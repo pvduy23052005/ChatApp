@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./auth.css";
+import "../../assets/css/auth.css";
 
 function Register() {
   const navigate = useNavigate();
@@ -45,7 +45,6 @@ function Register() {
 
     try {
       console.log("Đăng ký với:", formData);
-
     } catch (error) {
       console.log(error);
       setError("Đăng ký thất bại. Vui lòng thử lại!");
@@ -72,7 +71,6 @@ function Register() {
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
-
 
         <form onSubmit={handleSubmit} className="register-form">
           <div className="form-group">

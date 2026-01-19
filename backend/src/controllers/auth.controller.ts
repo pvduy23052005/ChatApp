@@ -9,20 +9,30 @@ export const loginPost = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng điền đầy đủ thông tin"
+      });
+    }
+
     const user = await User.findOne({
       email: email,
       deleted: false,
     });
 
-    if (!email || !password) {
-      return res.status(400).json({ error: "Vui lòng điền đầy đủ thông tin" });
-    }
     if (!user) {
-      return res.status(400).json({ error: "Email không chính xác" });
-
+      return res.status(400).json({
+        success: false,
+        message: "Email không chính xác"
+      });
     }
+
     if (user.password != md5(password)) {
-      return res.status(400).json({ error: "Mật khẩu không chính xác" });
+      return res.status(400).json({
+        success: false,
+        message: "Mật khẩu không đúng"
+      });
     }
 
     const payload = {
@@ -32,7 +42,7 @@ export const loginPost = async (req: Request, res: Response) => {
     const token = jwt.sign(
       payload,
       process.env.ACCESS_TOKEN_SECRET as string, {
-      expiresIn: "15s"
+      expiresIn: "30s"
     })
 
     res.cookie("token", token, {
@@ -40,7 +50,7 @@ export const loginPost = async (req: Request, res: Response) => {
       sameSite: "lax",
       path: "/",
     });
-
+    
     res.status(200).json({
       success: true,
       user: {
