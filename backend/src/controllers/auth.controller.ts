@@ -35,6 +35,12 @@ export const loginPost = async (req: Request, res: Response) => {
       expiresIn: "15s"
     })
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+    });
+
     res.status(200).json({
       success: true,
       user: {
@@ -51,6 +57,28 @@ export const loginPost = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Lỗi hệ thống, vui lòng thử lại sau"
+    });
+  }
+}
+
+// [post] auth/login . 
+export const logoutPost = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie("token", {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict" // Hoặc "lax" tùy setting lúc login
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Đăng xuất thành công!"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống khi đăng xuất"
     });
   }
 }
