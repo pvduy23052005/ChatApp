@@ -13,3 +13,8 @@ Content-Type : application/json
 ###
 POST {{BASE_URL}}/auth/logout 
 Content-Type : application/json
+
+
+###
+get {{BASE_URL}}/chat?roomId
+Content-Type : application/json

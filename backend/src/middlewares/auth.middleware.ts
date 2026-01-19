@@ -22,7 +22,7 @@ const authMiddleware = async (
     const user = await User.findOne({
       _id: decoded.userId,
       deleted: false,
-    }).select("-password");
+    }).select("_id");
 
     if (!user) {
       return res.status(4001).json({
