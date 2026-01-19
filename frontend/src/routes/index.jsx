@@ -2,6 +2,7 @@ import { useRoutes } from "react-router-dom";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import Chat from "../pages/Chat";
+import MainLayout from "../layouts/MainLayout";
 
 function AllRoute() {
   const elements = useRoutes([
@@ -16,7 +17,8 @@ function AllRoute() {
     // private routes.
     {
       paht: "/",
-      children: [{ path: "/", element: <Chat /> }],
+      element: <MainLayout />,
+      children: [{ index: true, element: <Chat /> }],
     },
   ]);
   return elements;

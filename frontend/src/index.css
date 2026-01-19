@@ -38,13 +38,22 @@ ul {
   list-style-type: none;
 }
 
-/* html {
+html {
   width: 100%;
   height: 100%;
-} */
+}
 
-/* body {
+div#root {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: var(--color-bg-primary);
-} */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-primary);
+  height: 100%;
+}

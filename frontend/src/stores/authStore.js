@@ -1,6 +1,6 @@
 export const authStore = {
   getUser: () => {
-    const user = localStorage.getItem("use");
+    const user = localStorage.getItem("user");
 
     if (!user) {
       return null;
@@ -14,7 +14,7 @@ export const authStore = {
     }
   },
   set : (dataUser) => {
-    localStorage.setItem("user" , dataUser)
+    localStorage.setItem("user" , JSON.stringify(dataUser))
   },
   clear : () => {
     localStorage.clear("user");

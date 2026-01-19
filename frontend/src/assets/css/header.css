@@ -1,0 +1,142 @@
+/* --- Header Container --- */
+header {
+  width: 100%;
+  background-color: var(--color-bg-sidebar); /* Hoặc dùng màu trắng/kính mờ */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Bóng đổ mềm mại hơn */
+  margin-bottom: 20px;
+  padding: 15px 0px; /* Tăng padding chút cho thoáng */
+  position: sticky; /* Giúp header dính lên trên cùng khi scroll */
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px); /* Hiệu ứng kính mờ nếu background có độ trong suốt */
+}
+
+/* --- Menu Links --- */
+header .inner-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Canh trái thay vì giữa */
+  gap: 15px; /* Tăng khoảng cách giữa các nút */
+  height: 100%;
+}
+
+header .inner-menu .btn-menu {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text, #555); /* Màu chữ mặc định */
+  padding: 8px 12px;
+  border-radius: 8px; /* Bo góc nút menu */
+  border: none; /* Bỏ border cũ */
+  transition: all 0.3s ease; /* Hiệu ứng mượt mà */
+  position: relative;
+}
+
+/* Hiệu ứng hover kiểu mới: Nổi background nhẹ */
+header .inner-menu .btn-menu:hover,
+header .inner-menu .btn-menu.active {
+  color: var(--color-primary, #007bff);
+  background-color: rgba(0, 123, 255, 0.1); /* Màu nền nhạt khi hover */
+}
+
+/* --- Search Bar --- */
+header .inner-search {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+header .inner-search form {
+  width: 100%;
+  position: relative;
+}
+
+/* Input đẹp hơn */
+header .inner-search form input {
+  width: 100%;
+  outline: none;
+  border: 1px solid transparent;
+  background-color: #f3f4f6; /* Màu nền xám nhạt cho input */
+  padding: 10px 20px;
+  border-radius: 50px; /* Hình viên thuốc */
+  font-size: 14px;
+  transition: all 0.3s ease;
+  color: var(--color-text);
+}
+
+/* Khi bấm vào input */
+header .inner-search form input:focus {
+  background-color: #fff;
+  border-color: var(--color-primary-hover, #007bff);
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1); /* Highlight nhẹ */
+}
+
+/* --- User Info --- */
+header .inner-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end; /* Đẩy về bên phải */
+  height: 100%;
+  cursor: pointer;
+}
+
+header .inner-info .name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text, #333);
+}
+
+header .inner-info img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover; /* Dùng cover để ảnh không bị méo */
+  border-radius: 50%;
+  border: 2px solid #fff; /* Viền trắng quanh avatar */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+header .inner-info:hover img {
+  transform: scale(1.05); /* Phóng to nhẹ avatar khi hover */
+}
+
+/* --- Create Room Button --- */
+header .inner-new-room {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header .btn-create-room {
+  background: linear-gradient(135deg, var(--color-button-active, #007bff), var(--color-primary-hover, #0056b3));
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 20px;
+  padding: 8px 20px;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+  transition: all 0.3s ease;
+  border: none;
+}
+
+header .btn-create-room:hover {
+  transform: translateY(-2px); /* Nút bay lên nhẹ */
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* Icon cho mobile */
+header .btn-icon {
+  font-size: 20px;
+  display: none; /* Chỉ hiện khi màn hình nhỏ, xử lý bằng media query */
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+}
