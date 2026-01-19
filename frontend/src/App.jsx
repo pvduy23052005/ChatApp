@@ -1,11 +1,12 @@
 import "./App.css";
+import AllRoute from "./routes";
 
 function App() {
-
-  return <>
-    <div>hello world</div>
-    </>;
+  return (
+    <>
+      <AllRoute />
+    </>
+  );
 }
 
 export default App;
-  
