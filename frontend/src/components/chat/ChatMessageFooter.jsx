@@ -2,12 +2,17 @@ import { useState } from "react";
 import { CiPaperplane } from "react-icons/ci";
 import { MdInsertEmoticon } from "react-icons/md";
 import { CgAttachment } from "react-icons/cg";
+import { chatServiceSocket } from "../../socket/services/chatServiceSocket";
 
 function ChatMessageFooter() {
-  const [content, setContent] = useState();
+  const [content, setContent] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    chatServiceSocket.sendMessage({
+      contents: content,
+    });
+    setContent("");
   };
 
   return (
@@ -20,7 +25,7 @@ function ChatMessageFooter() {
           onChange={(e) => setContent(e.target.value)}
         />
 
-        <button class="btn button-footer">
+        <button className="btn button-footer">
           <MdInsertEmoticon />
         </button>
         {/* Nút gửi */}

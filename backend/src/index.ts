@@ -5,6 +5,8 @@ import allRoute from "./routes/index.route";
 import { connectDatabase } from "./config/database";
 import cookieParser from "cookie-parser"
 import cors from "cors";
+import http from "http";
+import { socketInit } from "./socket";
 
 const port: string | number = process.env.PORT || 5000;
 const app: Express = express();
@@ -16,15 +18,17 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
+const server = http.createServer(app);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
 connectDatabase();
-
 allRoute(app);
+socketInit(server);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running ${port}`);
 })
