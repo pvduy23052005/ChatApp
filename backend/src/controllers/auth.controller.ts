@@ -42,7 +42,7 @@ export const loginPost = async (req: Request, res: Response) => {
     const token = jwt.sign(
       payload,
       process.env.ACCESS_TOKEN_SECRET as string, {
-      expiresIn: "30s"
+      expiresIn: "1d"
     })
 
     res.cookie("token", token, {

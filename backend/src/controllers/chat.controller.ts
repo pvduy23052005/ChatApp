@@ -1,48 +1,30 @@
 import { Request, Response } from "express";
 import getRoom from "../helper/getRoom.helper";
 import getChat from "../helper/getChat.helper";
-import getInfoRoom from "../helper/getInfoRoom.helper";
-import Room from "../models/room.model";
+import User from "../models/user.model";
 
-// [get] /chat/roomId=234435345354345345
-export const index = async (req: Request, res: Response) => {
+// [get] /chat/rooms.
+export const getListRoom = async (req: Request, res: Response) => {
   try {
-    const roomId = (req.query.roomId as string) || "";
-    let chats: any[] = [];
-    let infoRoom: any = null;
-    let allRooms: any = [];
+    const myID = res.locals.user._id.toString();
 
-    if (!roomId) {
+    const existsUser = await User.findOne({
+      _id: myID,
+      deleted: false
+    }).select("_id");
+
+    if (!existsUser) {
       return res.status(400).json({
         success: false,
-        message: "Vui lòng chọn người mà muốn nhắn tin"
+        message: "Người dùng không tồn tại "
       })
     }
 
-    const room = await Room.findById(roomId);
-    console.log(room);
-
-    if (!room) {
-      return res.status(400).json({
-        success: false,
-        message: "Phòng không tồn tại"
-      })
-    }
-
-    [allRooms, chats] = await Promise.all([
-      getRoom(res, "accepted"),
-      getChat(roomId),
-    ]);
-
-    // const objectRoom = await getInfoRoom(req, res);
-    // if (objectRoom) {
-    //   infoRoom = objectRoom;
-    // }
-
-    res.status(400).json({
-      message: true,
-      listchats: chats,
-      allRoom: allRooms
+    const rooms = await getRoom(res, "accepted");
+    console.log(rooms);
+    res.status(200).json({
+      success: true,
+      rooms: rooms,
     });
   } catch (error) {
     console.log(error);

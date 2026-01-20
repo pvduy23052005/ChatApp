@@ -40,6 +40,7 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
         path: "lastMessageId",
         select: "content status user_id"
       });
+    console.log(rooms);
 
     const listRoom = rooms.map((room: any): ObjectRoom | null => {
       const otherMember = room.members.find(
@@ -54,7 +55,7 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
         if (otherMember && otherMember.user_id) {
           titleRoom = otherMember.user_id.fullName;
           avatarRoom = otherMember.user_id.avatar || "/images/default-avatar.webp";
-          statusOnline = otherMember.user_id.statusOnline ;
+          statusOnline = otherMember.user_id.statusOnline;
           ortherUser_id = otherMember.user_id._id.toString();
         }
       } else {
@@ -89,7 +90,7 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
         lastMessage: lastMsg,
         updatedAt: room.updatedAt,
         statusOnline: statusOnline,
-        otherUserId : ortherUser_id,
+        otherUserId: ortherUser_id,
       };
     }).filter((item: ObjectRoom | null) => item !== null);
 

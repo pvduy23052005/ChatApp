@@ -16,5 +16,6 @@ Content-Type : application/json
 
 
 ###
-get {{BASE_URL}}/chat?roomId
+get {{BASE_URL}}/chat/rooms
 Content-Type : application/json
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3Njg4NzM3NTUsImV4cCI6MTc2ODk2MDE1NX0.rQ7aqRAJ12XPMEN2om6dJ7ASKIvpPB8rE7gyIA_LcSk
