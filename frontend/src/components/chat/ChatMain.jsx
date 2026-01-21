@@ -5,7 +5,7 @@ function ChatMain() {
   return (
     <>
       <div className="chat-main-body">
-        <ChatMessageGroup/>
+        <ChatMessageGroup  />
         <ChatMessageFooter />
       </div>
     </>

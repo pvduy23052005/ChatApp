@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CiPaperplane } from "react-icons/ci";
 import { MdInsertEmoticon } from "react-icons/md";
 import { CgAttachment } from "react-icons/cg";
@@ -6,11 +6,17 @@ import { chatServiceSocket } from "../../socket/services/chatServiceSocket";
 
 function ChatMessageFooter() {
   const [content, setContent] = useState("");
+  const inputRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!content) {
+      inputRef.current.focus();
+      return;
+    }
+    // send message
     chatServiceSocket.sendMessage({
-      contents: content,
+      content: content,
     });
     setContent("");
   };
@@ -23,6 +29,7 @@ function ChatMessageFooter() {
           placeholder="Nhập nội dung"
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          ref={inputRef}
         />
 
         <button className="btn button-footer">

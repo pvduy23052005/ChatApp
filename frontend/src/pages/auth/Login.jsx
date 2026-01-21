@@ -31,7 +31,7 @@ function Login() {
     try {
       const res = await authServiceAPI.login({ email, password });
       login(res.user);
-      navigate("/");
+      navigate("/chat");
     } catch (error) {
       if (error.response) {
         console.log(error.response.data);

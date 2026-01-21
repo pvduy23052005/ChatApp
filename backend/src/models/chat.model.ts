@@ -6,13 +6,15 @@ const chatSchema = new mongoose.Schema({
     ref: "User"
   },
   room_id: {
-    type: String
+    type: String,
+    default: ""
   },
   content: {
     type: String,
   },
   images: {
     type: Array,
+    default: []
   },
   status: {
     type: String,

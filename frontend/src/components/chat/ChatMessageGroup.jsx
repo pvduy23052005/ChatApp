@@ -1,12 +1,16 @@
 import { useAuth } from "../../hook/auth/useAuth";
+import { useEffect, useRef } from "react";
+import { useChatSocket } from "../../hook/socket/useChatSocket";
 
-function ChatMessageGroup({ chats = [] }) {
+function ChatMessageGroup() {
   const { user } = useAuth();
-  const myId = user?._id || user?.id;
+  const myID = user?._id || user?.id;
+  const scrollTopRef = useRef();
+  const { chats } = useChatSocket();
 
   const lastMessageIndex = chats
     .map((item) => item.user_id?._id?.toString() || "")
-    .lastIndexOf(myId?.toString());
+    .lastIndexOf(myID?.toString());
 
   // conver time .
   const formatTime = (dateString) => {
@@ -21,10 +25,15 @@ function ChatMessageGroup({ chats = [] }) {
     if (!url) return false;
     return /\.(jpeg|jpg|gif|png|webp)$/i.test(url);
   };
+  
   const getFileName = (url) => {
     if (!url) return "File";
     return url.split("/").pop().split("?")[0].split(":upload:")[0];
   };
+
+  useEffect(() => {
+    scrollTopRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chats]);
 
   return (
     <div className="chat-message-body">
@@ -43,7 +52,7 @@ function ChatMessageGroup({ chats = [] }) {
             );
           }
           const senderId = chat.user_id?._id?.toString();
-          const isMe = senderId === myId?.toString();
+          const isMe = senderId === myID?.toString();
           const time = formatTime(chat.createdAt);
 
           return (
@@ -120,6 +129,8 @@ function ChatMessageGroup({ chats = [] }) {
             </div>
           );
         })}
+
+      <div ref={scrollTopRef}></div>
     </div>
   );
 }
