@@ -10,12 +10,12 @@ export const getListRoom = async (req: Request, res: Response) => {
   try {
     const myID = res.locals.user.id.toString();
 
-    const existsUser = await User.findOne({
+    const existUser = await User.findOne({
       _id: myID,
       deleted: false
     }).select("_id");
 
-    if (!existsUser) {
+    if (!existUser) {
       return res.status(400).json({
         success: false,
         message: "Người dùng không tồn tại "
@@ -23,7 +23,6 @@ export const getListRoom = async (req: Request, res: Response) => {
     }
 
     const rooms = await getRoom(res, "accepted");
-    console.log(rooms);
     res.status(200).json({
       success: true,
       rooms: rooms,
