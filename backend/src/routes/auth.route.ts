@@ -6,4 +6,6 @@ router.post("/login", controller.loginPost);
 
 router.post("/logout", controller.logoutPost);
 
+router.post("/register", controller.register);
+
 export const authRoute: Router = router; 

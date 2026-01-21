@@ -50,7 +50,7 @@ export const loginPost = async (req: Request, res: Response) => {
       sameSite: "lax",
       path: "/",
     });
-    
+
     res.status(200).json({
       success: true,
       user: {
@@ -85,6 +85,54 @@ export const logoutPost = async (req: Request, res: Response) => {
       success: true,
       message: "Đăng xuất thành công!"
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống khi đăng xuất"
+    });
+  }
+}
+
+// [post] auth/login . 
+export const register = async (req: Request, res: Response) => {
+  try {
+
+    let { email, password, fullName, passwordConfirm } = req.body;
+    const user = await User.findOne({
+      email: email,
+    });
+
+    if (user) {
+      res.status(400).json({
+        success: false,
+        message: "Email đã tồn tại"
+      });
+    }
+
+    if (password != passwordConfirm) {
+      res.status(400).json({
+        success: false,
+        message: "Xác nhận mật khẩu không đúng"
+      })
+    }
+
+    password = md5(password);
+    const userObject = {
+      fullName: fullName,
+      email: email,
+      password: password,
+      statusOffline: "offline",
+    };
+
+    const newUser = new User(userObject);
+    newUser.save();
+
+
+    res.status(201).json({
+      success: true , 
+      dataUser : newUser
+    })
+
   } catch (error) {
     res.status(500).json({
       success: false,
