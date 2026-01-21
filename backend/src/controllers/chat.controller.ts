@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import getRoom from "../helper/getRoom.helper";
 import getChat from "../helper/getChat.helper";
 import User from "../models/user.model";
+import Room from "../models/room.model";
+import mongoose from "mongoose";
 
 // [get] /chat/rooms.
 export const getListRoom = async (req: Request, res: Response) => {
@@ -33,4 +35,41 @@ export const getListRoom = async (req: Request, res: Response) => {
       message: "Lỗi hệ thống, vui lòng thử lại sau"
     });
   }
+}
+
+// [get] /chat/room/:id . 
+export const getListChat = async (req: Request, res: Response) => {
+  try {
+    const roomID = (req.params.id as string) || "";
+
+    if (!mongoose.Types.ObjectId.isValid(roomID)) {
+      return res.status(400).json({ message: "ID phòng không đúng định dạng" });
+    }
+
+    const existsRoom = await Room.findOne({
+      _id: roomID,
+      deleted: false
+    });
+
+    if (!existsRoom) {
+      return res.status(400).json({
+        success: false,
+        message: "Phòng không tồn tại "
+      });
+    }
+
+    const chats = await getChat(roomID);
+
+    res.json({
+      success: true,
+      chats: chats
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống, vui lòng thử lại sau"
+    });
+  }
+
 }
