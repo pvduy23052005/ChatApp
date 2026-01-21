@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 // [get] /chat/rooms.
 export const getListRoom = async (req: Request, res: Response) => {
   try {
-    const myID = res.locals.user._id.toString();
+    const myID = res.locals.user.id.toString();
 
     const existsUser = await User.findOne({
       _id: myID,
@@ -40,7 +40,7 @@ export const getListRoom = async (req: Request, res: Response) => {
 // [get] /chat/room/:id . 
 export const getListChat = async (req: Request, res: Response) => {
   try {
-    const roomID = (req.params.id as string) || "";
+    const roomID: string = (req.params.id?.toString()) || "";
 
     if (!mongoose.Types.ObjectId.isValid(roomID)) {
       return res.status(400).json({ message: "ID phòng không đúng định dạng" });
