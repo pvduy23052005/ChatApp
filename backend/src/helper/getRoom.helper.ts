@@ -40,7 +40,6 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
         path: "lastMessageId",
         select: "content status user_id"
       });
-    console.log(rooms);
 
     const listRoom = rooms.map((room: any): ObjectRoom | null => {
       const otherMember = room.members.find(

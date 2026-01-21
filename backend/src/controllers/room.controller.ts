@@ -1,5 +1,6 @@
 import { Response, Request } from 'express';
 import Room from '../models/room.model';
+import User from "../models/user.model";
 
 // [post] /room/create.
 export const createRoomPost = async (req: Request, res: Response) => {
@@ -21,12 +22,10 @@ export const createRoomPost = async (req: Request, res: Response) => {
       });
     }
 
-    let memberIDs: string[] = [];
-
     // members only a person . =>  conver string -> array . 
-    if (!Array.isArray(members)) {
-      memberIDs = [members];
-    }
+    const memberIDs: string[] = Array.isArray(members)
+      ? [...members]
+      : [members];
 
     if (memberIDs.length === 1) {
       const userID = memberIDs;
@@ -65,6 +64,7 @@ export const createRoomPost = async (req: Request, res: Response) => {
     });
 
     const newRoom = new Room(newRoomData);
+    await newRoom.save();
 
     res.status(201).json({
       success: true,
@@ -82,3 +82,51 @@ export const createRoomPost = async (req: Request, res: Response) => {
   }
 }
 
+// [post] /room/detail/:id.
+export const roomDetail = async (req: Request, res: Response) => {
+  try {
+    const roomID = req.params.id?.toString();
+    const myID: string = res.locals.user.id.toString() || "";
+
+    const [user, detailRoom] = await Promise.all([
+      User.findOne({ _id: myID, deleted: false }).select("friendList"),
+      Room.findOne({ _id: roomID, deleted: false }).populate({
+        path: "members.user_id",
+        select: "fullName avatar"
+      })
+    ]);
+
+    if (!detailRoom) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập phòng hợp lệ"
+      });
+    }
+
+    const memberIDs = detailRoom.members.map(
+      (member: any) => member.user_id._id.toString());
+    const friendIDs = user?.friendList.map(
+      (id: any) => id.toString()
+    );
+
+    const friends = await User.find({
+      _id: {
+        $in: friendIDs,
+        $nin: memberIDs
+      },
+      deleted: false
+    }).select("fullName avatar");
+
+    res.status(200).json({
+      success: true,
+      room: detailRoom,
+      friends: friends,
+    })
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống"
+    });
+  }
+}

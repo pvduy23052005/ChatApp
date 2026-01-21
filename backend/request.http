@@ -1,5 +1,6 @@
 
 @BASE_URL = http://localhost:5000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3Njg4NzM3NTUsImV4cCI6MTc2ODk2MDE1NX0.rQ7aqRAJ12XPMEN2om6dJ7ASKIvpPB8rE7gyIA_LcSk
 
 ###
 POST {{BASE_URL}}/auth/login 
@@ -29,12 +30,34 @@ Content-Type : application/json
 ###
 get {{BASE_URL}}/chat/rooms
 Content-Type : application/json
-Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3Njg4NzM3NTUsImV4cCI6MTc2ODk2MDE1NX0.rQ7aqRAJ12XPMEN2om6dJ7ASKIvpPB8rE7gyIA_LcSk
+Authorization: Bearer {{token}}
 
 ###
-GET  {{BASE_URL}}/chat/room/234234234322 
+GET  {{BASE_URL}}/chat/room/6970dcf2a678b807b469f192 
 Content-Type : application/json
+Authorization: Bearer {{token}}
 
 // user. 
 ###
 GET  {{BASE_URL}}/users 
+
+
+// room  
+###
+post {{BASE_URL}}/room/create
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "titleRoom" : "testRoom",
+  "members" : [ 
+    "6965c572cad48fa15af26fbe",
+    "696229443a2254e15056776b"
+  ]
+}
+
+### 
+GET {{BASE_URL}}/room/detail/6970e3eb9f810f7b919c7063
+Authorization: Bearer {{token}}
+
+// end room  

@@ -3,6 +3,7 @@ import { authRoute } from "./auth.route"
 import { chatRoute } from "./chat.route"
 import authMiddleware from "../middlewares/auth.middleware"
 import { userRoute } from "./user.route"
+import { roomRoute } from "./room.route"
 
 const allRoute = (app: Express) => {
 
@@ -11,6 +12,8 @@ const allRoute = (app: Express) => {
   app.use("/chat", authMiddleware, chatRoute);
 
   app.use("/users", authMiddleware, userRoute);
+
+  app.use("/room", authMiddleware,  roomRoute);
 }
 
 export default allRoute; 
