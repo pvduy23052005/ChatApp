@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import Room from '../models/room.model';
 import User from "../models/user.model";
+import { RiReservedFill } from 'react-icons/ri';
 
 // [post] /room/create.
 export const createRoomPost = async (req: Request, res: Response) => {
@@ -129,4 +130,67 @@ export const roomDetail = async (req: Request, res: Response) => {
       message: "Lỗi hệ thống"
     });
   }
+}
+
+// [post] /room/add-member/:id 
+export const addMember = async (req: Request, res: Response) => {
+  const roomID: string = req.params.id?.toString() || "";
+  let { newMemberIDs } = req.body.memberIDs;
+  const myID: string = res.locals.user.id.toString();
+
+  const room = await Room.findOne({
+    _id: roomID,
+    deleted: false
+  })
+
+  if (!room) {
+    return res.status(400).json({
+      success: false,
+      message: "Vui lòng nhập phòng hợp lệ"
+    });
+  }
+
+  const currentMember = room.members.find(
+    (member: any) => member.user_id._id.toString() === myID
+  )
+
+  if (currentMember?.role !== "superAdmin") {
+    return res.status(400).json({
+      success: false,
+      message: "Bạn không có quyền xóa thành viên"
+    });
+  }
+
+  if (newMemberIDs === myID) {
+    return res.status(400).json({
+      success: false,
+      message: "Không thể xóa chính mình khỏi nhóm"
+    });
+  }
+
+  if (!Array.isArray(newMemberIDs)) {
+    newMemberIDs = [newMemberIDs];
+  }
+
+  const listNewMembers = newMemberIDs.map((userId: string) => {
+    return {
+      user_id: userId,
+      role: "member",
+      status: "accepted"
+    };
+  });
+
+  await Room.updateOne({
+    _id: roomID
+  }, {
+    $push: {
+      members: { $each: listNewMembers }
+    }
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Thêm thành công",
+    newMemberIDs: newMemberIDs
+  })
 }
