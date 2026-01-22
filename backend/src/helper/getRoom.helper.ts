@@ -25,7 +25,6 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
       "members": {
         $elemMatch: {
           user_id: myID,
-          status: status,
         }
       },
       deleted: false
@@ -40,12 +39,10 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
         path: "lastMessageId",
         select: "content status user_id"
       });
-
     const listRoom = rooms.map((room: any): ObjectRoom | null => {
       const otherMember = room.members.find(
-        (member: any) => member.user_id && member.user_id._id.toString() !== myID
+        (member: any) => member.user_id._id.toString() !== myID.toString()
       );
-
       let titleRoom = "";
       let avatarRoom = "";
       let statusOnline: "online" | "offline" = "offline";

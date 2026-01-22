@@ -1,24 +1,11 @@
-import { useEffect , useState } from "react";
-import { userServiceAPI } from "../../services/userServiceAPI";
 import "../../assets/css/user.css";
+import { useUserList } from "../../hook/user/useUserList";
+import { useUserAction } from "../../hook/user/useUserAction";
 
 function UserList() {
-  const [users, setUsers] = useState([]);
+  const { users } = useUserList();
+  const { handleChatNotFriend } = useUserAction();
 
-  useEffect(() => {
-    const handleGetUsers = async () => {
-      try {
-        const res = await userServiceAPI.getUsers();
-        console.log(res.uses);
-        setUsers(res.users);
-      } catch (error) {
-        console.log(error.response.data.message);
-      }
-    };
-    handleGetUsers();
-  }, []);
-
-  
   return (
     <div className="container py-3">
       <div className="container-user">
@@ -55,7 +42,10 @@ function UserList() {
                   </button>
 
                   {/* Nút Nhắn tin */}
-                  <button className="btn-action btn-chat" user-id={user.id}>
+                  <button
+                    className="btn-action btn-chat"
+                    onClick={() => handleChatNotFriend(user._id)}
+                  >
                     <i className="fa-solid fa-comment"></i> Nhắn tin
                   </button>
                 </div>

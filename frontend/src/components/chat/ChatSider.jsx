@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../hook/auth/useAuth";
 import { useEffect, useState } from "react";
 import { chatServiceAPI } from "../../services/chatServiceAPI";
@@ -6,6 +6,8 @@ import { chatServiceAPI } from "../../services/chatServiceAPI";
 function ChatSider() {
   const { user } = useAuth();
   const [rooms, setRooms] = useState([]);
+  const [searchParams] = useSearchParams();
+  const currentRoomID = searchParams.get("roomId");
 
   const truncateText = (text, maxLength) => {
     if (!text) return "";
@@ -36,11 +38,13 @@ function ChatSider() {
             ? truncateText(lastMsg.content, 15)
             : "Bắt đầu trò chuyện";
 
+          const isActive = currentRoomID === room._id;
+
           return (
             <Link
               to={`/chat?roomId=${room._id}`}
               key={room._id}
-              className={`box-friend`}
+              className={`box-friend ${isActive ? "active" : ""}`}
               data-user-id={room.otherUserId}
               data-room-id={room._id}
             >

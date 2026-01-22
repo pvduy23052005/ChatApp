@@ -3,6 +3,7 @@ import { useEffect , useState } from "react";
 
 export const useChatSocket = () => {
   const [chats, setChats] = useState([]);
+  
 
   useEffect(() => {
     const handleNewMessage = (newMessage) => {

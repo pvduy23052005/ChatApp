@@ -43,8 +43,6 @@ GET  {{BASE_URL}}/users
 
 // end api_user. 
 
-
-
 // api_room  
 ###
 post {{BASE_URL}}/room/create
