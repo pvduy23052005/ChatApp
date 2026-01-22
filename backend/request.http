@@ -37,9 +37,12 @@ GET  {{BASE_URL}}/chat/room/6970dcf2a678b807b469f192
 Content-Type : application/json
 Authorization: Bearer {{token}}
 
-// user. 
+// api_user. 
 ###
 GET  {{BASE_URL}}/users 
+
+// end api_user. 
+
 
 
 // api_room  
@@ -78,6 +81,7 @@ Authorization: Bearer {{token}}
   "newMemberIDs" : "6965c572cad48fa15af26fbe"
 }
 
+###
 POST  {{BASE_URL}}/room/delete/6970e3eb9f810f7b919c7063
 Content-Type: application/json
 Authorization: Bearer {{token}}

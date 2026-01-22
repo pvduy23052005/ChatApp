@@ -90,7 +90,7 @@ export const roomDetail = async (req: Request, res: Response) => {
 
     const [user, detailRoom] = await Promise.all([
       User.findOne({ _id: myID, deleted: false }).select("friendList"),
-      Room.findOne({ _id: roomID, deleted: false }).populate({
+      Room.findOne({ _id: roomID }).populate({
         path: "members.user_id",
         select: "fullName avatar"
       })
@@ -100,6 +100,13 @@ export const roomDetail = async (req: Request, res: Response) => {
       return res.status(400).json({
         success: false,
         message: "Vui lòng nhập phòng hợp lệ"
+      });
+    }
+
+    if (detailRoom.deleted === true) {
+      return res.status(400).json({
+        success: false,
+        message: "Phòng đã bị xóa"
       });
     }
 

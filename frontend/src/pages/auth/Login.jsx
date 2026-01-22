@@ -26,7 +26,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset lỗi giao diện nếu có
+    setError(""); 
 
     try {
       const res = await authServiceAPI.login({ email, password });

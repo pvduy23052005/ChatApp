@@ -1,6 +1,8 @@
 import { useAuth } from "../../hook/auth/useAuth";
 import { useEffect, useRef } from "react";
 import { useChatSocket } from "../../hook/socket/useChatSocket";
+import { formatTime, isSystemMessage } from "../../utils/chat.utils";
+import FileAttachment from "../attachments/FileAttachment";
 
 function ChatMessageGroup() {
   const { user } = useAuth();
@@ -12,25 +14,6 @@ function ChatMessageGroup() {
     .map((item) => item.user_id?._id?.toString() || "")
     .lastIndexOf(myID?.toString());
 
-  // conver time .
-  const formatTime = (dateString) => {
-    if (!dateString) return "";
-    return new Date(dateString).toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const checkIsImage = (url) => {
-    if (!url) return false;
-    return /\.(jpeg|jpg|gif|png|webp)$/i.test(url);
-  };
-  
-  const getFileName = (url) => {
-    if (!url) return "File";
-    return url.split("/").pop().split("?")[0].split(":upload:")[0];
-  };
-
   useEffect(() => {
     scrollTopRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats]);
@@ -39,10 +22,7 @@ function ChatMessageGroup() {
     <div className="chat-message-body">
       {chats &&
         chats.map((chat, index) => {
-          const isSystem =
-            chat.content?.includes("đã rời nhóm") ||
-            chat.content?.includes("đã thêm") ||
-            chat.content?.includes("đã xóa");
+          const isSystem = isSystemMessage(chat.content);
 
           if (isSystem) {
             return (
@@ -77,36 +57,7 @@ function ChatMessageGroup() {
                 {/* image ,file ( pdf .doc ) */}
                 {chat.images && chat.images.length > 0 && (
                   <div className="images">
-                    {chat.images.map((image, imgIndex) => {
-                      if (!image) return null;
-                      const isImage = checkIsImage(image);
-
-                      if (isImage) {
-                        return (
-                          <img
-                            key={imgIndex}
-                            src={image}
-                            alt="preview"
-                            className="chat-image-preview"
-                          />
-                        );
-                      } else {
-                        return (
-                          <a
-                            key={imgIndex}
-                            href={image}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="file-attachment-box"
-                          >
-                            <i className="bx bx-file"></i>
-                            <span className="file-name">
-                              {getFileName(image)}
-                            </span>
-                          </a>
-                        );
-                      }
-                    })}
+                    <FileAttachment linkFile={chat.images} />
                   </div>
                 )}
                 {/* Time */}

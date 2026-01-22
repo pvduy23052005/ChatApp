@@ -3,16 +3,23 @@ import { useContext } from "react";
 import { AppContext } from "../../context/AppContext"; // Nhớ sửa đường dẫn đúng với folder của bạn
 import "../../assets/css/header.css"; // Import file CSS vào
 import { useAuth } from "../../hook/auth/useAuth";
+import { authServiceAPI } from "../../services/authServiceAPI";
 
 function Header() {
   const { logout } = useContext(AppContext);
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = (e) => {
-    e.preventDefault();
-    logout(); 
-    navigate("/auth/login"); 
+  const handleLogout = async (e) => {
+    try {
+      e.preventDefault();
+      const res = await authServiceAPI.logout();
+      console.log(res);
+      logout();
+      navigate("/auth/login");
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
   };
 
   return (
@@ -31,7 +38,7 @@ function Header() {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                  }} 
+                  }}
                 >
                   Đăng xuất
                 </button>

@@ -74,12 +74,7 @@ export const loginPost = async (req: Request, res: Response) => {
 // [post] auth/login . 
 export const logoutPost = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("token", {
-      path: "/",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict" // Hoặc "lax" tùy setting lúc login
-    });
+    res.clearCookie("token");
 
     res.status(200).json({
       success: true,
@@ -88,7 +83,7 @@ export const logoutPost = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Lỗi hệ thống khi đăng xuất"
+      message: "Lỗi hệ thống "
     });
   }
 }

@@ -9,7 +9,6 @@ export const chatSocket = (io: Server, socket: Socket) => {
     const newChat = new Chat({
       user_id: myID,
       content: data.content,
-      senderID: myID
     });
 
     await newChat.save();

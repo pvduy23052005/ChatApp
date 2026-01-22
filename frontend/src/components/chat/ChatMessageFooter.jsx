@@ -3,10 +3,16 @@ import { CiPaperplane } from "react-icons/ci";
 import { MdInsertEmoticon } from "react-icons/md";
 import { CgAttachment } from "react-icons/cg";
 import { chatServiceSocket } from "../../socket/services/chatServiceSocket";
+import EmojiPickerAttachment from "../attachments/EmojiPickerAttachment";
 
 function ChatMessageFooter() {
   const [content, setContent] = useState("");
   const inputRef = useRef();
+  const [showEmoji, setShowEmoji] = useState(false);
+
+  const handleEmojiClick = (emojiData) => {
+    setContent((prev) => prev + emojiData.emoji);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,6 +25,7 @@ function ChatMessageFooter() {
       content: content,
     });
     setContent("");
+    setShowEmoji(false);
   };
 
   return (
@@ -32,10 +39,23 @@ function ChatMessageFooter() {
           ref={inputRef}
         />
 
-        <button className="btn button-footer">
+        {/* Emoji */}
+        <EmojiPickerAttachment
+          showEmoji={showEmoji}
+          setShowEmoji={setShowEmoji}
+          handleEmojiClick={handleEmojiClick}
+        />
+
+        <button
+          className="btn button-footer"
+          type="button"
+          onClick={() => {
+            setShowEmoji(!showEmoji);
+          }}
+        >
           <MdInsertEmoticon />
         </button>
-        {/* Nút gửi */}
+        {/* btn send */}
         <button className="btn button-footer" type="submit">
           <CiPaperplane />
         </button>

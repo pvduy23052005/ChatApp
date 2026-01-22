@@ -28,7 +28,7 @@
   flex-shrink: 0;
 }
 
-.button-footer:hover  {
+.button-footer:hover {
   background-color: var(--color-hover-primary);
 }
 
@@ -420,9 +420,7 @@
 
 /* end css chat  */
 
-
 /* css preview */
-
 
 /* Ẩn input checkbox mặc định */
 .box-user-select input[type="checkbox"] {
@@ -885,3 +883,20 @@
   border-radius: 20px;
   font-style: italic;
 }
+
+/* css emoji */
+.emoji-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.emoji-picker-container {
+  position: absolute;
+  bottom: 30px; 
+  right: 100%;
+  z-index: 1000; 
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+/* end  css emoji */
