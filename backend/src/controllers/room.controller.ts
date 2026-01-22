@@ -1,7 +1,6 @@
 import { Response, Request } from 'express';
 import Room from '../models/room.model';
 import User from "../models/user.model";
-import { RiReservedFill } from 'react-icons/ri';
 
 // [post] /room/create.
 export const createRoomPost = async (req: Request, res: Response) => {
@@ -134,63 +133,101 @@ export const roomDetail = async (req: Request, res: Response) => {
 
 // [post] /room/add-member/:id 
 export const addMember = async (req: Request, res: Response) => {
-  const roomID: string = req.params.id?.toString() || "";
-  let { newMemberIDs } = req.body.memberIDs;
-  const myID: string = res.locals.user.id.toString();
+  try {
+    const roomID: string = req.params.id?.toString() || "";
+    let { newMemberIDs } = req.body;
+    const room = res.locals.room;
 
-  const room = await Room.findOne({
-    _id: roomID,
-    deleted: false
-  })
-
-  if (!room) {
-    return res.status(400).json({
-      success: false,
-      message: "Vui lòng nhập phòng hợp lệ"
-    });
-  }
-
-  const currentMember = room.members.find(
-    (member: any) => member.user_id._id.toString() === myID
-  )
-
-  if (currentMember?.role !== "superAdmin") {
-    return res.status(400).json({
-      success: false,
-      message: "Bạn không có quyền xóa thành viên"
-    });
-  }
-
-  if (newMemberIDs === myID) {
-    return res.status(400).json({
-      success: false,
-      message: "Không thể xóa chính mình khỏi nhóm"
-    });
-  }
-
-  if (!Array.isArray(newMemberIDs)) {
-    newMemberIDs = [newMemberIDs];
-  }
-
-  const listNewMembers = newMemberIDs.map((userId: string) => {
-    return {
-      user_id: userId,
-      role: "member",
-      status: "accepted"
-    };
-  });
-
-  await Room.updateOne({
-    _id: roomID
-  }, {
-    $push: {
-      members: { $each: listNewMembers }
+    if (!Array.isArray(newMemberIDs)) {
+      newMemberIDs = [newMemberIDs];
     }
-  });
 
-  res.status(200).json({
-    success: true,
-    message: "Thêm thành công",
-    newMemberIDs: newMemberIDs
-  })
+    const existMemberIDs = room.members.map(
+      (member: any) => member.user_id.toString()
+    )
+
+    const filteredMemberIDs = newMemberIDs.filter((userID: string) => {
+      const isExistMemberID: boolean = existMemberIDs.includes(userID);
+      if (isExistMemberID === false) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+
+    if (filteredMemberIDs.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Tất cả người dùng được chọn đã có mặt trong phòng"
+      });
+    }
+
+    const listNewMembers = filteredMemberIDs.map((userId: string) => {
+      return {
+        user_id: userId,
+        role: "member",
+        status: "accepted"
+      };
+    });
+    console.log(listNewMembers);
+
+    await Room.updateOne({
+      _id: roomID
+    }, {
+      $push: {
+        members: { $each: listNewMembers }
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Thêm thành công",
+      newMemberIDs: newMemberIDs
+    });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống"
+    });
+  }
+}
+
+
+// [post] /room/remove-member/:id 
+export const removeMember = async (req: Request, res: Response) => {
+  try {
+    const roomID: string = req.params.id?.toString() || "";
+    const { removeMemberID } = req.body;
+    console.log(removeMemberID)
+    const myID: string = res.locals.user.id.toString();
+    console.log(myID);
+
+    if (removeMemberID === myID) {
+      return res.status(400).json({
+        success: false,
+        message: "Không thể xóa chính mình khỏi nhóm"
+      });
+    }
+
+    await Room.updateOne({
+      _id: roomID
+    }, {
+      $pull: {
+        members: { user_id: removeMemberID }
+      }
+    });
+
+    res.status(200).json({
+      success: false,
+      message: "Đã xóa thành viên khỏi nhóm",
+      removeMemberID: removeMemberID
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống"
+    });
+  }
 }
