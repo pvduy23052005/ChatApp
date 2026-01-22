@@ -4,6 +4,7 @@ import Register from "../pages/auth/Register";
 import Chat from "../pages/Chat";
 import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
+import UserList from "../pages/user";
 
 function AllRoute() {
   const elements = useRoutes([
@@ -23,7 +24,10 @@ function AllRoute() {
           <MainLayout />
         </ProtectedRoute>
       ),
-      children: [{ index: true, path: "chat", element: <Chat /> }],
+      children: [
+        { index: true, path: "chat", element: <Chat /> },
+        { index: true, path: "user", element: <UserList /> }
+      ],
     },
   ]);
   return elements;

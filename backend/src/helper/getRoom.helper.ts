@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import Room from '../models/room.model';
-
+import mongoose from 'mongoose';
 interface ObjectRoom {
   _id: string;
   title: string;
@@ -18,8 +18,8 @@ interface ObjectRoom {
 
 const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => {
   try {
-    const myID = res.locals.user._id.toString();
-
+    const myIDString = res.locals.user.id;
+    const myID = new mongoose.Types.ObjectId(myIDString);
     // 2. Query Database
     const rooms: any = await Room.find({
       "members": {

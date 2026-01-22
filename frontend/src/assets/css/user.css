@@ -1,0 +1,166 @@
+.container-user {
+  box-shadow: var(--item-box-shadow);
+  border-radius: 12px;
+  padding: 50px;
+}
+
+.container-user h3{
+  color : var(--color-hover-primary);
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--color-hover-primary);
+}
+
+.container-user .row-users {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding-bottom: 50px;
+  width: 100%;
+}
+
+.box-user {
+  background-color: var(--color-bg-sidebar);
+  border: 1px solid var(--color-border-hr);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: var(--item-box-shadow);
+}
+
+.box-user:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-hover-primary);
+}
+
+.inner-avatar {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 15px;
+}
+
+.inner-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--color-bg-primary);
+}
+
+.inner-status {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid var(--color-bg-sidebar);
+}
+
+.inner-status.online {
+  background-color: var(--color-button-active);
+}
+
+.inner-status.offline {
+  background-color: var(--color-text-placeholder);
+}
+
+.inner-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 15px;
+  display: -webkit-box;
+  overflow: hidden;
+}
+
+.inner-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.btn-add {
+  background-color: var(--color-button);
+  color: #ffffff;
+}
+
+.btn-add:hover {
+  opacity: 0.9;
+}
+
+.btn-chat {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+}
+
+.btn-chat:hover {
+  background-color: var(--color-hover-secondary);
+}
+
+.btn-cancel i {
+  font-size: 20px;
+}
+
+.box-user .btn-cancel {
+  display: none;
+}
+
+.box-user.add-friend-request .btn-add {
+  display: none;
+}
+
+.box-user.add-friend-request .btn-cancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box-user .btn-accept-friend {
+  background-color: var(--color-button);
+  color: #ffffff;
+}
+
+.box-user .btn-deleted-friend {
+  display: none;
+}
+
+.box-user.refuse .btn-refuse-friend {
+  display: none;
+}
+
+.box-user.refuse .btn-deleted-friend {
+  display: block;
+}
+
+.box-user .btn-accepted-friend {
+  display: none;
+}
+
+.box-user.accepted .btn-accepted-friend {
+  display: block;
+}
+
+.box-user.accepted .btn-accept-friend {
+  display: none;
+}

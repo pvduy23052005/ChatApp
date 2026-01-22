@@ -1,6 +1,6 @@
 
 @BASE_URL = http://localhost:5000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3NjkwNTIwMjEsImV4cCI6MTc2OTEzODQyMX0.Z27lQPPUpwyLkvMe3dyA9-YE5--5yXjxNlgIL0TxDws
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3NjkwNzIxODYsImV4cCI6MTc2OTE1ODU4Nn0.VdlShzwCcTAVywh2OMpTkz5YC2CtLevZSr3FFx_BbM8
 
 ###
 POST {{BASE_URL}}/auth/login 
@@ -33,7 +33,7 @@ Content-Type : application/json
 Authorization: Bearer {{token}}
 
 ###
-GET  {{BASE_URL}}/chat/room/6970dcf2a678b807b469f192 
+GET  {{BASE_URL}}/chat/room/6970e3eb9f810f7b919c7063 
 Content-Type : application/json
 Authorization: Bearer {{token}}
 
