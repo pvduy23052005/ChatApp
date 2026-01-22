@@ -22,6 +22,7 @@ async function roomValidate(req: Request, res: Response, next: NextFunction) {
     const currentMember = room.members.find(
       (member: any) => member.user_id._id.toString() === myID
     )
+    
     if (currentMember?.role !== "superAdmin") {
       return res.status(400).json({
         success: false,

@@ -169,7 +169,6 @@ export const addMember = async (req: Request, res: Response) => {
         status: "accepted"
       };
     });
-    console.log(listNewMembers);
 
     await Room.updateOne({
       _id: roomID
@@ -193,7 +192,6 @@ export const addMember = async (req: Request, res: Response) => {
   }
 }
 
-
 // [post] /room/remove-member/:id 
 export const removeMember = async (req: Request, res: Response) => {
   try {
@@ -201,7 +199,6 @@ export const removeMember = async (req: Request, res: Response) => {
     const { removeMemberID } = req.body;
     console.log(removeMemberID)
     const myID: string = res.locals.user.id.toString();
-    console.log(myID);
 
     if (removeMemberID === myID) {
       return res.status(400).json({
@@ -219,7 +216,7 @@ export const removeMember = async (req: Request, res: Response) => {
     });
 
     res.status(200).json({
-      success: false,
+      success: true,
       message: "Đã xóa thành viên khỏi nhóm",
       removeMemberID: removeMemberID
     });
@@ -231,3 +228,30 @@ export const removeMember = async (req: Request, res: Response) => {
     });
   }
 }
+
+// [post] /room/delete/:id
+export const deleteRoomPost = async (req: Request, res: Response) => {
+  try {
+    const roomId = req.params.id;
+
+    await Room.updateOne(
+      { _id: roomId },
+      {
+        deleted: true,
+        deletedAt: new Date()
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Đã xóa phòng chat thành công",
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống"
+    });
+  }
+};

@@ -5,6 +5,11 @@ import roomValidate from "../validate/room/room.validate";
 
 router.post("/create", controller.createRoomPost);
 
+router.post("/delete/:id",
+  roomValidate,
+  controller.deleteRoomPost
+)
+
 router.get("/detail/:id", controller.roomDetail);
 
 router.post("/add-member/:id",

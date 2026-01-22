@@ -42,7 +42,7 @@ Authorization: Bearer {{token}}
 GET  {{BASE_URL}}/users 
 
 
-// room  
+// api_room  
 ###
 post {{BASE_URL}}/room/create
 Content-Type: application/json
@@ -78,4 +78,8 @@ Authorization: Bearer {{token}}
   "newMemberIDs" : "6965c572cad48fa15af26fbe"
 }
 
-// end room  
+POST  {{BASE_URL}}/room/delete/6970e3eb9f810f7b919c7063
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+// end api_room    
