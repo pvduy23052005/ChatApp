@@ -5,6 +5,7 @@ import Chat from "../pages/Chat";
 import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import UserList from "../pages/user";
+import NotFound from "../components/common/NotFound";
 
 function AllRoute() {
   const elements = useRoutes([
@@ -29,6 +30,8 @@ function AllRoute() {
         { index: true, path: "user", element: <UserList /> }
       ],
     },
+    // 404 
+    { path : "*", element : <NotFound/>}
   ]);
   return elements;
 }

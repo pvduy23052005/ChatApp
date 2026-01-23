@@ -1,17 +1,12 @@
 import { useAuth } from "../../hook/auth/useAuth";
 import { useEffect, useRef } from "react";
-import { useChatSocket } from "../../hook/socket/useChatSocket";
 import { formatTime, isSystemMessage } from "../../utils/chat.utils";
 import FileAttachment from "../attachments/FileAttachment";
-import { useSearchParams } from "react-router-dom";
 
-function ChatMessageGroup() {
+function ChatMessageGroup({chats}) {
   const { user } = useAuth();
   const myID = user?._id || user?.id;
   const scrollTopRef = useRef();
-  const [searchParams] = useSearchParams();
-
-  const { chats } = useChatSocket(searchParams.get("roomId"));
 
   const lastMessageIndex = chats
     .map((item) => item.user_id?._id?.toString() || "")
@@ -26,7 +21,7 @@ function ChatMessageGroup() {
       {chats &&
         chats.map((chat, index) => {
           const isSystem = isSystemMessage(chat.content);
-          
+
           if (isSystem) {
             return (
               <div className="system-message" key={chat._id || index}>

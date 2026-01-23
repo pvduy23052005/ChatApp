@@ -111,7 +111,7 @@ header .inner-new-room {
 }
 
 header .btn-create-room {
-  background: linear-gradient(135deg, var(--color-button-active, #007bff), var(--color-primary-hover, #0056b3));
+  background-color: var(--color-button);
   font-size: 14px;
   font-weight: 600;
   color: #fff;
@@ -119,14 +119,15 @@ header .btn-create-room {
   padding: 8px 20px;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
   transition: all 0.3s ease;
+  box-shadow: var(--item-shadow);
   border: none;
 }
 
 header .btn-create-room:hover {
   transform: translateY(-2px); /* Nút bay lên nhẹ */
-  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+  color: var(--color-button);
+  background-color:#fff;
 }
 
 /* Icon cho mobile */
