@@ -6,6 +6,7 @@ import { chatServiceSocket } from "../../socket/services/chatServiceSocket";
 import EmojiPickerAttachment from "../attachments/EmojiPickerAttachment";
 import { useSearchParams } from "react-router-dom";
 import PreviewImage from "../attachments/PreviewImageAttachment";
+import { uploadFile } from "../../utils/uploadFile.utils";
 
 function ChatMessageFooter() {
   const [content, setContent] = useState("");
@@ -20,16 +21,18 @@ function ChatMessageFooter() {
     setContent((prev) => prev + emojiData.emoji);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!content && files.length === 0) {
       inputRef.current.focus();
       return;
     }
+
+    const urls = await uploadFile(files);
     chatServiceSocket.sendMessage({
       content: content,
       roomID: currentRoomID,
-      images: files,
+      images: urls,
     });
 
     setContent("");
@@ -44,10 +47,10 @@ function ChatMessageFooter() {
   return (
     <div className="chat-message-footer">
       <form onSubmit={handleSubmit} style={{ position: "relative" }}>
-        <PreviewImage 
-        files={files} 
-        setFiles={setFiles}
-        inputRef={fileInputRef}
+        <PreviewImage
+          files={files}
+          setFiles={setFiles}
+          inputRef={fileInputRef}
         />
 
         <input

@@ -3,7 +3,7 @@ import { getFileName, checkIsImage } from "../../utils/chat.utils";
 function FileAttachment({ linkFile }) {
   return (
     <>
-      {linkFile.images.map((image, imgIndex) => {
+      {linkFile.map((image, imgIndex) => {
         if (!image) return null;
         const isImage = checkIsImage(image);
 

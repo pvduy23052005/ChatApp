@@ -26,7 +26,7 @@ function ChatMessageGroup() {
       {chats &&
         chats.map((chat, index) => {
           const isSystem = isSystemMessage(chat.content);
-
+          
           if (isSystem) {
             return (
               <div className="system-message" key={chat._id || index}>

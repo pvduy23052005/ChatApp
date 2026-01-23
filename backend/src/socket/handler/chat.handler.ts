@@ -11,7 +11,8 @@ export const chatSocket = (io: Server, socket: Socket) => {
     const newChat = new Chat({
       user_id: myID,
       content: data.content,
-      room_id: roomID
+      room_id: roomID, 
+      images : data.images
     });
 
     await Promise.all([

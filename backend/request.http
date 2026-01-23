@@ -85,3 +85,12 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 // end api_room    
+
+
+###
+POST {{BASE_URL}}/upload/files 
+Content-Type: application/json
+
+{
+  "test" : "5"
+}
