@@ -4,11 +4,17 @@ import { MdInsertEmoticon } from "react-icons/md";
 import { CgAttachment } from "react-icons/cg";
 import { chatServiceSocket } from "../../socket/services/chatServiceSocket";
 import EmojiPickerAttachment from "../attachments/EmojiPickerAttachment";
+import { useSearchParams } from "react-router-dom";
+import PreviewImage from "../attachments/PreviewImageAttachment";
 
 function ChatMessageFooter() {
   const [content, setContent] = useState("");
   const inputRef = useRef();
   const [showEmoji, setShowEmoji] = useState(false);
+  const [searchParams] = useSearchParams();
+  const currentRoomID = searchParams.get("roomId");
+  const [files, setFiles] = useState([]);
+  const fileInputRef = useRef();
 
   const handleEmojiClick = (emojiData) => {
     setContent((prev) => prev + emojiData.emoji);
@@ -16,21 +22,34 @@ function ChatMessageFooter() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!content) {
+    if (!content && files.length === 0) {
       inputRef.current.focus();
       return;
     }
-    // send message
     chatServiceSocket.sendMessage({
       content: content,
+      roomID: currentRoomID,
+      images: files,
     });
+
     setContent("");
+    setFiles([]);
     setShowEmoji(false);
+  };
+
+  const handleAttachmentClick = () => {
+    fileInputRef.current.click();
   };
 
   return (
     <div className="chat-message-footer">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ position: "relative" }}>
+        <PreviewImage 
+        files={files} 
+        setFiles={setFiles}
+        inputRef={fileInputRef}
+        />
+
         <input
           type="text"
           placeholder="Nhập nội dung"
@@ -45,6 +64,22 @@ function ChatMessageFooter() {
           setShowEmoji={setShowEmoji}
           handleEmojiClick={handleEmojiClick}
         />
+
+        {/* Nút kẹp ghim kích hoạt input file */}
+        <label
+          className="btn button-footer"
+          type="button" // Để type button để tránh submit form nhầm
+          htmlFor="preview-image"
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={handleAttachmentClick}
+        >
+          <CgAttachment />
+        </label>
 
         <button
           className="btn button-footer"

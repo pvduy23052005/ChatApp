@@ -1,0 +1,52 @@
+/* Container chính cho danh sách ảnh */
+.preview-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto; 
+  max-width: 100%;
+  position: absolute;
+  bottom: 100%; 
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  padding: 10px 0; 
+  
+}
+
+.preview-item {
+  width: 80px;
+  height: 80px;
+  min-width: 80px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+  position: relative;
+  background-color: #f9f9f9;
+}
+
+.btn-remove-file {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 12px;
+  z-index: 20;
+  transition: background 0.2s;
+}
+
+.btn-remove-file:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.preview-content-wrapper {
+  width: 100%;
+  height: 100%;
+}

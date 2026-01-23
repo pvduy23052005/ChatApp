@@ -3,12 +3,15 @@ import { useEffect, useRef } from "react";
 import { useChatSocket } from "../../hook/socket/useChatSocket";
 import { formatTime, isSystemMessage } from "../../utils/chat.utils";
 import FileAttachment from "../attachments/FileAttachment";
+import { useSearchParams } from "react-router-dom";
 
 function ChatMessageGroup() {
   const { user } = useAuth();
   const myID = user?._id || user?.id;
   const scrollTopRef = useRef();
-  const { chats } = useChatSocket();
+  const [searchParams] = useSearchParams();
+
+  const { chats } = useChatSocket(searchParams.get("roomId"));
 
   const lastMessageIndex = chats
     .map((item) => item.user_id?._id?.toString() || "")

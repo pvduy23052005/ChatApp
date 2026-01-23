@@ -33,7 +33,7 @@ Content-Type : application/json
 Authorization: Bearer {{token}}
 
 ###
-GET  {{BASE_URL}}/chat/room/6970e3eb9f810f7b919c7063 
+GET  {{BASE_URL}}/chat/room/6971fc1fb8c530cd5f358c40 
 Content-Type : application/json
 Authorization: Bearer {{token}}
 

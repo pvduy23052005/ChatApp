@@ -5,4 +5,8 @@ export const chatServiceAPI = {
     const res = await API.get("/chat/rooms");
     return res;
   },
+  getChats: async (roomID) => {
+    const res = await API.get(`/chat/room/${roomID}`);
+    return res;
+  },
 };
