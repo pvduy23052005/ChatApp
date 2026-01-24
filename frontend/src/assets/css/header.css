@@ -8,7 +8,9 @@ header {
   position: sticky; /* Giúp header dính lên trên cùng khi scroll */
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(10px); /* Hiệu ứng kính mờ nếu background có độ trong suốt */
+  backdrop-filter: blur(
+    10px
+  ); /* Hiệu ứng kính mờ nếu background có độ trong suốt */
 }
 
 /* --- Menu Links --- */
@@ -94,7 +96,7 @@ header .inner-info img {
   object-fit: cover; /* Dùng cover để ảnh không bị méo */
   border-radius: 50%;
   border: 2px solid #fff; /* Viền trắng quanh avatar */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
 }
 
@@ -127,10 +129,9 @@ header .btn-create-room {
 header .btn-create-room:hover {
   transform: translateY(-2px); /* Nút bay lên nhẹ */
   color: var(--color-button);
-  background-color:#fff;
+  background-color: #fff;
 }
 
-/* Icon cho mobile */
 header .btn-icon {
   font-size: 20px;
   display: none; /* Chỉ hiện khi màn hình nhỏ, xử lý bằng media query */
@@ -141,3 +142,32 @@ header .btn-icon {
   padding: 0;
   border-radius: 50%;
 }
+
+.chat-header {
+  height: 60px; /* Chiều cao cố định */
+  display: flex;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  padding: 0 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0; /* Không bị co lại */
+  background-color: red;
+}
+
+/* Ảnh Avatar */
+.chat-header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover; /* Chống méo ảnh */
+  margin-right: 12px; /* Khoảng cách với tên */
+  border: 1px solid #eee;
+}
+
+/* Tên người dùng */
+.chat-header-name {
+  font-size: 16px;
+  font-weight: 600; /* In đậm vừa phải */
+  color: #333;
+}
+/* end  css chat header */

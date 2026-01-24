@@ -1,11 +1,9 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../hook/auth/useAuth";
-import { useEffect, useState } from "react";
-import { chatServiceAPI } from "../../services/chatServiceAPI";
+import { NavLink } from "react-router-dom";
 
-function ChatSider() {
+function ChatSider({ rooms }) {
   const { user } = useAuth();
-  const [rooms, setRooms] = useState([]);
   const [searchParams] = useSearchParams();
   const currentRoomID = searchParams.get("roomId");
 
@@ -14,19 +12,14 @@ function ChatSider() {
     return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   };
 
-  useEffect(() => {
-    const handleGetRooms = async () => {
-      try {
-        const res = await chatServiceAPI.getRooms();
-        setRooms(res.rooms);
-      } catch (error) {
-        console.log(error.response.data.message);
-      }
-    };
-    handleGetRooms();
-  }, []);
   return (
     <div className="chat-sider">
+      <div className="chat-header">
+        <div className="nav-header">
+          <NavLink to={"/chat"}>Tin nhắn</NavLink>
+          <NavLink to={"/chat/not-friend"}>Tin nhắn chờ</NavLink>
+        </div>
+      </div>
       {rooms &&
         rooms.map((room) => {
           const myId = user?._id || user?.id;

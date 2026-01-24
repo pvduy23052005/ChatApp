@@ -1,27 +1,26 @@
 import ChatMessageFooter from "./ChatMessageFooter";
 import ChatMessageGroup from "./ChatMessageGroup";
-import { useSearchParams } from "react-router-dom";
 import { useChatSocket } from "../../hook/socket/useChatSocket";
 import EmptyChatState from "../common/EmptyChat";
+import ChatHeader from "./ChatHeader";
 
-function ChatMain() {
-  const [searchParams] = useSearchParams();
-  const roomID = searchParams.get("roomId");
-  const { chats } = useChatSocket(roomID);
-
+function ChatMain({ currentRoomID, currentRoomInfo }) {
+  const { chats } = useChatSocket(currentRoomID);
+  console.log(currentRoomInfo);
   return (
-    <>
-      <div className="chat-main-body">
-        {roomID ? (
-          <>
-            <ChatMessageGroup chats={chats} />
-            <ChatMessageFooter />
-          </>
-        ) : (
-          <EmptyChatState />
-        )}
-      </div>
-    </>
+    <div className="chat-main-body">
+      {currentRoomID ? (
+        <>
+          <ChatHeader currentRoomInfo={currentRoomInfo} />
+
+          <ChatMessageGroup chats={chats} />
+
+          <ChatMessageFooter />
+        </>
+      ) : (
+        <EmptyChatState />
+      )}
+    </div>
   );
 }
 
