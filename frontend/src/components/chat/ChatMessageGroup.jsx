@@ -2,10 +2,12 @@ import { useAuth } from "../../hook/auth/useAuth";
 import { useEffect, useRef } from "react";
 import { formatTime, isSystemMessage } from "../../utils/chat.utils";
 import FileAttachment from "../attachments/FileAttachment";
+import TypingChat from "../common/TypingChat";
 
-function ChatMessageGroup({chats}) {
+function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
   const { user } = useAuth();
   const myID = user?._id || user?.id;
+
   const scrollTopRef = useRef();
 
   const lastMessageIndex = chats
@@ -14,7 +16,7 @@ function ChatMessageGroup({chats}) {
 
   useEffect(() => {
     scrollTopRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chats]);
+  }, [chats, isShowTyping]);
 
   return (
     <div className="chat-message-body">
@@ -78,7 +80,7 @@ function ChatMessageGroup({chats}) {
             </div>
           );
         })}
-
+      {isShowTyping && <TypingChat user={typingUser} />}
       <div ref={scrollTopRef}></div>
     </div>
   );

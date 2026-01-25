@@ -11,8 +11,8 @@ export const chatSocket = (io: Server, socket: Socket) => {
     const newChat = new Chat({
       user_id: myID,
       content: data.content,
-      room_id: roomID, 
-      images : data.images
+      room_id: roomID,
+      images: data.images
     });
 
     await Promise.all([
@@ -28,5 +28,10 @@ export const chatSocket = (io: Server, socket: Socket) => {
 
     io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
   })
+
+  socket.on("CLIENT_SEND_TYPING", (data) => {
+    socket.join(data.roomID);
+    socket.broadcast.to(data.roomID).emit("SERVER_RETURN_TYPING", data);
+  });
 }
 

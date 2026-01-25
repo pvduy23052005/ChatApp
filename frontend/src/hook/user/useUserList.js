@@ -29,7 +29,7 @@ export const useUserList = () => {
     return () => {
       socket.off("SERVER_SEND_ROOM_ID", handleReturnRoomID);
     };
-  }, [navigate, socket]);
+  }, [navigate]);
 
   return {
     users,

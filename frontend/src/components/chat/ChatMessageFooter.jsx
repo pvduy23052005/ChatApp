@@ -7,6 +7,7 @@ import EmojiPickerAttachment from "../attachments/EmojiPickerAttachment";
 import { useSearchParams } from "react-router-dom";
 import PreviewImage from "../attachments/PreviewImageAttachment";
 import { uploadFile } from "../../utils/uploadFile.utils";
+import { useAuth } from "../../hook/auth/useAuth";
 
 function ChatMessageFooter() {
   const [content, setContent] = useState("");
@@ -16,6 +17,7 @@ function ChatMessageFooter() {
   const currentRoomID = searchParams.get("roomId");
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef();
+  const { user } = useAuth();
 
   const handleEmojiClick = (emojiData) => {
     setContent((prev) => prev + emojiData.emoji);
@@ -40,6 +42,18 @@ function ChatMessageFooter() {
     setShowEmoji(false);
   };
 
+  const handleInputChange = (e) => {
+    setContent(e.target.value);
+
+    chatServiceSocket.sendTyping({
+      roomID: currentRoomID,
+      isShow: true,
+      user_id: user?.id.toString(),
+      avatar: user?.avatar,
+      fullName: user?.fullName,
+    });
+  };
+
   const handleAttachmentClick = () => {
     fileInputRef.current.click();
   };
@@ -57,7 +71,7 @@ function ChatMessageFooter() {
           type="text"
           placeholder="Nhập nội dung"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={handleInputChange}
           ref={inputRef}
         />
 
