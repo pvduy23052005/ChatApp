@@ -5,11 +5,26 @@ import User from "../models/user.model";
 import Room from "../models/room.model";
 import mongoose from "mongoose";
 
-// [get] /chat/rooms.
+// [get] /chat/rooms?status = accepted 
 export const getListRoom = async (req: Request, res: Response) => {
   try {
+    const stastusRoom: string = req.query.status?.toString() || "";
+    let rooms: any = [];
 
-    const rooms = await getRoom(res, "accepted");
+    if (!stastusRoom) {
+      return res.status(400).json({
+        success: false,
+        message: "Chưa chuyền quer query status"
+      });
+    }
+
+    if (stastusRoom === "accepted") {
+      rooms = await getRoom(res, stastusRoom);
+    }
+    else {
+      rooms = await getRoom(res, stastusRoom);
+    }
+
 
     res.status(200).json({
       success: true,

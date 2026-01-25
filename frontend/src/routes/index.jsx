@@ -27,7 +27,8 @@ function AllRoute() {
       ),
       children: [
         { index: true, path: "chat", element: <Chat /> },
-        { index: true, path: "user", element: <UserList /> }
+        { path: "user", element: <UserList /> },
+        { path : "chat/not-friend" , element: <Chat/>}
       ],
     },
     // 404 

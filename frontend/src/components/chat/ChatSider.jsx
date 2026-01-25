@@ -16,7 +16,7 @@ function ChatSider({ rooms }) {
     <div className="chat-sider">
       <div className="chat-header">
         <div className="nav-header">
-          <NavLink to={"/chat"}>Tin nhắn</NavLink>
+          <NavLink to={"/chat"} end>Tin nhắn</NavLink>
           <NavLink to={"/chat/not-friend"}>Tin nhắn chờ</NavLink>
         </div>
       </div>
@@ -35,7 +35,7 @@ function ChatSider({ rooms }) {
 
           return (
             <Link
-              to={`/chat?roomId=${room._id}`}
+              to={`${location.pathname}?roomId=${room._id}`}
               key={room._id}
               className={`box-friend ${isActive ? "active" : ""}`}
               data-user-id={room.otherUserId}

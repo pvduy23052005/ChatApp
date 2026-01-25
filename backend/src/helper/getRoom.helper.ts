@@ -25,6 +25,7 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
       "members": {
         $elemMatch: {
           user_id: myID,
+          status: status
         }
       },
       deleted: false

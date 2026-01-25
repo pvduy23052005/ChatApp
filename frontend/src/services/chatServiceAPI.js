@@ -1,8 +1,12 @@
 import { API } from "./api";
 
 export const chatServiceAPI = {
-  getRooms: async () => {
-    const res = await API.get("/chat/rooms");
+  getRoomAcceptes: async () => {
+    const res = await API.get("/chat/rooms?status=accepted");
+    return res;
+  },
+  getRoomWaitings: async () => {
+    const res = await API.get("/chat/rooms?status=waiting");
     return res;
   },
   getChats: async (roomID) => {

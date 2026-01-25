@@ -6,7 +6,6 @@ import ChatHeader from "./ChatHeader";
 
 function ChatMain({ currentRoomID, currentRoomInfo }) {
   const { chats } = useChatSocket(currentRoomID);
-  console.log(currentRoomInfo);
   return (
     <div className="chat-main-body">
       {currentRoomID ? (
