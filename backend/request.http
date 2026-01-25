@@ -1,6 +1,6 @@
 
 @BASE_URL = http://localhost:5000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3NjkyMjU0MDUsImV4cCI6MTc2OTMxMTgwNX0.KPqTyN4e9THTcS4Rwk6_kVQiOEOqPLu3cQ1WFkwD8bY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3NjkzNDYzMzMsImV4cCI6MTc2OTQzMjczM30.Hzo-8yEpDxCaNL4qY7GZtgorBLoJxqeqMp4316moQnQ
 
 ###
 POST {{BASE_URL}}/auth/login 
@@ -58,7 +58,7 @@ Authorization: Bearer {{token}}
 }
 
 ### 
-GET {{BASE_URL}}/room/detail/6970e3eb9f810f7b919c7063
+GET {{BASE_URL}}/room/detail/6971fc1fb8c530cd5f358c40
 Authorization: Bearer {{token}}
 
 ###

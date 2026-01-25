@@ -6,6 +6,7 @@ import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import UserList from "../pages/user";
 import NotFound from "../components/common/NotFound";
+import Detail from "../pages/Room/Detail";
 
 function AllRoute() {
   const elements = useRoutes([
@@ -28,11 +29,20 @@ function AllRoute() {
       children: [
         { index: true, path: "chat", element: <Chat /> },
         { path: "user", element: <UserList /> },
-        { path : "chat/not-friend" , element: <Chat/>}
+        { path: "chat/not-friend", element: <Chat /> },
+        {
+          path: "room",
+          children: [
+            {
+              path: "detail/:id",
+              element: <Detail />,
+            },
+          ],
+        },
       ],
     },
-    // 404 
-    { path : "*", element : <NotFound/>}
+    // 404
+    { path: "*", element: <NotFound /> },
   ]);
   return elements;
 }

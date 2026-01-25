@@ -29,7 +29,7 @@ function ChatHeader({ currentRoomInfo }) {
 
   return (
     <>
-      <Link to={`room/detail/${currentRoomInfo._id}`}>
+      <Link to={`/room/detail/${currentRoomInfo._id}`}>
         <div className="chat-header">
           <style>{`
         .chat-header {
