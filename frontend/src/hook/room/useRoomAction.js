@@ -8,7 +8,6 @@ export const useRoomAction = () => {
 
   const deleteRoom = useCallback(
     async (roomID, roomTitle = "nhóm này") => {
-      // 1. Hiển thị Confirm ngay tại đây
       const isConfirm = window.confirm(
         `Bạn có chắc chắn muốn xóa ${roomTitle}? Hành động này không thể hoàn tác.`,
       );
@@ -26,7 +25,19 @@ export const useRoomAction = () => {
     [navigate],
   );
 
+  const removeMember = useCallback(async (roomID, memberID, fullName) => {
+    try {
+      const res = await roomServiceAPI.removeMember(roomID, memberID);
+      if (res.success) {
+        toast.success(`Đã xóa ${fullName} khỏi nhóm`);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
+  }, []);
+
   return {
     deleteRoom,
+    removeMember,
   };
 };

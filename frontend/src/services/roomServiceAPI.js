@@ -15,4 +15,10 @@ export const roomServiceAPI = {
 
     return res;
   },
+  removeMember: async (roomID, memberID) => {
+    const res = await API.post(`/room/remove-member/${roomID}`, {
+      removeMemberID: memberID,
+    });
+    return res;
+  },
 };

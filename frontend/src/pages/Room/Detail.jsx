@@ -13,7 +13,7 @@ function Detail() {
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
-  const { deleteRoom } = useRoomAction();
+  const { deleteRoom, removeMember } = useRoomAction();
 
   // --- 1. LẤY DỮ LIỆU ---
   useEffect(() => {
@@ -37,6 +37,19 @@ function Detail() {
     return (
       <div className="text-center mt-4 text-danger">Không tìm thấy phòng</div>
     );
+
+  const onRemoveMember = (memberID, fullName) => {
+    const isConfirm = window.confirm(`Bạn có chắc chắn muốn xóa ${fullName}? `);
+    if (!isConfirm) return;
+
+    setRoom((prev) => ({
+      ...prev,
+      members: prev.members.filter(
+        (m) => (m.user_id._id || m.user_id) !== memberID,
+      ),
+    }));
+    removeMember(id, memberID, fullName);
+  };
 
   // --- 2. LOGIC QUYỀN HẠN ---
   const myID = user?._id || user?.id;
@@ -168,7 +181,12 @@ function Detail() {
                     {isSuperAdmin && !isMe && (
                       <button
                         className="btn btn-sm btn-light text-danger"
-                        title="Mời ra khỏi nhóm"
+                        onClick={() => {
+                          onRemoveMember(
+                            member.user_id._id,
+                            member.user_id.fullName,
+                          );
+                        }}
                       >
                         <FaDeleteLeft />
                       </button>
