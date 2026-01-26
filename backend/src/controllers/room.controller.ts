@@ -87,14 +87,13 @@ export const roomDetail = async (req: Request, res: Response) => {
   try {
     const roomID = req.params.id?.toString();
     const myID: string = res.locals.user.id.toString() || "";
+    const user = res.locals.user;
 
-    const [user, detailRoom] = await Promise.all([
-      User.findOne({ _id: myID, deleted: false }).select("friendList"),
-      Room.findOne({ _id: roomID }).populate({
-        path: "members.user_id",
-        select: "fullName avatar"
-      })
-    ]);
+    const detailRoom = await Room.findOne({ _id: roomID }).populate({
+      path: "members.user_id",
+      select: "fullName avatar"
+    }).select("-lastMessageId").lean()
+
 
     if (!detailRoom) {
       return res.status(400).json({
@@ -113,7 +112,7 @@ export const roomDetail = async (req: Request, res: Response) => {
     const memberIDs = detailRoom.members.map(
       (member: any) => member.user_id._id.toString());
     const friendIDs = user?.friendList.map(
-      (id: any) => id.toString()
+      (user: any) => user.user_id.toString()
     );
 
     const friends = await User.find({

@@ -9,4 +9,8 @@ export const authServiceAPI = {
     const res = await API.post("/auth/logout");
     return res;
   },
+  register: async (data) => {
+    const res = await API.post("/auth/register", data);
+    return res;
+  },
 };

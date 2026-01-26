@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/auth.css";
+import { authServiceAPI } from "../../services/authServiceAPI";
 
 function Register() {
   const navigate = useNavigate();
@@ -44,9 +45,11 @@ function Register() {
     }
 
     try {
-      console.log("Đăng ký với:", formData);
+      const res = await authServiceAPI.register(formData);
+      navigate("/auth/login");
+      console.log("Đăng ký với:", res.dataUser);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
       setError("Đăng ký thất bại. Vui lòng thử lại!");
     }
   };
