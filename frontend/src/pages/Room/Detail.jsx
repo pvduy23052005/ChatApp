@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { roomServiceAPI } from "../../services/roomServiceAPI";
 import { useAuth } from "../../hook/auth/useAuth";
+import { FaRegSave } from "react-icons/fa";
+import { RiDeleteBin2Line } from "react-icons/ri";
+import { FaDeleteLeft } from "react-icons/fa6";
+import { useRoomAction } from "../../hook/room/useRoomAction";
 
 function Detail() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
+  const { deleteRoom } = useRoomAction();
 
   // --- 1. LẤY DỮ LIỆU ---
   useEffect(() => {
@@ -28,6 +32,7 @@ function Detail() {
   }, [id]);
 
   if (loading) return <div className="text-center mt-4">Đang tải...</div>;
+
   if (!room)
     return (
       <div className="text-center mt-4 text-danger">Không tìm thấy phòng</div>
@@ -39,7 +44,6 @@ function Detail() {
     (m) => m.user_id._id === myID && m.role === "superAdmin",
   );
   const isGroup = room.typeRoom === "group";
-
 
   return (
     <div className="container my-4">
@@ -81,14 +85,15 @@ function Detail() {
                       className="btn btn-sm btn-outline-primary"
                       title="Lưu tên"
                     >
-                      <i className="fas fa-save"></i>
+                      <FaRegSave />
                     </button>
                     <button
                       className="btn btn-sm btn-outline-danger"
-                      onClick={handleDeleteRoom}
-                      title="Xóa nhóm"
+                      onClick={() => {
+                        deleteRoom(id);
+                      }}
                     >
-                      <i className="fas fa-trash"></i>
+                      <RiDeleteBin2Line />
                     </button>
                   </div>
                 )}
@@ -103,10 +108,7 @@ function Detail() {
                 Danh sách thành viên
               </h6>
               {isGroup && !isSuperAdmin && (
-                <button
-                  className="btn btn-sm btn-outline-danger"
-                  onClick={handleLeaveRoom}
-                >
+                <button className="btn btn-sm btn-outline-danger">
                   <i className="fa-solid fa-right-from-bracket me-1"></i> Rời
                   nhóm
                 </button>
@@ -168,7 +170,7 @@ function Detail() {
                         className="btn btn-sm btn-light text-danger"
                         title="Mời ra khỏi nhóm"
                       >
-                        <i className="fas fa-times"></i>
+                        <FaDeleteLeft />
                       </button>
                     )}
                   </div>

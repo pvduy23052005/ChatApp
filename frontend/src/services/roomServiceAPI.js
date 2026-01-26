@@ -10,4 +10,9 @@ export const roomServiceAPI = {
 
     return res;
   },
+  delete: async (roomID) => {
+    const res = await API.post(`/room/delete/${roomID}`);
+
+    return res;
+  },
 };

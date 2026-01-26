@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { userServiceAPI } from "../../services/userServiceAPI";
 import { roomServiceAPI } from "../../services/roomServiceAPI";
 import "../../assets/css/room/create.css";
+import {toast} from "react-toastify"
 
 function Create() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ function Create() {
     e.preventDefault();
 
     if (!titleRoom.trim()) {
-      alert("Vui lòng nhập tên phòng!");
+      toast.success("Vui long nhap tieu de ")
       return;
     }
     if (selectedMembers.length === 0) {
@@ -55,7 +56,7 @@ function Create() {
 
       const res = await roomServiceAPI.create(dataPayload);
       if (res.success) {
-        alert("Tạo phòng thành công!");
+        toast.success("Tạo phòng thành công!")
         navigate("/chat");
       }
     } catch (error) {
