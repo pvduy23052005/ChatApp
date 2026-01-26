@@ -22,7 +22,7 @@ const authMiddleware = async (
     const user = await User.findOne({
       _id: decoded.userId,
       deleted: false,
-    }).select("fullName");
+    }).select("fullName friendAccepts");
 
     if (!user) {
       return res.status(4001).json({

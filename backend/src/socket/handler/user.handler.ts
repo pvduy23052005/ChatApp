@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import Room from "../../models/room.model";
+import User from "../../models/user.model";
 
 export const userSocket = (io: Server, socket: Socket) => {
   const myID = socket.data.user.userId;
@@ -38,4 +39,34 @@ export const userSocket = (io: Server, socket: Socket) => {
   });
   // end chatNotFriend
 
+  // friend request . 
+  socket.on("CIENT_FRIEND_REQUEST", async (data) => {
+    try {
+      await Promise.all([
+        // add userB to firnedRequest of userA 
+        User.updateOne({ _id: myID }, { $addToSet: { friendRequests: data.userID } }),
+        //  add userA to friendAccepts of userB . 
+        User.updateOne({ _id: data.userID }, { $addToSet: { friendAccepts: myID } })
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  // end friend request 
+
+
+  // friend cancel 
+  socket.on("CLIENT_FRIEND_CANCEL", async (data) => {
+    try {
+      await Promise.all([
+        // delete userB to firnedRequest of userA 
+        User.updateOne({ _id: myID }, { $pull: { friendRequests: data.userID } }),
+        //  delete userA to friendAccepts of userB . 
+        User.updateOne({ _id: data.userID }, { $pull: { friendAccepts: myID } })
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  // end friend cancel 
 }

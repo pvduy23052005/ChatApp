@@ -8,7 +8,17 @@ export const useUserAction = () => {
     });
   }, []);
 
+  const handleFriendRequest = useCallback((userID) => {
+    userServiceSocket.friendRequest(userID);
+  }, []);
+
+  const handleFriendCancel = useCallback((userID) => {
+    userServiceSocket.cancelRequest(userID);
+  }, []);
+
   return {
     handleChatNotFriend,
+    handleFriendRequest,
+    handleFriendCancel,
   };
 };

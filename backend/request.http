@@ -41,6 +41,9 @@ Authorization: Bearer {{token}}
 ###
 GET  {{BASE_URL}}/users 
 
+###
+GET {{BASE_URL}}/users/friend-accepts
+
 // end api_user. 
 
 // api_room  

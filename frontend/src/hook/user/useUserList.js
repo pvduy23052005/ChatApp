@@ -33,5 +33,6 @@ export const useUserList = () => {
 
   return {
     users,
+    setUsers,
   };
 };

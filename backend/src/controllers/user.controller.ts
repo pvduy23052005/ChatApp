@@ -28,3 +28,31 @@ export const getUsers = async (req: Request, res: Response) => {
     });
   }
 }
+
+
+// [get] /user/friend-accepts . 
+export const friendAccepts = async (req: Request, res: Response) => {
+  try {
+    const myID: string = res.locals.user.id.toString();
+    const listIdFriendAccepts: string[] = res.locals.user.friendAccepts;
+
+    const users: any = await User.find({
+      $and: [
+        { _id: { $ne: myID } },
+        { _id: { $in: listIdFriendAccepts } }],
+      deleted: false
+    }).select("fullName avatar");
+
+    res.status(200).json({
+      success: true,
+      friendAccepts: users
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống, vui lòng thử lại sau"
+    });
+  }
+
+}
