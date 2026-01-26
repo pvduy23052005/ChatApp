@@ -5,6 +5,12 @@ export const roomServiceAPI = {
     const res = await API.get(`/room/detail/${roomID}`);
     return res;
   },
+  edit : async (roomID , title) => {
+    const res = await API.patch(`/room/edit/${roomID}` , {
+      title: title
+    });
+    return res ; 
+  },
   create: async (data) => {
     const res = await API.post("/room/create", data);
 

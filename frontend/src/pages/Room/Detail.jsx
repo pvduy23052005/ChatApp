@@ -1,47 +1,23 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { roomServiceAPI } from "../../services/roomServiceAPI";
 import { useAuth } from "../../hook/auth/useAuth";
-import { FaRegSave } from "react-icons/fa";
-import { RiDeleteBin2Line } from "react-icons/ri";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { useRoomAction } from "../../hook/room/useRoomAction";
+import { useRoomDetail } from "../../hook/room/useRoomDetail";
+import RoomHeader from "../../components/room/RoomHeader";
 
 function Detail() {
   const { id } = useParams();
   const { user } = useAuth();
-  const [room, setRoom] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [title, setTitle] = useState("");
   const { deleteRoom, removeMember } = useRoomAction();
+  const { room, setRoom, loading, error } = useRoomDetail(id);
 
-  // --- 1. LẤY DỮ LIỆU ---
-  useEffect(() => {
-    const fetchRoom = async () => {
-      try {
-        const res = await roomServiceAPI.getDetail(id);
-        setRoom(res.room);
-        setTitle(res.room.title);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (id) fetchRoom();
-  }, [id]);
-
-  if (loading) return <div className="text-center mt-4">Đang tải...</div>;
-
-  if (!room)
-    return (
-      <div className="text-center mt-4 text-danger">Không tìm thấy phòng</div>
-    );
+  if (loading) return <div>Đang tải...</div>;
+  if (error) return <div>Lỗi: {error}</div>;
+  if (!room) return <div>Không tìm thấy phòng</div>;
 
   const onRemoveMember = (memberID, fullName) => {
     const isConfirm = window.confirm(`Bạn có chắc chắn muốn xóa ${fullName}? `);
     if (!isConfirm) return;
-
     setRoom((prev) => ({
       ...prev,
       members: prev.members.filter(
@@ -51,9 +27,8 @@ function Detail() {
     removeMember(id, memberID, fullName);
   };
 
-  // --- 2. LOGIC QUYỀN HẠN ---
   const myID = user?._id || user?.id;
-  const isSuperAdmin = room.members.some(
+  const isSuperAdmin = room?.members?.some(
     (m) => m.user_id._id === myID && m.role === "superAdmin",
   );
   const isGroup = room.typeRoom === "group";
@@ -63,56 +38,11 @@ function Detail() {
       <div className="row justify-content-center">
         <div className="col-12 col-lg-8">
           {/* HEADER */}
-          <div className="card mb-4 shadow-sm">
-            <div className="card-body">
-              <div className="d-flex align-items-center gap-3">
-                {/* Avatar */}
-                <img
-                  src={room.avatar || "/images/default-avatar.webp"}
-                  alt="Avatar"
-                  className="rounded-circle"
-                  style={{ width: "60px", height: "60px", objectFit: "cover" }}
-                />
-
-                {/* Form sửa tên */}
-                <div className="flex-grow-1">
-                  <form>
-                    <input
-                      className="form-control fw-bold"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      readOnly={!isSuperAdmin && !isGroup} // Chỉ cho sửa nếu là Admin hoặc Group
-                      placeholder="Tên cuộc trò chuyện"
-                    />
-                    <small className="text-muted mt-1 d-block">
-                      <i className="fas fa-users me-1"></i>{" "}
-                      {room.members.length} thành viên
-                    </small>
-                  </form>
-                </div>
-
-                {/* Nút thao tác Admin */}
-                {isSuperAdmin && (
-                  <div className="d-flex gap-2">
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      title="Lưu tên"
-                    >
-                      <FaRegSave />
-                    </button>
-                    <button
-                      className="btn btn-sm btn-outline-danger"
-                      onClick={() => {
-                        deleteRoom(id);
-                      }}
-                    >
-                      <RiDeleteBin2Line />
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <RoomHeader
+            room={room}
+            isSuperAdmin={isSuperAdmin}
+            deleteRoomFunc={deleteRoom}
+          />
 
           {/* --- PHẦN 2: DANH SÁCH THÀNH VIÊN --- */}
           <div className="card shadow-sm">

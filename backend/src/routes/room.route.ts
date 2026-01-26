@@ -10,6 +10,11 @@ router.post("/delete/:id",
   controller.deleteRoomPost
 )
 
+router.patch("/edit/:id",
+  roomValidate,
+  controller.editRoomPost
+)
+
 router.get("/detail/:id", controller.roomDetail);
 
 router.post("/add-member/:id",

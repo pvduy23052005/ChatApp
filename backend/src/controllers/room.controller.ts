@@ -137,6 +137,44 @@ export const roomDetail = async (req: Request, res: Response) => {
   }
 }
 
+// [patch] /room/edit/:id.
+export const editRoomPost = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const { title } = req.body;
+
+    if (!title || title.trim() === "") {
+      return res.status(400).json({
+        success: false,
+        message: "Tên phòng không được để trống!",
+      });
+    }
+
+    await Room.updateOne(
+      { _id: id },
+      {
+        $set: {
+          title: title.trim(),
+        }
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Cập nhật thông tin phòng thành công!",
+      data: {
+        _id: id,
+        title: title.trim()
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống"
+    });
+  }
+}
+
 // [post] /room/add-member/:id 
 export const addMember = async (req: Request, res: Response) => {
   try {
@@ -203,7 +241,6 @@ export const removeMember = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
     const { removeMemberID } = req.body;
-    console.log(removeMemberID)
     const myID: string = res.locals.user.id.toString();
 
     if (removeMemberID === myID) {
