@@ -14,8 +14,7 @@ function Header() {
   const handleLogout = async (e) => {
     try {
       e.preventDefault();
-      const res = await authServiceAPI.logout();
-      console.log(res);
+      await authServiceAPI.logout(user.id);
       logout();
       navigate("/auth/login");
     } catch (error) {

@@ -36,7 +36,6 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 }
 
-
 // [get] /user/friend-accepts . 
 export const friendAccepts = async (req: Request, res: Response) => {
   try {
@@ -62,4 +61,27 @@ export const friendAccepts = async (req: Request, res: Response) => {
     });
   }
 
+}
+
+// [get] /user/friends
+export const getFriends = async (req: Request, res: Response) => {
+  try {
+    const listFriend = res.locals.user.friendList;
+    const friendIDs: string[] = listFriend.map((item: any) => item.user_id);
+
+    const friends = await User.find({
+      _id: { $in: friendIDs }
+    }).select("fullName avatar");
+
+    res.status(200).json({
+      success: true,
+      friends: friends
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi hệ thống, vui lòng thử lại sau"
+    });
+  }
 }

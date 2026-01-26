@@ -8,6 +8,7 @@ import UserList from "../pages/user";
 import NotFound from "../components/common/NotFound";
 import Detail from "../pages/Room/Detail";
 import AcceptFriend from "../pages/User/AcceptFriend";
+import Create from "../pages/Room/Create";
 
 function AllRoute() {
   const elements = useRoutes([
@@ -40,10 +41,8 @@ function AllRoute() {
         {
           path: "room",
           children: [
-            {
-              path: "detail/:id",
-              element: <Detail />,
-            },
+            { path: "detail/:id", element: <Detail /> },
+            { path: "create", element: <Create /> },
           ],
         },
       ],

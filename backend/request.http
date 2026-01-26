@@ -44,6 +44,9 @@ GET  {{BASE_URL}}/users
 ###
 GET {{BASE_URL}}/users/friend-accepts
 
+###
+GET {{BASE_URL}}/users/friends
+
 // end api_user. 
 
 // api_room  

@@ -38,8 +38,6 @@ function ChatSider({ rooms }) {
               to={`${location.pathname}?roomId=${room._id}`}
               key={room._id}
               className={`box-friend ${isActive ? "active" : ""}`}
-              data-user-id={room.otherUserId}
-              data-room-id={room._id}
             >
               <img
                 src={room.avatar || "/images/default-avatar.webp"}
@@ -47,7 +45,7 @@ function ChatSider({ rooms }) {
               />
 
               <div className="inner-content">
-                <span className="name">{truncateText(room.title, 25)}</span>
+                <span className="name">{truncateText(room.title, 28)}</span>
 
                 <span className={`last-message ${isRead}`}>
                   {lastMsg.content ? (
@@ -60,7 +58,7 @@ function ChatSider({ rooms }) {
                 </span>
               </div>
 
-              <div className="inner-status" data-status={room.statusOnline}>
+              <div className="inner-status" status={room.statusOnline}>
                 <i className="fa-solid fa-circle"></i>
               </div>
             </Link>

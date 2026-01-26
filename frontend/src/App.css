@@ -116,7 +116,7 @@
   position: relative;
   padding: 10px;
   justify-content: center;
-  gap: 10px ; 
+  gap: 10px;
 }
 
 .chat-main .box-friend.active {
@@ -128,7 +128,6 @@
   top: 3px;
   left: 3px;
   font-size: 12px;
-  background-color: var(--color-bg-sidebar);
   opacity: 0;
   display: flex;
   align-items: center;
@@ -137,7 +136,9 @@
 
 .chat-main .box-friend .inner-status[status="online"] {
   opacity: 1;
+  filter: drop-shadow(0 0 1px #00ff00); /* Tạo hiệu ứng phát sáng nhẹ */
   color: #00ff00;
+  background-color: #00ff00;
 }
 
 .chat-main .chat-sider .box-friend img {

@@ -125,7 +125,7 @@ function ChatHeader({ currentRoomInfo }) {
 
             <div className="header-currentRoomInfo">
               <h3 className="user-name">{name}</h3>
-              <p className="user-status">
+              <p className="user-status ">
                 {isOnline ? "Đang hoạt động" : "Truy cập gần đây"}
               </p>
             </div>

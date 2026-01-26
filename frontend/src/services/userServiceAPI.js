@@ -9,4 +9,8 @@ export const userServiceAPI = {
     const res = await API.get("/users/friend-accepts");
     return res;
   },
+  getFriends: async () => {
+    const res = await API.get("/users/friends");
+    return res;
+  },
 };

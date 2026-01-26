@@ -74,8 +74,13 @@ export const loginPost = async (req: Request, res: Response) => {
 // [post] auth/login . 
 export const logoutPost = async (req: Request, res: Response) => {
   try {
+    const { myID } = req.body;
     res.clearCookie("token");
-
+    await User.updateOne({
+      _id: myID,
+    }, {
+      statusOnline: "offline"
+    });
     res.status(200).json({
       success: true,
       message: "Đăng xuất thành công!"
@@ -124,8 +129,8 @@ export const register = async (req: Request, res: Response) => {
 
 
     res.status(201).json({
-      success: true , 
-      dataUser : newUser
+      success: true,
+      dataUser: newUser
     })
 
   } catch (error) {
