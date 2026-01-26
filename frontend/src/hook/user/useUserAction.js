@@ -16,9 +16,19 @@ export const useUserAction = () => {
     userServiceSocket.cancelRequest(userID);
   }, []);
 
+  const handleFriendRefuse = useCallback((userID) => {
+    userServiceSocket.refuseFriend(userID);
+  }, []);
+
+  const handleFriendAccept = useCallback((userID) => {
+    userServiceSocket.acceptFriend(userID);
+  }, []);
+
   return {
     handleChatNotFriend,
     handleFriendRequest,
     handleFriendCancel,
+    handleFriendRefuse,
+    handleFriendAccept,
   };
 };

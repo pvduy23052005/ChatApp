@@ -6,7 +6,7 @@ export const userServiceAPI = {
     return res;
   },
   getUserAccepts: async () => {
-    const res = await API.get("/users/friend-accept");
+    const res = await API.get("/users/friend-accepts");
     return res;
   },
 };

@@ -42,31 +42,18 @@ function Header() {
                 >
                   Đăng xuất
                 </button>
-                <NavLink to="/user" className="btn btn-menu">
+                <NavLink to="/user" className="btn btn-menu" end> 
                   Người dùng
                 </NavLink>
                 <NavLink to="/chat" className="btn btn-menu">
                   Tin nhắn
                 </NavLink>
-                <NavLink to="/user/friend-accepts" className="btn btn-menu">
+                <NavLink to="/user/accept-friends" className="btn btn-menu">
                   Lời mời
                 </NavLink>
               </div>
             </div>
-
-            {/* --- Cột 2: Search --- */}
-            <div className="col-3 col-md-4 col-sm-5">
-              <div className="inner-search">
-                <form id="form-search">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Tìm kiếm"
-                  />
-                </form>
-              </div>
-            </div>
-
+            
             {/* --- Cột 3: Nút tạo phòng --- */}
             <div className="col-1 col-md-2 col-sm-1">
               <div className="inner-new-room">

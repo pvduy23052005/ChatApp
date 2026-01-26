@@ -7,6 +7,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import UserList from "../pages/user";
 import NotFound from "../components/common/NotFound";
 import Detail from "../pages/Room/Detail";
+import AcceptFriend from "../pages/User/AcceptFriend";
 
 function AllRoute() {
   const elements = useRoutes([
@@ -28,7 +29,13 @@ function AllRoute() {
       ),
       children: [
         { index: true, path: "chat", element: <Chat /> },
-        { path: "user", element: <UserList /> },
+        {
+          path: "user",
+          children: [
+            { index: true, element: <UserList /> },
+            { path: "accept-friends", element: <AcceptFriend /> },
+          ],
+        },
         { path: "chat/not-friend", element: <Chat /> },
         {
           path: "room",

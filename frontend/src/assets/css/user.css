@@ -153,6 +153,10 @@
   display: block;
 }
 
+.box-user.refuse .btn-accept-friend{
+  display: none;
+}
+
 .box-user .btn-accepted-friend {
   display: none;
 }
@@ -162,5 +166,9 @@
 }
 
 .box-user.accepted .btn-accept-friend {
+  display: none;
+}
+
+.box-user.accepted .btn-refuse-friend{
   display: none;
 }

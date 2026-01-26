@@ -6,13 +6,20 @@ export const getUsers = async (req: Request, res: Response) => {
   try {
 
     const myID = res.locals.user.id.toString();
+    const user = res.locals.user;
+    const friendIDs: string[] = user.friendList.map((item: any) => item.user_id);
+    const acceptIDs: string[] = user.friendAccepts.map((item: any) => item.toString());
+    const requestIDs: string[] = user.friendRequests.map((item: any) => item.toString());
 
     const listId = [
-      myID
-    ]
+      myID,
+      ...friendIDs,
+      ...acceptIDs,
+      ...requestIDs,
+    ];
 
     const users = await User.find({
-      _id: { $ne: listId },
+      _id: { $nin: listId },
       deleted: false
     }).select("fullName avatar");
 

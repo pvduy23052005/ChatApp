@@ -17,4 +17,18 @@ export const userServiceSocket = {
       userID: userID,
     });
   },
+
+  refuseFriend: (userID) => {
+    if (!socket.connected) return;
+    socket.emit("CLIENT_REFUSE_FRIEND", {
+      userID: userID,
+    });
+  },
+
+  acceptFriend: (userID) => {
+    if (!socket.connected) return;
+    socket.emit("CLIENT_ACCEPT_FRIEND", {
+      userID: userID,
+    });
+  },
 };

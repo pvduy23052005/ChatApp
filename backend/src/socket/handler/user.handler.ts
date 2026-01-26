@@ -54,7 +54,6 @@ export const userSocket = (io: Server, socket: Socket) => {
   });
   // end friend request 
 
-
   // friend cancel 
   socket.on("CLIENT_FRIEND_CANCEL", async (data) => {
     try {
@@ -69,4 +68,83 @@ export const userSocket = (io: Server, socket: Socket) => {
     }
   });
   // end friend cancel 
+
+
+  // refuse friend 
+  socket.on("CLIENT_REFUSE_FRIEND", async (data) => {
+    try {
+      await Promise.all([
+        User.updateOne({
+          _id: myID,
+        }, {
+          $pull: { friendAccepts: data.userID }
+        }),
+        User.updateOne({
+          _id: data.userID,
+        }, {
+          $pull: { friendRequests: myID, }
+        })
+      ])
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  // end refuse friend 
+
+  // accept friend . 
+  socket.on("CLIENT_ACCEPT_FRIEND", async (data) => {
+    const userID = data.userID; 
+
+    try {
+      let existRoom = await Room.findOne({
+        typeRoom: "single",
+        "members.user_id": { $all: [myID, userID] },
+      })
+        .select("_id") 
+        .lean();       
+      let roomChatId;
+
+      if (existRoom) {
+        roomChatId = existRoom._id;
+        Room.updateOne(
+          { _id: roomChatId },
+          { $set: { "members.$[].status": "accepted" } }
+        ).exec();
+      } else {
+        const newRoom = await Room.create({
+          typeRoom: "single",
+          members: [
+            { user_id: myID, status: "accepted" },
+            { user_id: userID, status: "accepted" },
+          ],
+        });
+        roomChatId = newRoom._id;
+      }
+
+      await Promise.all([
+        User.updateOne(
+          { _id: myID },
+          {
+            $addToSet: {
+              friendList: { user_id: userID, room_chat_id: roomChatId },
+            },
+            $pull: { friendAccepts: userID },
+          }
+        ),
+        User.updateOne(
+          { _id: userID },
+          {
+            $addToSet: {
+              friendList: { user_id: myID, room_chat_id: roomChatId },
+            },
+            $pull: { friendRequests: myID },
+          }
+        ),
+      ]);
+
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  // end accept friend .
 }
