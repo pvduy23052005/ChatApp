@@ -1,173 +1,342 @@
-/* --- Header Container --- */
+/* ==================== HEADER CONTAINER ==================== */
 header {
   width: 100%;
-  background-color: var(--color-bg-sidebar); /* Hoặc dùng màu trắng/kính mờ */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Bóng đổ mềm mại hơn */
-  margin-bottom: 20px;
-  padding: 15px 0px; /* Tăng padding chút cho thoáng */
-  position: sticky; /* Giúp header dính lên trên cùng khi scroll */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+  padding: 16px 0;
+  position: sticky;
   top: 0;
-  z-index: 100;
-  backdrop-filter: blur(
-    10px
-  ); /* Hiệu ứng kính mờ nếu background có độ trong suốt */
-}
-
-/* --- Menu Links --- */
-header .inner-menu {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Canh trái thay vì giữa */
-  gap: 15px; /* Tăng khoảng cách giữa các nút */
-  height: 100%;
-}
-
-header .inner-menu .btn-menu {
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text, #555); /* Màu chữ mặc định */
-  padding: 8px 12px;
-  border-radius: 8px; /* Bo góc nút menu */
-  border: none; /* Bỏ border cũ */
-  transition: all 0.3s ease; /* Hiệu ứng mượt mà */
-  position: relative;
-}
-
-/* Hiệu ứng hover kiểu mới: Nổi background nhẹ */
-header .inner-menu .btn-menu:hover,
-header .inner-menu .btn-menu.active {
-  color: var(--color-primary, #007bff);
-  background-color: rgba(0, 123, 255, 0.1); /* Màu nền nhạt khi hover */
-}
-
-/* --- Search Bar --- */
-header .inner-search {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-
-header .inner-search form {
-  width: 100%;
-  position: relative;
-}
-
-/* Input đẹp hơn */
-header .inner-search form input {
-  width: 100%;
-  outline: none;
-  border: 1px solid transparent;
-  background-color: #f3f4f6; /* Màu nền xám nhạt cho input */
-  padding: 10px 20px;
-  border-radius: 50px; /* Hình viên thuốc */
-  font-size: 14px;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  color: var(--color-text);
 }
 
-/* Khi bấm vào input */
-header .inner-search form input:focus {
-  background-color: #fff;
-  border-color: var(--color-primary-hover, #007bff);
-  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1); /* Highlight nhẹ */
+header:hover {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* --- User Info --- */
-header .inner-info {
+/* Align items in row */
+header .row {
   display: flex;
-  gap: 12px;
   align-items: center;
-  justify-content: flex-end; /* Đẩy về bên phải */
-  height: 100%;
-  cursor: pointer;
+  justify-content: space-between;
+  flex-wrap: nowrap;
 }
 
-header .inner-info .name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text, #333);
-}
-
-header .inner-info img {
-  width: 45px;
-  height: 45px;
-  object-fit: cover; /* Dùng cover để ảnh không bị méo */
-  border-radius: 50%;
-  border: 2px solid #fff; /* Viền trắng quanh avatar */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-header .inner-info:hover img {
-  transform: scale(1.05); /* Phóng to nhẹ avatar khi hover */
-}
-
-/* --- Create Room Button --- */
-header .inner-new-room {
-  height: 100%;
+/* ==================== MENU LINKS ==================== */
+.inner-menu {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+  height: 100%;
+  flex-wrap: nowrap;
 }
 
-header .btn-create-room {
-  background-color: var(--color-button);
+.btn-menu {
+  position: relative;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  display: inline-block;
+}
+
+/* Underline animation */
+.btn-menu::before {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
+  transition: transform 0.3s ease;
+}
+
+.btn-menu:hover,
+.btn-menu.active {
+  color: #667eea;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.08),
+    rgba(118, 75, 162, 0.08)
+  );
+  transform: translateY(-1px);
+}
+
+.btn-menu:hover::before,
+.btn-menu.active::before {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.btn-menu:active {
+  transform: translateY(0);
+}
+
+/* ==================== CREATE ROOM BUTTON ==================== */
+.inner-new-room {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.btn-create-room {
+  background: var(--color-button);
   font-size: 14px;
   font-weight: 600;
   color: #fff;
-  border-radius: 20px;
-  padding: 8px 20px;
+  border-radius: 12px;
+  padding: 6px 20px;
   text-decoration: none;
   white-space: nowrap;
-  transition: all 0.3s ease;
-  box-shadow: var(--item-shadow);
   border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-header .btn-create-room:hover {
-  transform: translateY(-2px); /* Nút bay lên nhẹ */
-  color: var(--color-button);
-  background-color: #fff;
+.btn-create-room:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-header .btn-icon {
-  font-size: 20px;
-  display: none; /* Chỉ hiện khi màn hình nhỏ, xử lý bằng media query */
+.btn-create-room:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Icon button for mobile */
+.btn-icon {
+  display: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
   border-radius: 50%;
+  font-size: 24px;
 }
 
-.chat-header {
-  height: 60px; /* Chiều cao cố định */
+/* ==================== USER INFO ==================== */
+.inner-info {
   display: flex;
-  align-items: center; /* Căn giữa theo chiều dọc */
-  padding: 0 20px;
-  background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
-  flex-shrink: 0; /* Không bị co lại */
-  background-color: red;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
 }
 
-/* Ảnh Avatar */
-.chat-header-avatar {
+.inner-info:hover {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.inner-info .name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.inner-info img {
   width: 40px;
   height: 40px;
+  object-fit: cover;
   border-radius: 50%;
-  object-fit: cover; /* Chống méo ảnh */
-  margin-right: 12px; /* Khoảng cách với tên */
-  border: 1px solid #eee;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-/* Tên người dùng */
+.inner-info:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  border-color: #667eea;
+}
+
+/* ==================== CHAT HEADER ==================== */
+.chat-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.chat-header-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+  border: 2px solid #f3f4f6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
 .chat-header-name {
   font-size: 16px;
-  font-weight: 600; /* In đậm vừa phải */
-  color: #333;
+  font-weight: 600;
+  color: #1f2937;
 }
-/* end  css chat header */
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1199px) {
+  .inner-menu {
+    gap: 4px;
+  }
+
+  .btn-menu {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .inner-info .name {
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 991px) {
+  header {
+    padding: 12px 0;
+  }
+
+  header .row {
+    flex-wrap: nowrap;
+  }
+
+  .inner-menu {
+    gap: 4px;
+  }
+
+  .btn-menu {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .inner-info .name {
+    font-size: 13px;
+    max-width: 80px;
+  }
+
+  .inner-info img {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 10px 0;
+  }
+
+  .inner-menu {
+    gap: 3px;
+  }
+
+  .btn-menu {
+    font-size: 14px;
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+
+  .btn-create-room:not(.btn-icon) {
+    display: none;
+  }
+
+  .btn-icon {
+    display: flex;
+  }
+
+  .inner-info .name {
+    display: none;
+  }
+
+  .inner-info {
+    padding: 4px;
+    justify-content: center;
+  }
+
+  .chat-header {
+    height: 60px;
+    padding: 0 16px;
+  }
+
+  .chat-header-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+  }
+
+  .chat-header-name {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  header {
+    padding: 8px 0;
+  }
+
+  .inner-menu {
+    gap: 2px;
+  }
+
+  .btn-menu {
+    font-size: 10px;
+    padding: 6px 6px;
+  }
+
+  .btn-menu::before {
+    display: none;
+  }
+
+  .btn-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .inner-info img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .chat-header {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .chat-header-avatar {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+  }
+
+  .chat-header-name {
+    font-size: 14px;
+  }
+}

@@ -84,12 +84,16 @@ function ChatHeader({ currentRoomInfo }) {
           font-size: 16px;
           font-weight: 600;
           color: #fff;
+          
         }
 
         .user-status {
           margin: 0;
           font-size: 12px;
           color: #fff;
+          white-space: nowrap;      
+          overflow: hidden;       
+          text-overflow: ellipsis;  
         }
 
         .header-actions {
@@ -127,17 +131,6 @@ function ChatHeader({ currentRoomInfo }) {
             </div>
           </div>
 
-          <div className="header-actions">
-            <button className="btn-icon">
-              <i className="fa-solid fa-phone"></i>
-            </button>
-            <button className="btn-icon">
-              <i className="fa-solid fa-video"></i>
-            </button>
-            <button className="btn-icon">
-              <i className="fa-solid fa-circle-info"></i>
-            </button>
-          </div>
         </div>
       </Link>
     </>

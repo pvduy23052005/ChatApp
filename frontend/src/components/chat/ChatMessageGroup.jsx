@@ -7,7 +7,6 @@ import TypingChat from "../common/TypingChat";
 function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
   const { user } = useAuth();
   const myID = user?._id || user?.id;
-
   const scrollTopRef = useRef();
 
   const lastMessageIndex = chats

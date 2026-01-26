@@ -1,9 +1,10 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { AppContext } from "../../context/AppContext"; // Nhớ sửa đường dẫn đúng với folder của bạn
-import "../../assets/css/header.css"; // Import file CSS vào
+import { AppContext } from "../../context/AppContext";
+import "../../assets/css/header.css";
 import { useAuth } from "../../hook/auth/useAuth";
 import { authServiceAPI } from "../../services/authServiceAPI";
+import { CiCirclePlus } from "react-icons/ci";
 
 function Header() {
   const { logout } = useContext(AppContext);
@@ -18,76 +19,60 @@ function Header() {
       logout();
       navigate("/auth/login");
     } catch (error) {
-      console.log(error.response.data.message);
+      console.log(error.response?.data?.message);
     }
   };
 
   return (
-    <>
-      <header>
-        <div className="container">
-          <div className="row">
-            {/* --- Cột 1: Menu --- */}
-            <div className="col-6 col-md-5 col-sm-5">
-              <div className="inner-menu">
-                {/* Logout xử lý bằng onClick thay vì href */}
-                <button
-                  onClick={handleLogout}
-                  className="btn btn-menu"
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  Đăng xuất
-                </button>
-                <NavLink to="/user" className="btn btn-menu" end> 
-                  Người dùng
-                </NavLink>
-                <NavLink to="/chat" className="btn btn-menu">
-                  Tin nhắn
-                </NavLink>
-                <NavLink to="/user/accept-friends" className="btn btn-menu">
-                  Lời mời
-                </NavLink>
-              </div>
+    <header>
+      <div className="container">
+        <div className="row align-items-center">
+          {/* Menu Navigation */}
+          <div className="col-lg-6 col-md-5 col-sm-8 col-6">
+            <div className="inner-menu">
+              <button onClick={handleLogout} className="btn-menu">
+                Đăng xuất
+              </button>
+              <NavLink to="/user" className="btn-menu" end>
+                Người dùng
+              </NavLink>
+              <NavLink to="/chat" className="btn-menu">
+                Tin nhắn
+              </NavLink>
+              <NavLink to="/user/accept-friends" className="btn-menu">
+                Lời mời
+              </NavLink>
             </div>
-            
-            {/* --- Cột 3: Nút tạo phòng --- */}
-            <div className="col-1 col-md-2 col-sm-1">
-              <div className="inner-new-room">
-                {/* Nút hiện chữ (Màn hình lớn) */}
-                <Link to="/room/create" className="btn btn-create-room">
-                  Tạo phòng
-                </Link>
+          </div>
 
-                {/* Nút hiện Icon (Màn hình nhỏ - Responsive) */}
-                <Link
-                  to="/room/create"
-                  className="btn btn-create-room btn-icon"
-                >
-                  <i className="bx bx-plus"></i>
-                </Link>
-              </div>
+          {/* Create Room Button */}
+          <div className="col-lg-2 col-md-5 col-sm-2 col-4">
+            <div className="inner-new-room">
+              {/* Desktop Button */}
+              <Link to="/room/create" className="btn-create-room">
+                <i className="bx bx-plus"></i>
+                Tạo phòng
+              </Link>
+              {/* Mobile Icon Button */}
+              <Link to="/room/create" className="btn-create-room btn-icon">
+                <CiCirclePlus />
+              </Link>
             </div>
+          </div>
 
-            {/* --- Cột 4: Info User --- */}
-            <div className="col-2 col-md-1 col-sm-1">
-              <div className="inner-info">
-                {/* Kiểm tra user có tồn tại không để tránh lỗi null */}
-                <span className="name">{user?.fullName}</span>
-
-                <img
-                  src={user?.avatar || "/images/default-avatar.webp"}
-                  alt="Avatar"
-                />
-              </div>
+          {/* User Info */}
+          <div className="col-lg-4 col-md-2 col-sm-2 col-2">
+            <div className="inner-info">
+              <span className="name">{user?.fullName}</span>
+              <img
+                src={user?.avatar || "/images/default-avatar.webp"}
+                alt={user?.fullName || "User Avatar"}
+              />
             </div>
           </div>
         </div>
-      </header>
-    </>
+      </div>
+    </header>
   );
 }
 
