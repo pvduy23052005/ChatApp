@@ -1,0 +1,206 @@
+/* Lớp phủ mờ đen toàn màn hình */
+.user-info-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Màu đen mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Luôn nổi lên trên cùng */
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Hộp nội dung */
+.user-info-card {
+  background: white;
+  width: 350px;
+  padding: 30px 20px;
+  border-radius: 15px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Avatar to */
+.user-info-avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f0f2f5;
+  margin-bottom: 15px;
+}
+
+/* Tên và Email */
+.user-info-name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.user-info-email {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+/* Nút đóng X */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #999;
+  cursor: pointer;
+  padding: 5px;
+}
+.close-btn:hover {
+  color: #333;
+}
+
+/* Nút profile */
+.btn-profile {
+  background-color: #0084ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-profile:hover {
+  background-color: #006bcf;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ... Giữ nguyên các class overlay, card cũ ... */
+
+/* Tiêu đề Form */
+.form-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Wrapper Avatar để chứa icon Camera */
+.user-info-avatar-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 20px auto;
+}
+
+.user-info-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f0f2f5;
+}
+
+/* Icon máy ảnh nhỏ ở góc avatar */
+.camera-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #e4e6eb;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid white;
+  color: #333;
+  transition: 0.2s;
+}
+.camera-icon:hover {
+  background: #d8dadf;
+}
+
+/* --- STYLE CHO INPUT --- */
+.form-body {
+  text-align: left; /* Căn trái cho nhãn và input */
+  padding: 0 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: #0084ff;
+  box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.1);
+}
+
+/* Nút Lưu */
+.btn-save {
+  width: 100%;
+  margin-top: 10px;
+  background-color: #0084ff;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #006bcf;
+}
+
+.btn-save:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

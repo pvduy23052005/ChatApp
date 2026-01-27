@@ -36,26 +36,47 @@ export const useRoomAction = () => {
     }
   }, []);
 
-  const leaveRoom = useCallback(async (roomID, fullName) => {
-    const confirm = window.confirm("Bạn có chắc chắn muốn rời nhóm");
+  const leaveRoom = useCallback(
+    async (roomID, fullName) => {
+      const confirm = window.confirm("Bạn có chắc chắn muốn rời nhóm");
 
-    if (!confirm) {
-      return;
-    }
-
-    try {
-      const res = await roomServiceAPI.leaveRoom(roomID);
-      if (res.success) {
-        toast.success("Bạn đã rời nhóm");
+      if (!confirm) {
+        return;
       }
-    } catch (err) {
-      console.log(err.response);
-    }
-  }, []);
+
+      try {
+        const res = await roomServiceAPI.leaveRoom(roomID);
+        if (res.success) {
+          toast.success("Bạn đã rời nhóm");
+          navigate("/chat");
+        }
+      } catch (err) {
+        console.log(err.response);
+      }
+    },
+    [navigate],
+  );
+
+  const addMember = useCallback(
+    async (roomID, memberIDs) => {
+      try {
+        const res = await roomServiceAPI.addMember(roomID, memberIDs);
+
+        if (res.success) {
+          toast.success(res.message);
+          navigate(-1);
+        }
+      } catch (error) {
+        console(error.response.data?.message);
+      }
+    },
+    [navigate],
+  );
 
   return {
     deleteRoom,
     removeMember,
     leaveRoom,
+    addMember,
   };
 };

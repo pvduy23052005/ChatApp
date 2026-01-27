@@ -1,15 +1,17 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import "../../assets/css/header.css";
 import { useAuth } from "../../hook/auth/useAuth";
 import { authServiceAPI } from "../../services/authServiceAPI";
 import { CiCirclePlus } from "react-icons/ci";
+import UserInfo from "./UserInfo";
 
 function Header() {
   const { logout } = useContext(AppContext);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [showUserInfo, setShowUserInfo] = useState(false);
 
   const handleLogout = async (e) => {
     try {
@@ -62,13 +64,17 @@ function Header() {
           {/* User Info */}
           <div className="col-lg-4 col-md-2 col-sm-2 col-2">
             <div className="inner-info">
-              <span className="name">{user?.fullName}</span>
               <img
                 src={user?.avatar || "/images/default-avatar.webp"}
-                alt={user?.fullName || "User Avatar"}
+                onClick={() => setShowUserInfo(true)}
               />
             </div>
           </div>
+          <UserInfo
+            user={user}
+            isOpen={showUserInfo}
+            onClose={() => setShowUserInfo(false)}
+          />
         </div>
       </div>
     </header>

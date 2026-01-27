@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { roomServiceAPI } from "../../services/roomServiceAPI";
 import { FaUserPlus, FaArrowLeft } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 import { useRoomDetail } from "../../hook/room/useRoomDetail";
+import { useRoomAction } from "../../hook/room/useRoomAction";
 
 function AddMember() {
   const [selectedIDs, setSelectedIDs] = useState([]);
@@ -12,6 +12,7 @@ function AddMember() {
   const navigate = useNavigate();
   const { friends } = useRoomDetail(id);
   const availableFriends = friends;
+  const { addMember } = useRoomAction();
 
   if (!availableFriends) return null;
 
@@ -32,13 +33,8 @@ function AddMember() {
     }
     try {
       setIsAdding(true);
-      const res = await roomServiceAPI.addMember(id, selectedIDs);
 
-      if (res.success) {
-        toast.success(res.message);
-        setSelectedIDs([]);
-        navigate(-1);
-      }
+      addMember(id, selectedIDs);
     } catch (error) {
       const msg = error.response?.data?.message || "Lỗi khi thêm thành viên";
       toast.error(msg);
