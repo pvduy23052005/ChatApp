@@ -1,13 +1,13 @@
 
 @BASE_URL = http://localhost:5000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3Njk0MzU1NzIsImV4cCI6MTc2OTUyMTk3Mn0.wWwTrYBkiaqxGpUYgxp7AUHmyid6xv3kaUILa6yhd7k
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTc2ZjA1NTI0YzBjMDE0MjdjM2NmYmYiLCJpYXQiOjE3Njk0ODY3ODMsImV4cCI6MTc2OTU3MzE4M30.qCHTzfm4NRaJJQHlXdXqusWJRD1geqLxnXJlEK47DjU
 
 ###
 POST {{BASE_URL}}/auth/login 
 Content-Type : application/json
 
 {
-  "email": "duy@gmail.com", 
+  "email": "c@gmail.com", 
   "password" : "123456"
 }
 

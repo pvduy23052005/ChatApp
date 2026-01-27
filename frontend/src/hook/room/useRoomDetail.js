@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { roomServiceAPI } from "../../services/roomServiceAPI";
+import { useNavigate } from "react-router-dom";
 
 export const useRoomDetail = (roomID) => {
   const [room, setRoom] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [friends, setFriends] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -25,12 +27,13 @@ export const useRoomDetail = (roomID) => {
       } catch (err) {
         console.error(err);
         setError(err.response?.data?.message || "Lỗi tải thông tin phòng");
+        navigate("/chat");
       } finally {
         setLoading(false);
       }
     };
     fetchRoom();
-  }, [roomID]);
+  }, [roomID, navigate]);
 
   return { room, setRoom, setFriends, loading, error, friends };
 };

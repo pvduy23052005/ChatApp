@@ -48,18 +48,6 @@ export const getListChat = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "ID phòng không đúng định dạng" });
     }
 
-    const existsRoom = await Room.findOne({
-      _id: roomID,
-      deleted: false
-    });
-
-    if (!existsRoom) {
-      return res.status(400).json({
-        success: false,
-        message: "Phòng không tồn tại "
-      });
-    }
-
     const chats = await getChat(roomID);
 
     res.json({
