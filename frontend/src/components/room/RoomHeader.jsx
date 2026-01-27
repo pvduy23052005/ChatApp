@@ -3,10 +3,13 @@ import { FaRegSave } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { roomServiceAPI } from "../../services/roomServiceAPI"; // Import API trực tiếp vào đây
+import { useNavigate } from "react-router-dom";
+import { FaUserPlus } from "react-icons/fa";
 
 function RoomHeader({ room, isSuperAdmin, deleteRoomFunc }) {
   const [title, setTitle] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleSet = () => {
@@ -92,18 +95,24 @@ function RoomHeader({ room, isSuperAdmin, deleteRoomFunc }) {
                     <span> Dang luu ... </span>
                   ) : (
                     <>
-                      <FaRegSave /> Lưu
+                      <FaRegSave /> 
                     </>
                   )}
                 </button>
               )}
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => navigate(`/room/add-member/${room._id}`)}
+              >
+                <FaUserPlus />
+              </button>
 
               <button
                 className="btn btn-outline-danger "
                 onClick={() => deleteRoomFunc(room._id, room.title)}
                 title="Giải tán nhóm"
               >
-                <RiDeleteBin2Line /> Xóa
+                <RiDeleteBin2Line /> 
               </button>
             </div>
           )}

@@ -20,9 +20,7 @@ function Detail() {
     if (!isConfirm) return;
     setRoom((prev) => ({
       ...prev,
-      members: prev.members.filter(
-        (m) => (m.user_id._id || m.user_id) !== memberID,
-      ),
+      members: prev.members.filter((m) => m.user_id._id !== memberID),
     }));
     removeMember(id, memberID, fullName);
   };

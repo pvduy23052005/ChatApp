@@ -5,6 +5,7 @@ export const useRoomDetail = (roomID) => {
   const [room, setRoom] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [friends, setFriends] = useState(null);
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -17,6 +18,7 @@ export const useRoomDetail = (roomID) => {
         const res = await roomServiceAPI.getDetail(roomID);
         if (res.success) {
           setRoom(res.room);
+          setFriends(res.friends);
         } else {
           setError("Không tìm thấy dữ liệu phòng");
         }
@@ -30,5 +32,5 @@ export const useRoomDetail = (roomID) => {
     fetchRoom();
   }, [roomID]);
 
-  return { room, setRoom, loading, error };
+  return { room, setRoom, setFriends, loading, error, friends };
 };

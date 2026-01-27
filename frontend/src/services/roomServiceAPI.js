@@ -5,11 +5,11 @@ export const roomServiceAPI = {
     const res = await API.get(`/room/detail/${roomID}`);
     return res;
   },
-  edit : async (roomID , title) => {
-    const res = await API.patch(`/room/edit/${roomID}` , {
-      title: title
+  edit: async (roomID, title) => {
+    const res = await API.patch(`/room/edit/${roomID}`, {
+      title: title,
     });
-    return res ; 
+    return res;
   },
   create: async (data) => {
     const res = await API.post("/room/create", data);
@@ -24,6 +24,12 @@ export const roomServiceAPI = {
   removeMember: async (roomID, memberID) => {
     const res = await API.post(`/room/remove-member/${roomID}`, {
       removeMemberID: memberID,
+    });
+    return res;
+  },
+  addMember: async (roomID, memberID) => {
+    const res = await API.post(`/room/add-member/${roomID}`, {
+      newMemberIDs: memberID,
     });
     return res;
   },

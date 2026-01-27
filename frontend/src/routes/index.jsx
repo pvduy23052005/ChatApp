@@ -9,6 +9,7 @@ import NotFound from "../components/common/NotFound";
 import Detail from "../pages/Room/Detail";
 import AcceptFriend from "../pages/User/AcceptFriend";
 import Create from "../pages/Room/Create";
+import AddMember from "../components/room/AddMember";
 
 function AllRoute() {
   const elements = useRoutes([
@@ -43,6 +44,7 @@ function AllRoute() {
           children: [
             { path: "detail/:id", element: <Detail /> },
             { path: "create", element: <Create /> },
+            { path: "add-member/:id", element: <AddMember /> },
           ],
         },
       ],
