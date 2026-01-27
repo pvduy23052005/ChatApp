@@ -8,7 +8,7 @@ import RoomHeader from "../../components/room/RoomHeader";
 function Detail() {
   const { id } = useParams();
   const { user } = useAuth();
-  const { deleteRoom, removeMember } = useRoomAction();
+  const { deleteRoom, removeMember, leaveRoom } = useRoomAction();
   const { room, setRoom, loading, error } = useRoomDetail(id);
 
   if (loading) return <div>Đang tải...</div>;
@@ -49,9 +49,13 @@ function Detail() {
                 Danh sách thành viên
               </h6>
               {isGroup && !isSuperAdmin && (
-                <button className="btn btn-sm btn-outline-danger">
-                  <i className="fa-solid fa-right-from-bracket me-1"></i> Rời
-                  nhóm
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => {
+                    leaveRoom(room._id, user.fullName);
+                  }}
+                >
+                  Rời nhóm
                 </button>
               )}
             </div>

@@ -33,4 +33,8 @@ export const roomServiceAPI = {
     });
     return res;
   },
+  leaveRoom: async (roomID) => {
+    const res = await API.post(`/room/leave/${roomID}`);
+    return res;
+  },
 };

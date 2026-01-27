@@ -298,3 +298,47 @@ export const deleteRoomPost = async (req: Request, res: Response) => {
     });
   }
 };
+
+// [post] /room/leave/:id
+export const leaveRoom = async (req: Request, res: Response) => {
+  try {
+    const roomID: string = req.params.id?.toString() || "";
+    const myID: string = res.locals.user.id.toString();
+
+    if (!roomID) {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng nhập phòng hợp lệ"
+      });
+    }
+
+    const room: any = await Room.findOne({ _id: roomID, deleted: false });
+    if (!room) return res.redirect("/chat");
+
+    const myInfo = room.members.find(
+      (member: any) => member.user_id.toString() === myID
+    );
+
+    if (myInfo && myInfo.role === "superAdmin") {
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng chỉ định người khác làm Trưởng nhóm trước khi rời"
+      });
+    }
+
+    await Room.updateOne(
+      { _id: roomID },
+      {
+        $pull: {
+          members: { user_id: myID }
+        },
+      }
+    );
+    res.status(200).json({
+      success: true,
+      message: "Bạn đã rời nhóm",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}

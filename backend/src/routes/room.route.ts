@@ -25,4 +25,7 @@ router.post("/remove-member/:id",
   roomValidate,
   controller.removeMember);
 
+router.post("/leave/:id",
+  controller.leaveRoom);
+
 export const roomRoute: Router = router;

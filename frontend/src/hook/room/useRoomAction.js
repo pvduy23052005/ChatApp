@@ -36,8 +36,26 @@ export const useRoomAction = () => {
     }
   }, []);
 
+  const leaveRoom = useCallback(async (roomID, fullName) => {
+    const confirm = window.confirm("Bạn có chắc chắn muốn rời nhóm");
+
+    if (!confirm) {
+      return;
+    }
+
+    try {
+      const res = await roomServiceAPI.leaveRoom(roomID);
+      if (res.success) {
+        toast.success("Bạn đã rời nhóm");
+      }
+    } catch (err) {
+      console.log(err.response);
+    }
+  }, []);
+
   return {
     deleteRoom,
     removeMember,
+    leaveRoom,
   };
 };
