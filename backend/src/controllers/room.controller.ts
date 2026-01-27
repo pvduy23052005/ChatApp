@@ -86,7 +86,6 @@ export const createRoomPost = async (req: Request, res: Response) => {
 export const roomDetail = async (req: Request, res: Response) => {
   try {
     const roomID = req.params.id?.toString();
-    const myID: string = res.locals.user.id.toString() || "";
     const user = res.locals.user;
 
     const detailRoom = await Room.findOne({ _id: roomID }).populate({
@@ -275,7 +274,7 @@ export const removeMember = async (req: Request, res: Response) => {
 // [post] /room/delete/:id
 export const deleteRoomPost = async (req: Request, res: Response) => {
   try {
-    const roomId = req.params.id;
+    const roomId = req.params.id?.toString();
 
     await Room.updateOne(
       { _id: roomId },
@@ -304,16 +303,7 @@ export const leaveRoom = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
     const myID: string = res.locals.user.id.toString();
-
-    if (!roomID) {
-      return res.status(400).json({
-        success: false,
-        message: "Vui lòng nhập phòng hợp lệ"
-      });
-    }
-
-    const room: any = await Room.findOne({ _id: roomID, deleted: false });
-    if (!room) return res.redirect("/chat");
+    const room = res.locals.room;
 
     const myInfo = room.members.find(
       (member: any) => member.user_id.toString() === myID
