@@ -4,6 +4,7 @@ import { Socket } from 'socket.io';
 import { authSocketMiddleware } from './middleware/auth.middleware';
 import { chatSocket } from './handler/chat.handler';
 import { userSocket } from './handler/user.handler';
+import { roomSocket } from './handler/room.handler';
 
 export const socketInit = (httpServer: HttpServer) => {
   const io = new Server(httpServer, {
@@ -18,6 +19,7 @@ export const socketInit = (httpServer: HttpServer) => {
   io.on("connection", async (socket: Socket) => {
     chatSocket(io, socket);
     userSocket(io, socket);
+    roomSocket(io, socket);
   })
 
 };

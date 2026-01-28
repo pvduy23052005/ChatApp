@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 
-export const authSocketMiddleware = (socket: Socket, next: (err?: Error) => void) => {
+export const authSocketMiddleware = async (socket: Socket, next: (err?: Error) => void) => {
   try {
     const cookieHeader = socket.handshake.headers.cookie;
     if (!cookieHeader) {
@@ -16,7 +16,7 @@ export const authSocketMiddleware = (socket: Socket, next: (err?: Error) => void
       return next(new Error("Authentication error: Token not found"));
     }
 
-    const decoded = (jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "token_secret"));
+    const decoded = (jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || "token_secret")) as object;
 
     socket.data.user = decoded;
 

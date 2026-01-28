@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { roomServiceAPI } from "../../services/roomServiceAPI";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { roomServiceSocket } from "../../socket/services/roomServiceSocket";
 
 export const useRoomAction = () => {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ export const useRoomAction = () => {
       const res = await roomServiceAPI.removeMember(roomID, memberID);
       if (res.success) {
         toast.success(`Đã xóa ${fullName} khỏi nhóm`);
+        // emit socket .
+        roomServiceSocket.removeMember(roomID, memberID, fullName);
       }
     } catch (error) {
       toast.error(error.response?.data?.message);

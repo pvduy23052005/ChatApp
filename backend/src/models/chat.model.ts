@@ -16,6 +16,10 @@ const chatSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
+  type: {
+    type: String,
+    enum: ["user", "system"]
+  },
   status: {
     type: String,
     enum: ["sent", "seen"],
