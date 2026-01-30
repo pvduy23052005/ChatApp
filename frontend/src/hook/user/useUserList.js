@@ -13,7 +13,7 @@ export const useUserList = () => {
         const res = await userServiceAPI.getUsers();
         setUsers(res.users);
       } catch (error) {
-        console.log(error.response.data.message);
+        console.log(error.response.data?.message);
       }
     };
     handleGetUsers();

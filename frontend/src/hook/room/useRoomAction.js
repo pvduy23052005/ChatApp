@@ -61,12 +61,14 @@ export const useRoomAction = () => {
   );
 
   const addMember = useCallback(
-    async (roomID, memberIDs) => {
+    async (roomID, memberIDs, listFullNames) => {
       try {
         const res = await roomServiceAPI.addMember(roomID, memberIDs);
 
         if (res.success) {
           toast.success(res.message);
+          // call socket .
+          roomServiceSocket.addMembers(roomID, memberIDs, listFullNames);
           navigate(-1);
         }
       } catch (error) {

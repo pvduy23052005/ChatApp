@@ -1,6 +1,6 @@
 import { useAuth } from "../../hook/auth/useAuth";
 import { useEffect, useRef } from "react";
-import { formatTime, isSystemMessage } from "../../utils/chat.utils";
+import { formatTime } from "../../utils/chat.utils";
 import FileAttachment from "../attachments/FileAttachment";
 import TypingChat from "../common/TypingChat";
 
@@ -21,7 +21,7 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
     <div className="chat-message-body">
       {chats &&
         chats.map((chat, index) => {
-          const isSystem = isSystemMessage(chat.content);
+          const isSystem = chat.type === "system";
 
           if (isSystem) {
             return (

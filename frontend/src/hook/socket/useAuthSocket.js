@@ -6,10 +6,11 @@ export const useAuthSocket = (isLogin) => {
     if (isLogin) {
       if (!socket.connected) {
         socket.connect();
-        console.log("connected");
+        console.log("connected" , socket.id);
       }
     } else {
       if (!socket.connect) {
+        console.log("disconnetd");
         socket.disconnect();
       }
     }
