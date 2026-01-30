@@ -15,4 +15,10 @@ export const roomServiceSocket = {
       listFullNames: listFullNames,
     });
   },
+  leaveRoom: (roomID, fullName) => {
+    socket.emit("CLINET_MEMBER_LEAVE_ROOM", {
+      roomID: roomID,
+      fullName: fullName,
+    });
+  },
 };

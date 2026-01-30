@@ -11,6 +11,7 @@ export const roomSocket = async (io: Server, socket: Socket) => {
     deleted: false,
   })).select("fullName");
 
+  // notify remove member 
   socket.on("CLINET_REMOVE_MEMBER", async (data) => {
     try {
       const { roomID, memberID, fullName } = data;
@@ -44,6 +45,7 @@ export const roomSocket = async (io: Server, socket: Socket) => {
     }
   });
 
+  // notify add member 
   socket.on("CLINET_ADD_MEMBER", async (data) => {
     try {
       const { roomID, memberIDs, listFullNames } = data;
@@ -66,7 +68,6 @@ export const roomSocket = async (io: Server, socket: Socket) => {
           { lastMessageID: newChat._id }
         )
       ]);
-      console.log(newChat);
 
       io.to(roomID).emit("SERVER_RETURN_MESSAGE", {
         ...dataChat,
@@ -77,5 +78,37 @@ export const roomSocket = async (io: Server, socket: Socket) => {
       console.error("Lỗi Socket Add Member:", error);
     }
 
+  });
+
+  // notify leave room . 
+  socket.on("CLINET_MEMBER_LEAVE_ROOM", async (data) => {
+    try {
+      const { roomID, fullName } = data;
+      socket.join(roomID);
+
+      const content = `${fullName} đã rời nhóm`;
+
+      const dataChat = {
+        room_id: roomID,
+        content: content,
+        type: "system"
+      }
+      const newChat = new Chat(dataChat);
+
+      await Promise.all([
+        newChat.save(),
+        Room.updateOne(
+          { _id: roomID },
+          { lastMessageID: newChat._id })
+      ])
+
+      io.to(roomID).emit("SERVER_RETURN_MESSAGE", {
+        ...dataChat,
+        _id: newChat._id,
+        createdAt: newChat.createdAt
+      });
+    } catch (error) {
+      console.error("Lỗi Socket Remove Member:", error);
+    }
   });
 }

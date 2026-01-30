@@ -52,6 +52,8 @@ export const useRoomAction = () => {
         if (res.success) {
           toast.success("Bạn đã rời nhóm");
           navigate("/chat");
+          // emit socket .
+          roomServiceSocket.leaveRoom(roomID, fullName);
         }
       } catch (err) {
         console.log(err.response);
