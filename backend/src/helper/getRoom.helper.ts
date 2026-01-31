@@ -39,7 +39,7 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
       .populate({
         path: "lastMessageId",
         select: "content status user_id"
-      });
+      }).lean();
     const listRoom = rooms.map((room: any): ObjectRoom | null => {
       const otherMember = room.members.find(
         (member: any) => member.user_id._id.toString() !== myID.toString()
@@ -72,7 +72,7 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
       const lastMsg = room.lastMessageId ? {
         content: room.lastMessageId.content,
         status: room.lastMessageId.status,
-        user_id: room.lastMessageId.user_id.toString()
+        user_id: room.lastMessageId?.user_id?.toString() || ""
       } : {
         content: "Bắt đầu trò chuyện ngay",
         status: "seen" as "seen",

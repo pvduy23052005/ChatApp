@@ -25,13 +25,13 @@ export const roomSocket = async (io: Server, socket: Socket) => {
         room_id: roomID,
       }
       const newChat = new Chat(dataChat);
-
+      console.log(newChat);
       // save db . 
       await Promise.all([
         newChat.save(),
         Room.updateOne(
           { _id: roomID },
-          { lastMessageID: newChat._id }
+          { lastMessageId: newChat._id }
         )
       ]);
 
@@ -65,7 +65,7 @@ export const roomSocket = async (io: Server, socket: Socket) => {
         newChat.save(),
         Room.updateOne(
           { _id: roomID },
-          { lastMessageID: newChat._id }
+          { lastMessageId: newChat._id }
         )
       ]);
 
@@ -99,7 +99,7 @@ export const roomSocket = async (io: Server, socket: Socket) => {
         newChat.save(),
         Room.updateOne(
           { _id: roomID },
-          { lastMessageID: newChat._id })
+          { lastMessageId: newChat._id })
       ])
 
       io.to(roomID).emit("SERVER_RETURN_MESSAGE", {

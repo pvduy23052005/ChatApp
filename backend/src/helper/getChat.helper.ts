@@ -9,7 +9,8 @@ const getChat = async (roomId: string) => {
     .populate({
       path: "user_id",
       select: "fullName avatar"
-    });
+    })
+    .lean();
 
   return chats;
 }

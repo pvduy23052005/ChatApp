@@ -28,7 +28,7 @@ function ChatSider({ rooms }) {
           const isRead = !isMe && lastMsg.status === "sent" ? "unread" : "";
           const prefix = isMe ? "Bạn: " : "";
           const messageContent = lastMsg.content
-            ? truncateText(lastMsg.content, 15)
+            ? truncateText(lastMsg.content, 20)
             : "Bắt đầu trò chuyện";
 
           const isActive = currentRoomID === room._id;
