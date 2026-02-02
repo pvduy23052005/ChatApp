@@ -10,8 +10,9 @@ const UserInfo = ({ user, isOpen, onClose }) => {
   useEffect(() => {
     if (isOpen && user?.fullName) {
       setFullName(user.fullName);
+      setEmail(user.email);
     }
-  }, [user?.fullName, isOpen]);
+  }, [user?.fullName, user?.email, isOpen]);
 
   if (!isOpen) return null;
 
@@ -69,8 +70,7 @@ const UserInfo = ({ user, isOpen, onClose }) => {
               type="email"
               className="form-input"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Nhập email..."
+              disabled
             />
           </div>
 

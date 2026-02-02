@@ -40,6 +40,7 @@ export const useChatSocket = (roomID) => {
     };
     handleGetChats();
 
+    // socket.
     socket.on("SERVER_RETURN_MESSAGE", handleNewMessage);
     socket.on("SERVER_RETURN_TYPING", handleTyping);
 

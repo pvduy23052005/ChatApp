@@ -1,11 +1,14 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../hook/auth/useAuth";
 import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import { ChatContext } from "../../context/ChatContext";
 
-function ChatSider({ rooms }) {
+function ChatSider() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const currentRoomID = searchParams.get("roomId");
+  const { rooms } = useContext(ChatContext);
 
   const truncateText = (text, maxLength) => {
     if (!text) return "";
@@ -16,7 +19,9 @@ function ChatSider({ rooms }) {
     <div className="chat-sider">
       <div className="chat-header">
         <div className="nav-header">
-          <NavLink to={"/chat"} end>Tin nhắn</NavLink>
+          <NavLink to={"/chat"} end>
+            Tin nhắn
+          </NavLink>
           <NavLink to={"/chat/not-friend"}>Tin nhắn chờ</NavLink>
         </div>
       </div>
@@ -28,7 +33,7 @@ function ChatSider({ rooms }) {
           const isRead = !isMe && lastMsg.status === "sent" ? "unread" : "";
           const prefix = isMe ? "Bạn: " : "";
           const messageContent = lastMsg.content
-            ? truncateText(lastMsg.content, 20)
+            ? truncateText(lastMsg.content, 18)
             : "Bắt đầu trò chuyện";
 
           const isActive = currentRoomID === room._id;
@@ -45,7 +50,7 @@ function ChatSider({ rooms }) {
               />
 
               <div className="inner-content">
-                <span className="name">{truncateText(room.title, 28)}</span>
+                <span className="name">{truncateText(room.title, 25)}</span>
 
                 <span className={`last-message ${isRead}`}>
                   {lastMsg.content ? (

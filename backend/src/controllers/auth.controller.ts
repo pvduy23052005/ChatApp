@@ -51,6 +51,12 @@ export const loginPost = async (req: Request, res: Response) => {
       path: "/",
     });
 
+    await User.updateOne({
+      _id: user.id,
+    }, {
+      statusOnline: "online"
+    });
+
     res.status(200).json({
       success: true,
       user: {
