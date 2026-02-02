@@ -8,7 +8,8 @@ function ChatSider() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const currentRoomID = searchParams.get("roomId");
-  const { rooms } = useContext(ChatContext);
+  const { rooms, onlineUserIDs } = useContext(ChatContext);
+  console.log(onlineUserIDs)
 
   const truncateText = (text, maxLength) => {
     if (!text) return "";
@@ -35,7 +36,7 @@ function ChatSider() {
           const messageContent = lastMsg.content
             ? truncateText(lastMsg.content, 18)
             : "Bắt đầu trò chuyện";
-
+          const isOnline = onlineUserIDs.includes(room.otherUserId);
           const isActive = currentRoomID === room._id;
 
           return (
@@ -43,6 +44,7 @@ function ChatSider() {
               to={`${location.pathname}?roomId=${room._id}`}
               key={room._id}
               className={`box-friend ${isActive ? "active" : ""}`}
+              user_id={room.otherUserId}
             >
               <img
                 src={room.avatar || "/images/default-avatar.webp"}
@@ -63,9 +65,11 @@ function ChatSider() {
                 </span>
               </div>
 
-              <div className="inner-status" status={room.statusOnline}>
-                <i className="fa-solid fa-circle"></i>
-              </div>
+              {isOnline && (
+                <div className="inner-status" status={room.statusOnline}>
+                  <i className="fa-solid fa-circle"></i>
+                </div>
+              )}
             </Link>
           );
         })}

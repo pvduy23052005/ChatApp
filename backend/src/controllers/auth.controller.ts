@@ -57,6 +57,12 @@ export const loginPost = async (req: Request, res: Response) => {
       statusOnline: "online"
     });
 
+    // socket .
+    _io.emit("SERVER_RETURN_ROOM_STATUS", {
+      userID: user.id,
+      status: "online"
+    });
+
     res.status(200).json({
       success: true,
       user: {
@@ -86,6 +92,11 @@ export const logoutPost = async (req: Request, res: Response) => {
       _id: myID,
     }, {
       statusOnline: "offline"
+    });
+    // socket .
+    _io.emit("SERVER_RETURN_ROOM_STATUS", {
+      userID: myID,
+      status: "offline"
     });
     res.status(200).json({
       success: true,

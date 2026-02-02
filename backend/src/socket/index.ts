@@ -14,6 +14,8 @@ export const socketInit = (httpServer: HttpServer) => {
     },
   });
 
+  (global as any)._io = io;
+
   io.use(authSocketMiddleware);
 
   io.on("connection", async (socket: Socket) => {
