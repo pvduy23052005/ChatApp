@@ -7,7 +7,6 @@ export const chatSocket = (io: Server, socket: Socket) => {
 
   socket.on("CLIENT_SEND_MESSAGE", async (data) => {
     const roomID = data.roomID;
-    socket.join(roomID);
     const newChat = new Chat({
       user_id: myID,
       content: data.content,
@@ -30,7 +29,6 @@ export const chatSocket = (io: Server, socket: Socket) => {
   })
 
   socket.on("CLIENT_SEND_TYPING", (data) => {
-    socket.join(data.roomID);
     socket.broadcast.to(data.roomID).emit("SERVER_RETURN_TYPING", data);
   });
 }

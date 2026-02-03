@@ -5,6 +5,7 @@ import { authSocketMiddleware } from './middleware/auth.middleware';
 import { chatSocket } from './handler/chat.handler';
 import { userSocket } from './handler/user.handler';
 import { roomSocket } from './handler/room.handler';
+import Room from "../models/room.model";
 
 export const socketInit = (httpServer: HttpServer) => {
   const io = new Server(httpServer, {
@@ -19,6 +20,21 @@ export const socketInit = (httpServer: HttpServer) => {
   io.use(authSocketMiddleware);
 
   io.on("connection", async (socket: Socket) => {
+    const myID = socket.data.user.userId;
+    if (myID) {
+      const rooms = await Room.find({
+        "members.user_id": myID,
+        deleted: false
+      }).select("_id").lean();
+
+      if (rooms.length > 0) {
+        rooms.forEach((room: any) => {
+          const roomId = room._id.toString();
+          socket.join(roomId); 
+        });
+      }
+    }
+
     chatSocket(io, socket);
     userSocket(io, socket);
     roomSocket(io, socket);

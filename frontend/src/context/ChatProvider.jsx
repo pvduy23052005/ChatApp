@@ -57,6 +57,41 @@ export const ChatProvider = ({ children }) => {
     handleGetRooms();
   }, [location.pathname]);
 
+  // logic real-time last-message .
+  useEffect(() => {
+    const handleNewMessage = (newMessage) => {
+      setRooms((prevRooms) => {
+        const roomIndex = prevRooms.findIndex(
+          (r) => r._id === newMessage.room_id,
+        );
+
+        if (roomIndex === -1) return prevRooms;
+
+        const newRooms = [...prevRooms];
+
+        const roomToUpdate = { ...newRooms[roomIndex] };
+
+        roomToUpdate.lastMessage = {
+          content: newMessage.content,
+          createdAt: newMessage.createdAt,
+          senderId: newMessage.user_id,
+        };
+
+        newRooms.splice(roomIndex, 1);
+
+        newRooms.unshift(roomToUpdate);
+
+        return newRooms;
+      });
+    };
+
+    socket.on("SERVER_RETURN_MESSAGE", handleNewMessage);
+
+    return () => {
+      socket.off("SERVER_RETURN_MESSAGE", handleNewMessage);
+    };
+  }, []);
+
   return (
     <ChatContext.Provider
       value={{
