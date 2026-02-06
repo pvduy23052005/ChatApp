@@ -9,7 +9,6 @@ function ChatSider() {
   const [searchParams] = useSearchParams();
   const currentRoomID = searchParams.get("roomId");
   const { rooms, onlineUserIDs } = useContext(ChatContext);
-  console.log(onlineUserIDs)
 
   const truncateText = (text, maxLength) => {
     if (!text) return "";
@@ -29,12 +28,16 @@ function ChatSider() {
       {rooms &&
         rooms.map((room) => {
           const myId = user?._id || user?.id;
+
           const lastMsg = room.lastMessage || {};
           const isMe = lastMsg.user_id === myId;
-          const isRead = !isMe && lastMsg.status === "sent" ? "unread" : "";
-          const prefix = isMe ? "Bạn: " : "";
+
+          const isRead = room.lastMessage.readBy?.includes(myId);
+          const classRead = isRead ? "" : "unread";
+
+          const prefix = isMe ? "Bạn: " : `${user.fullName}:`;
           const messageContent = lastMsg.content
-            ? truncateText(lastMsg.content, 18)
+            ? truncateText(lastMsg.content, 10)
             : "Bắt đầu trò chuyện";
           const isOnline = onlineUserIDs.includes(room.otherUserId);
           const isActive = currentRoomID === room._id;
@@ -53,8 +56,7 @@ function ChatSider() {
 
               <div className="inner-content">
                 <span className="name">{truncateText(room.title, 25)}</span>
-
-                <span className={`last-message ${isRead}`}>
+                <span className={`last-message ${classRead}`}>
                   {lastMsg.content ? (
                     <>
                       {prefix} {messageContent}

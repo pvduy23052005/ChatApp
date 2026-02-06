@@ -21,7 +21,7 @@ const memberSchema = new mongoose.Schema({
 }
 )
 
-const userSchema = new mongoose.Schema({
+const roomSchema = new mongoose.Schema({
   title: {
     type: String,
     default: "",
@@ -43,6 +43,8 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 })
 
-const Room = mongoose.model("Room", userSchema, "rooms");
+roomSchema.index({ "members.user_id": 1, deleted: 1, updatedAt: -1 });
+
+const Room = mongoose.model("Room", roomSchema, "rooms");
 
 export default Room; 

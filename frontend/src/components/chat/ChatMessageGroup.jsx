@@ -9,9 +9,7 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
   const myID = user?._id || user?.id;
   const scrollTopRef = useRef();
 
-  const lastMessageIndex = chats
-    .map((item) => item.user_id?._id?.toString() || "")
-    .lastIndexOf(myID?.toString());
+  const lastMessageIndex = chats.length - 1;
 
   useEffect(() => {
     scrollTopRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,6 +31,7 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
           const senderId = chat.user_id?._id?.toString();
           const isMe = senderId === myID?.toString();
           const time = formatTime(chat.createdAt);
+          const isSeen = chat.readBy?.length > 1;
 
           return (
             <div
@@ -65,7 +64,7 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
 
                   {isMe &&
                     index === lastMessageIndex &&
-                    (chat.status === "seen" ? (
+                    (isSeen ? (
                       <span className="chat-status" data-status="seen">
                         Đã xem
                       </span>

@@ -3,18 +3,18 @@ import { chatServiceAPI } from "../../services/chatServiceAPI";
 import { socket } from "../../socket";
 import { useEffect, useRef, useState } from "react";
 
-export const useChatSocket = (roomID) => {
+export const useChatSocket = (currentRoomID) => {
   const [chats, setChats] = useState([]);
   const typingTimeoutRef = useRef();
   const [typingUser, setTypingUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!roomID) return;
+    if (!currentRoomID) return;
 
     const handleGetChats = async () => {
       try {
-        const res = await chatServiceAPI.getChats(roomID);
+        const res = await chatServiceAPI.getChats(currentRoomID);
         if (res.success) {
           setChats(res.chats || []);
         }
@@ -25,7 +25,7 @@ export const useChatSocket = (roomID) => {
     };
 
     const handleTyping = (data) => {
-      if (data.roomID !== roomID) return;
+      if (data.roomID !== currentRoomID) return;
       setTypingUser(data);
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
       typingTimeoutRef.current = setTimeout(() => {
@@ -34,24 +34,53 @@ export const useChatSocket = (roomID) => {
     };
 
     const handleNewMessage = (newMessage) => {
-      if (newMessage.room_id === roomID) {
+      if (newMessage.room_id === currentRoomID) {
         setChats((prev) => [...prev, newMessage]);
       }
     };
+
+    const handleUpdateReadMessage = (data) => {
+      const { roomID, userID } = data;
+      console.log(data);
+      if (roomID === currentRoomID) {
+        setChats((prev) => {
+          const newListChats = prev.map((message) => {
+            const currentReadList = message.readBy || [];
+            console.log(currentReadList);
+            const isUserAlreadyRead = currentReadList.includes(userID);
+
+            if (isUserAlreadyRead) {
+              return message;
+            }
+            const updateMesssage = {
+              ...message,
+              readBy: [...currentReadList, userID],
+            };
+
+            return updateMesssage;
+          });
+          return newListChats;
+        });
+      }
+    };
+    // fetch api
     handleGetChats();
 
     // socket.
     socket.on("SERVER_RETURN_MESSAGE", handleNewMessage);
     socket.on("SERVER_RETURN_TYPING", handleTyping);
+    socket.on("SERVER_RETURN_UPDATE_READ_STATUS", handleUpdateReadMessage);
 
     return () => {
       socket.off("SERVER_RETURN_MESSAGE", handleNewMessage);
       socket.off("SERVER_RETURN_TYPING", handleTyping);
+      socket.off("SERVER_UPDATE_READ_STATUS", handleUpdateReadMessage);
+
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
       setChats([]);
       setTypingUser(null);
     };
-  }, [roomID, navigate]);
+  }, [currentRoomID, navigate]);
 
   return {
     chats,

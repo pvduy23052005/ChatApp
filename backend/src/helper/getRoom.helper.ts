@@ -10,6 +10,7 @@ interface ObjectRoom {
     content: string;
     status: "sent" | "seen";
     user_id: string;
+    readBy?: string[];
   };
   updatedAt: Date;
   otherUserId?: string;
@@ -31,14 +32,13 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
       deleted: false
     })
       .sort({ updatedAt: -1 })
-      .lean()
       .populate({
         path: "members.user_id",
         select: "fullName avatar statusOnline"
       })
       .populate({
         path: "lastMessageId",
-        select: "content status user_id"
+        select: "content status user_id readBy"
       }).lean();
     const listRoom = rooms.map((room: any): ObjectRoom | null => {
       const otherMember = room.members.find(
@@ -72,7 +72,8 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
       const lastMsg = room.lastMessageId ? {
         content: room.lastMessageId.content,
         status: room.lastMessageId.status,
-        user_id: room.lastMessageId?.user_id?.toString() || ""
+        user_id: room.lastMessageId?.user_id?.toString() || "",
+        readBy: room.lastMessageId.readBy
       } : {
         content: "Bắt đầu trò chuyện ngay",
         status: "seen" as "seen",

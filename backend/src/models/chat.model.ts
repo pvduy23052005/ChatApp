@@ -24,6 +24,10 @@ const chatSchema = new mongoose.Schema({
     type: String,
     enum: ["sent", "seen"],
   },
+  readBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }],
   deleted: {
     type: Boolean,
     default: false
