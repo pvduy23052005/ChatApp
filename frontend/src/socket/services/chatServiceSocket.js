@@ -10,4 +10,9 @@ export const chatServiceSocket = {
     if (!socket.connected) return;
     socket.emit("CLIENT_SEND_TYPING", data);
   },
+
+  userReadLastMessage: (data) => {
+    if (!socket.connected) return;
+    socket.emit("CLIENT_READ_ROOM",data);
+  },
 };

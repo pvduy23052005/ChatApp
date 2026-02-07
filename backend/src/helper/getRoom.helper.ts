@@ -20,12 +20,11 @@ interface ObjectRoom {
 const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => {
   try {
     const myIDString = res.locals.user.id;
-    const myID = new mongoose.Types.ObjectId(myIDString);
-    // 2. Query Database
+    const myID = new mongoose.Types.ObjectId(myIDString); 
     const rooms: any = await Room.find({
       "members": {
         $elemMatch: {
-          user_id: myID,
+          user_id: myID, 
           status: status
         }
       },
@@ -40,7 +39,7 @@ const getRoom = async (res: Response, status: string): Promise<ObjectRoom[]> => 
         path: "lastMessageId",
         select: "content status user_id readBy"
       }).lean();
-    const listRoom = rooms.map((room: any): ObjectRoom | null => {
+    const listRoom = rooms?.map((room: any): ObjectRoom | null => {
       const otherMember = room.members.find(
         (member: any) => member.user_id._id.toString() !== myID.toString()
       );

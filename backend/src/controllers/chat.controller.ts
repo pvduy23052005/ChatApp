@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import getRoom from "../helper/getRoom.helper";
 import getChat from "../helper/getChat.helper";
-import User from "../models/user.model";
-import Room from "../models/room.model";
 import mongoose from "mongoose";
 
-// [get] /chat/rooms?status = accepted 
+// [get] /chat/rooms?status = accepted || waiting 
 export const getListRoom = async (req: Request, res: Response) => {
   try {
     const stastusRoom: string = req.query.status?.toString() || "";
@@ -24,7 +22,6 @@ export const getListRoom = async (req: Request, res: Response) => {
     else {
       rooms = await getRoom(res, stastusRoom);
     }
-
 
     res.status(200).json({
       success: true,

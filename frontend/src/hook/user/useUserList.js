@@ -20,14 +20,22 @@ export const useUserList = () => {
   }, []);
 
   useEffect(() => {
-    const handleReturnRoomID = (data) => {
+    const handleReturnRoomNotFriendID = (data) => {
+      const { roomID } = data;
+      navigate(`/chat?/not-friend?roomId=${roomID}`);
+    };
+
+    const handleReturnRoomFriendID = (data) => {
       const { roomID } = data;
       navigate(`/chat?roomId=${roomID}`);
     };
-    socket.on("SERVER_SEND_ROOM_ID", handleReturnRoomID);
+
+    // socket
+    socket.on("SERVER_SEND_ROOM_NOT_FRIEND_ID", handleReturnRoomNotFriendID);
+    socket.on("SERVER_RETURN_ROOM_FRIEND_ID", handleReturnRoomFriendID);
 
     return () => {
-      socket.off("SERVER_SEND_ROOM_ID", handleReturnRoomID);
+      socket.off("SERVER_SEND_ROOM_ID", handleReturnRoomNotFriendID);
     };
   }, [navigate]);
 

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { chatServiceAPI } from "../../services/chatServiceAPI";
 import { socket } from "../../socket";
 import { useEffect, useRef, useState } from "react";
+import { updateSatusMessmasge_util } from "../../utils/room.util";
 
 export const useChatSocket = (currentRoomID) => {
   const [chats, setChats] = useState([]);
@@ -41,25 +42,14 @@ export const useChatSocket = (currentRoomID) => {
 
     const handleUpdateReadMessage = (data) => {
       const { roomID, userID } = data;
-      console.log(data);
       if (roomID === currentRoomID) {
-        setChats((prev) => {
-          const newListChats = prev.map((message) => {
-            const currentReadList = message.readBy || [];
-            console.log(currentReadList);
-            const isUserAlreadyRead = currentReadList.includes(userID);
-
-            if (isUserAlreadyRead) {
-              return message;
-            }
-            const updateMesssage = {
-              ...message,
-              readBy: [...currentReadList, userID],
-            };
-
-            return updateMesssage;
-          });
-          return newListChats;
+        setChats((prevListMessage) => {
+          // userID is my id .
+          const newListMessages = updateSatusMessmasge_util(
+            prevListMessage,
+            userID,
+          );
+          return newListMessages;
         });
       }
     };

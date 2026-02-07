@@ -15,7 +15,7 @@ export const userSocket = (io: Server, socket: Socket) => {
       }
     });
     if (existRoom) {
-      socket.emit("SERVER_SEND_ROOM_ID", { roomID: existRoom.id });
+      socket.emit("SERVER_SEND_ROOM_NOT_FRIEND_ID", { roomID: existRoom.id });
     } else {
       const newRoom = new Room(
         {
@@ -34,7 +34,7 @@ export const userSocket = (io: Server, socket: Socket) => {
           ]
         });
       await newRoom.save();
-      socket.emit("SERVER_SEND_ROOM_ID", { roomID: newRoom.id });
+      socket.emit("SERVER_RETURN_ROOM_FRIEND_ID", { roomID: newRoom.id });
     }
   });
   // end chatNotFriend
@@ -93,15 +93,15 @@ export const userSocket = (io: Server, socket: Socket) => {
 
   // accept friend . 
   socket.on("CLIENT_ACCEPT_FRIEND", async (data) => {
-    const userID = data.userID; 
+    const userID = data.userID;
 
     try {
       let existRoom = await Room.findOne({
         typeRoom: "single",
         "members.user_id": { $all: [myID, userID] },
       })
-        .select("_id") 
-        .lean();       
+        .select("_id")
+        .lean();
       let roomChatId;
 
       if (existRoom) {

@@ -4,6 +4,11 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import { chatServiceAPI } from "../services/chatServiceAPI";
 import { socket } from "../socket/index";
 import { useAuth } from "../hook/auth/useAuth";
+import {
+  markRoomRead_util,
+  updateLastMessageAndReorder_util,
+} from "../utils/room.util";
+import { chatServiceSocket } from "../socket/services/chatServiceSocket";
 
 export const ChatProvider = ({ children }) => {
   const [rooms, setRooms] = useState([]);
@@ -28,40 +33,34 @@ export const ChatProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    if (user?.id && currentRoomID) {
-      socket.emit("CLIENT_READ_ROOM", {
+    if (user.id && currentRoomID) {
+      // socket
+      chatServiceSocket.userReadLastMessage({
         roomID: currentRoomID,
         userID: user.id,
       });
 
       setRooms((prevRooms) => {
-        return prevRooms.map((room) => {
-          if (room._id === currentRoomID && room.lastMessage) {
-            const oldReadBy = room.lastMessage.readBy || [];
-            if (!oldReadBy.includes(user.id)) {
-              return {
-                ...room,
-                lastMessage: {
-                  ...room.lastMessage,
-                  readBy: [...oldReadBy, user.id], // Thêm mình vào
-                },
-              };
-            }
-          }
-          return room;
-        });
+        const newListRooms = markRoomRead_util(
+          prevRooms,
+          currentRoomID,
+          user.id,
+        );
+        return newListRooms;
       });
     }
-  }, [currentRoomID , user.id]);
+  }, [currentRoomID, user.id]);
 
   // online status .
   useEffect(() => {
     const handleRoomStatus = ({ userID, status }) => {
-      setOnlineUserIDs((prev) => {
+      setOnlineUserIDs((currentOnlineIDs) => {
         if (status === "online") {
-          return prev.includes(userID) ? prev : [...prev, userID];
+          return currentOnlineIDs.includes(userID)
+            ? currentOnlineIDs
+            : [...currentOnlineIDs, userID];
         } else {
-          return prev.filter((id) => id != userID);
+          return currentOnlineIDs.filter((id) => id != userID);
         }
       });
     };
@@ -97,7 +96,7 @@ export const ChatProvider = ({ children }) => {
     handleGetRooms();
   }, [location.pathname]);
 
-  // logic real-time last-message .
+  // real-time view last-message .
   useEffect(() => {
     const handleNewMessage = (newMessage) => {
       const openingRoomID = currentRoomIDRef.current;
@@ -110,37 +109,21 @@ export const ChatProvider = ({ children }) => {
           newMessage.readBy.push(myID);
         }
 
-        //
         if (!isMyMessage && openingRoomID === newMessage.room_id) {
           // socket .
-          console.log("ok");
-          socket.emit("CLIENT_READ_ROOM", {
-            roomID: newMessage.room_id,
+          chatServiceSocket.userReadLastMessage({
+            roomID: openingRoomID,
             userID: myID,
           });
         }
       }
       setRooms((prevRooms) => {
-        const roomIndex = prevRooms.findIndex(
-          (r) => r._id === newMessage.room_id,
+        const newListRooms = updateLastMessageAndReorder_util(
+          prevRooms,
+          newMessage,
+          myID,
         );
-
-        if (roomIndex === -1) return prevRooms;
-        const newRooms = [...prevRooms];
-
-        const roomToUpdate = { ...newRooms[roomIndex] };
-
-        roomToUpdate.lastMessage = {
-          content: newMessage.content,
-          createdAt: newMessage.createdAt,
-          user_id: myID,
-          readBy: newMessage.readBy,
-        };
-
-        newRooms.splice(roomIndex, 1);
-        newRooms.unshift(roomToUpdate);
-
-        return newRooms;
+        return newListRooms;
       });
     };
 
