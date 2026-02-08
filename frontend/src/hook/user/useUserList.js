@@ -22,17 +22,11 @@ export const useUserList = () => {
   useEffect(() => {
     const handleReturnRoomNotFriendID = (data) => {
       const { roomID } = data;
-      navigate(`/chat?/not-friend?roomId=${roomID}`);
-    };
-
-    const handleReturnRoomFriendID = (data) => {
-      const { roomID } = data;
-      navigate(`/chat?roomId=${roomID}`);
+      navigate(`/chat/not-friend?roomId=${roomID}`);
     };
 
     // socket
     socket.on("SERVER_SEND_ROOM_NOT_FRIEND_ID", handleReturnRoomNotFriendID);
-    socket.on("SERVER_RETURN_ROOM_FRIEND_ID", handleReturnRoomFriendID);
 
     return () => {
       socket.off("SERVER_SEND_ROOM_ID", handleReturnRoomNotFriendID);

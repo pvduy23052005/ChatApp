@@ -3,9 +3,7 @@ import { userServiceSocket } from "../../socket/services/userServiceSocket";
 
 export const useUserAction = () => {
   const handleChatNotFriend = useCallback((userID) => {
-    userServiceSocket.chatNotFriend({
-      userID: userID,
-    });
+    userServiceSocket.chatNotFriend(userID);
   }, []);
 
   const handleFriendRequest = useCallback((userID) => {

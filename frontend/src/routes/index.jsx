@@ -31,6 +31,7 @@ function AllRoute() {
       ),
       children: [
         { index: true, path: "chat", element: <Chat /> },
+        { path: "chat/not-friend", element: <Chat /> },
         {
           path: "user",
           children: [
@@ -38,7 +39,6 @@ function AllRoute() {
             { path: "accept-friends", element: <AcceptFriend /> },
           ],
         },
-        { path: "chat/not-friend", element: <Chat /> },
         {
           path: "room",
           children: [

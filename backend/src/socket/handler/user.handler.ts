@@ -24,7 +24,7 @@ export const userSocket = (io: Server, socket: Socket) => {
             {
               user_id: myID,
               role: "member",
-              status: "accepted",
+              status: "waiting",
             },
             {
               user_id: userID,
@@ -34,7 +34,7 @@ export const userSocket = (io: Server, socket: Socket) => {
           ]
         });
       await newRoom.save();
-      socket.emit("SERVER_RETURN_ROOM_FRIEND_ID", { roomID: newRoom.id });
+      socket.emit("SERVER_SEND_ROOM_NOT_FRIEND_ID", { roomID: newRoom.id });
     }
   });
   // end chatNotFriend

@@ -1,11 +1,19 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hook/auth/useAuth";
+import { useEffect } from "react";
 
-function ProtectedRoute({children}) {
+function ProtectedRoute({ children }) {
   const { isLogin } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLogin) {
+      navigate("/auth/login");
+    }
+  }, [isLogin, navigate]);
 
   if (!isLogin) {
-    return <NavLink to={"/auth/login"} />;
+    return null;
   }
 
   return children;
