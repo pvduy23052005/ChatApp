@@ -41,7 +41,7 @@ const UserInfo = ({ user, isOpen, onClose }) => {
     const file = e.target.files[0];
     if (file) {
       if (!file.type.startsWith("image/")) {
-        alert("Vui lòng chọn file ảnh!"); 
+        alert("Vui lòng chọn file ảnh!");
         return;
       }
 
@@ -84,6 +84,7 @@ const UserInfo = ({ user, isOpen, onClose }) => {
       if (data.success) {
         toast.success("Cập nhật thành công");
         setUser(data.user);
+        console.log(data.user);
         authStore.set(data.user);
       }
       // onClose();

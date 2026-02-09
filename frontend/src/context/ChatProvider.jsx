@@ -109,6 +109,10 @@ export const ChatProvider = ({ children }) => {
           newMessage.readBy.push(myID);
         }
 
+        console.log(myID);
+        console.log(newMessage);
+        
+
         if (!isMyMessage && openingRoomID === newMessage.room_id) {
           // socket .
           chatServiceSocket.userReadLastMessage({

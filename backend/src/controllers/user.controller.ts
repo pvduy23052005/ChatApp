@@ -129,7 +129,12 @@ export const editProfile = async (req: Request, res: Response) => {
       code: 200,
       success: true,
       message: "Cập nhật thông tin thành công!",
-      user: user
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        avatar: user.avatar
+      },
     });
 
   } catch (error) {
