@@ -47,8 +47,10 @@ export const loginPost = async (req: Request, res: Response) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       path: "/",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000 
     });
 
     await User.updateOne({

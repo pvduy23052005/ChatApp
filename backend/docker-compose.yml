@@ -9,7 +9,7 @@ services:
     
     ports:
       - "${PORT}:${PORT}" # Lấy port từ file .env luôn cho đồng bộ
-    
+      
     environment:
       - PORT=${PORT}
       - MONGODB_URI=${MONGODB_URI}
