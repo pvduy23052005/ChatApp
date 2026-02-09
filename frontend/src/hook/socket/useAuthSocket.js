@@ -1,16 +1,15 @@
 import { useEffect } from "react";
-import { socket } from "../../socket";
+import { socket } from "../../socket"; // File chứa instance socket tĩnh
 
 export const useAuthSocket = (isLogin) => {
   useEffect(() => {
     if (isLogin) {
       if (!socket.connected) {
         socket.connect();
-        console.log("connected" , socket.id);
       }
     } else {
-      if (!socket.connect) {
-        console.log("disconnetd");
+      if (socket.connected) {
+        console.log("Socket Disconnected");
         socket.disconnect();
       }
     }

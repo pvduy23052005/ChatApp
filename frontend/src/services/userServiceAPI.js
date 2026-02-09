@@ -13,4 +13,9 @@ export const userServiceAPI = {
     const res = await API.get("/users/friends");
     return res;
   },
+
+  editProfile: async (data) => {
+    const res = await API.post("/users/edit/profile", data);
+    return res;
+  },
 };

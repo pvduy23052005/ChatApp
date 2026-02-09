@@ -1,13 +1,13 @@
 
 @BASE_URL = http://localhost:5000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3NzA0MjkyMDksImV4cCI6MTc3MDUxNTYwOX0.4Z6S7879N58kkANWUOiJQS4b5eop4u9gW0nF4P52utY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYyMjk0NDNhMjI1NGUxNTA1Njc3NmIiLCJpYXQiOjE3NzA1NjIzODQsImV4cCI6MTc3MDY0ODc4NH0.1BHMY2eeSoSg9RhoNL5jb3hQNP8AMC7M4VWHdclpsvw
 
 ###
 POST {{BASE_URL}}/auth/login 
 Content-Type : application/json
 
 {
-  "email": "duy@gmail.com", 
+  "email": "a@gmail.com", 
   "password" : "123456"
 }
 
@@ -45,6 +45,14 @@ GET {{BASE_URL}}/users/friend-accepts
 
 ###
 GET {{BASE_URL}}/users/friends
+
+###
+POST   {{BASE_URL}}/users/edit/profile
+Content-Type: application/json
+
+{
+  "fullName" : "van abbb"
+}
 
 // end api_user. 
 

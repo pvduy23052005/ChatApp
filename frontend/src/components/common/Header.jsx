@@ -2,14 +2,13 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import "../../assets/css/header.css";
-import { useAuth } from "../../hook/auth/useAuth";
 import { authServiceAPI } from "../../services/authServiceAPI";
 import { CiCirclePlus } from "react-icons/ci";
 import UserInfo from "./UserInfo";
 
 function Header() {
   const { logout } = useContext(AppContext);
-  const { user } = useAuth();
+  const { user } = useContext(AppContext);
   const navigate = useNavigate();
   const [showUserInfo, setShowUserInfo] = useState(false);
 
