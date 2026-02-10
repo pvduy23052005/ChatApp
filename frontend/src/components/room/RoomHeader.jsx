@@ -35,7 +35,6 @@ function RoomHeader({ room, isSuperAdmin, deleteRoomFunc }) {
         toast.success(res.message);
       }
     } catch (error) {
-      console.error(error);
       const msg = error.response?.data?.message || "Lỗi khi cập nhật tên";
       toast.error(msg);
       setTitle(room.title);

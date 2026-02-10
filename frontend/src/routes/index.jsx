@@ -4,7 +4,7 @@ import Register from "../pages/auth/Register";
 import Chat from "../pages/Chat";
 import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
-import UserList from "../pages/user";
+import UserList from "../pages/User";
 import NotFound from "../components/common/NotFound";
 import Detail from "../pages/Room/Detail";
 import AcceptFriend from "../pages/User/AcceptFriend";

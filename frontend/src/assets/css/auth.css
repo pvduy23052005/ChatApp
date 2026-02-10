@@ -17,14 +17,20 @@
 }
 
 /* ========== Container & Card ========== */
+
+.login-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .login-container,
 .register-container {
   width: 100%;
 }
 
-.login-container {
-  max-width: 550px;
-}
 
 .register-container {
   max-width: 600px;
@@ -369,7 +375,8 @@
 }
 
 @keyframes shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   25% {

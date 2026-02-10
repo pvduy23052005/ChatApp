@@ -84,7 +84,6 @@ const UserInfo = ({ user, isOpen, onClose }) => {
       if (data.success) {
         toast.success("Cập nhật thành công");
         setUser(data.user);
-        console.log(data.user);
         authStore.set(data.user);
       }
       // onClose();
