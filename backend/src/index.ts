@@ -1,4 +1,4 @@
-import express, { Express} from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import allRoute from "./routes/index.route";
@@ -12,7 +12,7 @@ const port: string | number = process.env.PORT || 5000;
 const app: Express = express();
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.URL_FRONTEND || "http://localhost:5173",
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
