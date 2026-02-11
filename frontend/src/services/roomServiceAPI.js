@@ -37,4 +37,10 @@ export const roomServiceAPI = {
     const res = await API.post(`/room/leave/${roomID}`);
     return res;
   },
+  assignAdmin: async (roomID, memberID) => {
+    const res = await API.post(`/room/assign-admin/${roomID}`, {
+      newAdminID: memberID,
+    });
+    return res;
+  },
 };

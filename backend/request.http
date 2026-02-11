@@ -1,13 +1,11 @@
 
 @BASE_URL = http://localhost:5000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTYyMjk0NDNhMjI1NGUxNTA1Njc3NmIiLCJpYXQiOjE3NzA1NjIzODQsImV4cCI6MTc3MDY0ODc4NH0.1BHMY2eeSoSg9RhoNL5jb3hQNP8AMC7M4VWHdclpsvw
-
-###
+@token= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTU4OTMwOTM3MWFjNTQ2ZDk4NDRkNzUiLCJpYXQiOjE3NzA3ODI4MTQsImV4cCI6MTc3MDg2OTIxNH0.jHJY5MQnOhSM5poNiSYaP9u41WyKrmwyrCXsh6Nyk6o
 POST {{BASE_URL}}/auth/login 
 Content-Type : application/json
 
 {
-  "email": "a@gmail.com", 
+  "email": "duy@gmail.com", 
   "password" : "123456"
 }
 
@@ -39,16 +37,22 @@ Authorization: Bearer {{token}}
 // api_user. 
 ###
 GET  {{BASE_URL}}/users 
+Authorization: Bearer {{token}}
 
 ###
 GET {{BASE_URL}}/users/friend-accepts
+Authorization: Bearer {{token}}
+
 
 ###
 GET {{BASE_URL}}/users/friends
+Authorization: Bearer {{token}}
+
 
 ###
 POST   {{BASE_URL}}/users/edit/profile
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "fullName" : "van abbb"
@@ -97,6 +101,14 @@ POST  {{BASE_URL}}/room/delete/6970e3eb9f810f7b919c7063
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+###
+POST  {{BASE_URL}}/room/assign-admin/6989a12fa5c2691d757acb70
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "newAdminID" : "6976f05524c0c01427c3cfbf"
+}
 // end api_room    
 
 

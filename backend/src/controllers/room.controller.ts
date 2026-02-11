@@ -332,3 +332,45 @@ export const leaveRoom = async (req: Request, res: Response) => {
     console.log(error);
   }
 }
+
+// [post] /room/assign-admin/:id
+export const assignAdmin = async (req: Request, res: Response) => {
+  try {
+    const roomID: string = req.params.id?.toString() || "";
+    const { newAdminID } = req.body;
+    const myID: string = res.locals.user.id.toString();
+
+    if(!newAdminID){
+      return res.status(400).json({
+        success: false,
+        message: "Vui lòng chọn thành viên để chỉ định làm quản trị viên"
+      })
+    }
+
+    if (newAdminID === myID) {
+      return res.status(400).json({
+        success: false,
+        message: "Bạn đã là quản trị viên của phòng"
+      })
+    }
+    console.log(newAdminID);
+
+    await Room.updateOne(
+      {
+        _id: roomID,
+        "members.user_id": newAdminID
+      },
+      {
+        $set: {
+          "members.$.role": "superAdmin"
+        }
+      }
+    )
+    res.status(200).json({
+      success: true,
+      message: "Thay dổi quyền thành công"
+    })
+  } catch (error) {
+    console.log("error assign admin", error);
+  }
+}

@@ -18,7 +18,10 @@ router.patch("/edit/:id",
   controller.editRoomPost
 )
 
-router.get("/detail/:id", roomValidate, controller.roomDetail);
+router.get("/detail/:id",
+  roomValidate,
+  controller.roomDetail
+);
 
 router.post("/add-member/:id",
   roomValidate,
@@ -33,5 +36,10 @@ router.post("/remove-member/:id",
 router.post("/leave/:id",
   roomValidate,
   controller.leaveRoom);
+
+router.post("/assign-admin/:id",
+  roomValidate,
+  roomActionValidate,
+  controller.assignAdmin);
 
 export const roomRoute: Router = router;

@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../hook/auth/useAuth";
-import { FaDeleteLeft } from "react-icons/fa6";
+import { FaDeleteLeft, FaCrown } from "react-icons/fa6";
 import { useRoomAction } from "../../hook/room/useRoomAction";
 import { useRoomDetail } from "../../hook/room/useRoomDetail";
 import RoomHeader from "../../components/room/RoomHeader";
+import { toast } from "react-toastify";
+import { roomServiceAPI } from "../../services/roomServiceAPI";
 
 function Detail() {
   const { id } = useParams();
@@ -25,9 +27,41 @@ function Detail() {
     removeMember(id, memberID, fullName);
   };
 
+  const onAssignAdmin = async (memberID, fullName) => {
+    const isConfirmed = window.confirm(
+      `Bạn có chắc chắn muốn chuyển quyền Trưởng nhóm cho ${fullName}? Bạn sẽ trở thành thành viên thường.`,
+    );
+
+    if (!isConfirmed) return;
+    try {
+      const res = await roomServiceAPI.assignAdmin(id, memberID);
+      if (res.success) {
+        toast.success(res.message);
+        setRoom((prevRoom) => {
+          const newMemberRoom = prevRoom.members.map((member) => {
+            if (member.user_id._id !== memberID) {
+              return member;
+            }
+            const newMember = {
+              ...member,
+              role: "superAdmin",
+            };
+            return newMember;
+          });
+          return {
+            ...prevRoom,
+            members: newMemberRoom,
+          };
+        });
+      }
+    } catch (error) {
+      toast.error(error.response.data?.message);
+    }
+  };
+
   const myID = user?._id || user?.id;
   const isSuperAdmin = room?.members?.some(
-    (m) => m.user_id._id === myID && m.role === "superAdmin",
+    (m) => m.user_id?._id === myID && m.role === "superAdmin",
   );
   const isGroup = room.typeRoom === "group";
 
@@ -121,6 +155,20 @@ function Detail() {
                         }}
                       >
                         <FaDeleteLeft />
+                      </button>
+                    )}
+                    {isSuperAdmin && !isMe && (
+                      <button
+                        className="btn btn-sm btn-light text-warning ml-2"
+                        title="Chuyển quyền trưởng nhóm"
+                        onClick={() => {
+                          onAssignAdmin(
+                            member.user_id._id,
+                            member.user_id.fullName,
+                          );
+                        }}
+                      >
+                        <FaCrown />
                       </button>
                     )}
                   </div>
