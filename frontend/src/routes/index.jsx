@@ -1,15 +1,11 @@
 import { useRoutes } from "react-router-dom";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
-import Chat from "../pages/Chat";
 import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
-import UserList from "../pages/User";
-import NotFound from "../components/common/NotFound";
-import Detail from "../pages/Room/Detail";
-import AcceptFriend from "../pages/User/AcceptFriend";
-import Create from "../pages/Room/Create";
-import AddMember from "../components/room/AddMember";
+import userRoute from "./userRoute";
+import roomRoute from "./roomRoute";
+import chatRoute from "./charRoute";
 
 function AllRoute() {
   const elements = useRoutes([
@@ -29,28 +25,10 @@ function AllRoute() {
           <MainLayout />
         </ProtectedRoute>
       ),
-      children: [
-        { index: true, path: "chat", element: <Chat /> },
-        { path: "chat/not-friend", element: <Chat /> },
-        {
-          path: "user",
-          children: [
-            { index: true, element: <UserList /> },
-            { path: "accept-friends", element: <AcceptFriend /> },
-          ],
-        },
-        {
-          path: "room",
-          children: [
-            { path: "detail/:id", element: <Detail /> },
-            { path: "create", element: <Create /> },
-            { path: "add-member/:id", element: <AddMember /> },
-          ],
-        },
-      ],
+      children: [chatRoute, userRoute, roomRoute],
     },
     // 404
-    { path: "*", element: <NotFound /> },
+    { path: "*", element: <Login /> },
   ]);
   return elements;
 }
