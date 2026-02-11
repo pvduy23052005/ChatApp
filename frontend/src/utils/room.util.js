@@ -67,3 +67,23 @@ export const updateSatusMessmasge_util = (chats, myID) => {
 
   return newListMessages;
 };
+
+export const updateAdminForRoom_util = (room, memberID) => {
+  const updateMemberRoom = room.members.map((member) => {
+    if (member.user_id._id !== memberID) {
+      return member;
+    }
+
+    const updateMember = {
+      ...member,
+      role: "superAdmin",
+    };
+
+    return updateMember;
+  });
+
+  return {
+    ...room,
+    members: updateMemberRoom,
+  };
+};

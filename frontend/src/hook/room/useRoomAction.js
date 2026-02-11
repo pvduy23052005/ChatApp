@@ -80,10 +80,24 @@ export const useRoomAction = () => {
     [navigate],
   );
 
+  const assignAdmin = useCallback(async (roomID, memberID, fullName) => {
+    try {
+      const res = await roomServiceAPI.assignAdmin(roomID, memberID);
+      if (res.success) {
+        // socket .
+        roomServiceSocket.assignAdmin(roomID, fullName);
+        toast.success("Phong trưởng nhóm thành công!");
+      }
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+  }, []);
+
   return {
     deleteRoom,
     removeMember,
     leaveRoom,
     addMember,
+    assignAdmin,
   };
 };

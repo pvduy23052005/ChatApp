@@ -4,13 +4,12 @@ import { FaDeleteLeft, FaCrown } from "react-icons/fa6";
 import { useRoomAction } from "../../hook/room/useRoomAction";
 import { useRoomDetail } from "../../hook/room/useRoomDetail";
 import RoomHeader from "../../components/room/RoomHeader";
-import { toast } from "react-toastify";
-import { roomServiceAPI } from "../../services/roomServiceAPI";
+import { updateAdminForRoom_util } from "../../utils/room.util";
 
 function Detail() {
   const { id } = useParams();
   const { user } = useAuth();
-  const { deleteRoom, removeMember, leaveRoom } = useRoomAction();
+  const { deleteRoom, removeMember, leaveRoom, assignAdmin } = useRoomAction();
   const { room, setRoom, loading, error } = useRoomDetail(id);
 
   if (loading) return <div>Đang tải...</div>;
@@ -20,43 +19,24 @@ function Detail() {
   const onRemoveMember = (memberID, fullName) => {
     const isConfirm = window.confirm(`Bạn có chắc chắn muốn xóa ${fullName}? `);
     if (!isConfirm) return;
+
     setRoom((prev) => ({
       ...prev,
       members: prev.members.filter((m) => m.user_id._id !== memberID),
     }));
     removeMember(id, memberID, fullName);
   };
-
+  
   const onAssignAdmin = async (memberID, fullName) => {
     const isConfirmed = window.confirm(
       `Bạn có chắc chắn muốn chuyển quyền Trưởng nhóm cho ${fullName}? Bạn sẽ trở thành thành viên thường.`,
     );
-
     if (!isConfirmed) return;
-    try {
-      const res = await roomServiceAPI.assignAdmin(id, memberID);
-      if (res.success) {
-        toast.success(res.message);
-        setRoom((prevRoom) => {
-          const newMemberRoom = prevRoom.members.map((member) => {
-            if (member.user_id._id !== memberID) {
-              return member;
-            }
-            const newMember = {
-              ...member,
-              role: "superAdmin",
-            };
-            return newMember;
-          });
-          return {
-            ...prevRoom,
-            members: newMemberRoom,
-          };
-        });
-      }
-    } catch (error) {
-      toast.error(error.response.data?.message);
-    }
+    setRoom((prevRoom) => {
+      const updateRoom = updateAdminForRoom_util(prevRoom, memberID);
+      return updateRoom;
+    });
+    assignAdmin(id, memberID, fullName);
   };
 
   const myID = user?._id || user?.id;

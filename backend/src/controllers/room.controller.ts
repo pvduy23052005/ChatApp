@@ -353,7 +353,6 @@ export const assignAdmin = async (req: Request, res: Response) => {
         message: "Bạn đã là quản trị viên của phòng"
       })
     }
-    console.log(newAdminID);
 
     await Room.updateOne(
       {

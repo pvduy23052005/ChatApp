@@ -21,4 +21,10 @@ export const roomServiceSocket = {
       fullName: fullName,
     });
   },
+  assignAdmin: (roomID, fullName) => {
+    socket.emit("CLIENT_ASSIGN_ADMIN", {
+      roomID: roomID,
+      fullName: fullName,
+    });
+  },
 };
