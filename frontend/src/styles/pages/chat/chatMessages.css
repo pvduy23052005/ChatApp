@@ -1,0 +1,194 @@
+/* ================================================================
+   MESSAGE AREA
+   ================================================================ */
+.chat-message-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background-color: var(--color-bg-chat);
+  min-height: 0; /* Crucial for nested flex scrolling */
+}
+
+/* Custom Scrollbar for messages */
+.chat-message-body::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-message-body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-full);
+}
+.chat-message-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ==================== MESSAGE ROW ==================== */
+.message-row {
+  display: flex;
+  width: 100%;
+  margin-bottom: 2px; /* Close grouping */
+}
+
+.message-row.last-in-group {
+  margin-bottom: var(--spacing-md); /* Space between groups */
+}
+
+.message-row.incoming {
+  justify-content: flex-start;
+}
+
+.message-row.outgoing {
+  justify-content: flex-end;
+}
+
+/* ==================== AVATAR ==================== */
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  margin-right: var(--spacing-sm);
+  display: flex;
+  align-items: flex-end; /* Align to bottom of last message */
+  flex-shrink: 0;
+}
+
+.message-avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 32px;
+  height: 32px;
+}
+
+/* ==================== CONTENT WRAPPER ==================== */
+.message-content-wrapper {
+  max-width: 65%;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-row.outgoing .message-content-wrapper {
+  align-items: flex-end;
+}
+
+.message-row.incoming .message-content-wrapper {
+  align-items: flex-start;
+}
+
+/* ==================== BUBBLE ==================== */
+.message-bubble {
+  position: relative;
+  border-radius: var(--radius-bubble);
+  padding: 8px 14px;
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  word-break: break-word;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.message-bubble .text {
+  margin: 0;
+}
+
+/* Incoming Bubble */
+.message-row.incoming .message-bubble {
+  background-color: var(--bg-msg-received);
+  color: var(--text-msg-received);
+  border-bottom-left-radius: 4px; /* Default for grouped */
+}
+.message-row.incoming.last-in-group .message-bubble {
+  border-bottom-left-radius: var(--radius-bubble); /* Round back for last */
+}
+
+/* Outgoing Bubble */
+.message-row.outgoing .message-bubble {
+  background-color: var(--bg-msg-sent);
+  color: var(--text-msg-sent);
+  border-bottom-right-radius: 4px;
+}
+.message-row.outgoing.last-in-group .message-bubble {
+  border-bottom-right-radius: var(--radius-bubble);
+}
+
+/* ==================== IMAGES IN MESSAGE ==================== */
+.message-images {
+  margin-top: 4px; /* Spacing if text + image */
+}
+/* Rule removed */
+
+/* ==================== META (Time & Status) ==================== */
+.message-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 0 4px;
+}
+
+.message-meta .timestamp {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.message-meta .status {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.message-meta .status.seen {
+  color: var(--color-primary); /* Or icon */
+  font-weight: 500;
+}
+
+/* ==================== SYSTEM MESSAGE ==================== */
+.system-message {
+  display: flex;
+  justify-content: center;
+  margin: var(--spacing-lg) 0;
+  width: 100%;
+}
+
+.system-message span {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+/* ==================== FILE ATTACHMENT ==================== */
+/* Ensure FileAttachment component inside bubble looks good */
+/* Assuming FileAttachment renders .file-attachment-box */
+.file-attachment-box {
+  background-color: rgba(255, 255, 255, 0.2);
+  /* Semi transparent so it works on both white and colored backgrounds */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.message-row.incoming .file-attachment-box {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .message-content-wrapper {
+    max-width: 80%;
+  }
+
+  .chat-message-body {
+    padding: var(--spacing-md);
+  }
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext } from "react"; // 1. Import useRef
 import { FaTimes, FaCamera, FaSave } from "react-icons/fa";
-import "../../assets/css/user/style.css";
+import "../../styles/pages/user/userInfo.css";
 import { uploadFile } from "../../utils/uploadFile.utils";
 import { userServiceAPI } from "../../services/userServiceAPI";
 import { toast } from "react-toastify";
@@ -16,8 +16,8 @@ const UserInfo = ({ user, isOpen, onClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const fileInputRef = useRef(null);
-
   const { setUser } = useContext(AppContext);
+
   useEffect(() => {
     if (isOpen && user) {
       setFullName(user.fullName || "");

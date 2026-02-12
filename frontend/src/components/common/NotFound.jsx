@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "../../assets/css/notFound.css";
+import "../../styles/components/common/notFound.css";
 
 function NotFound() {
   const navigate = useNavigate();
@@ -58,7 +58,6 @@ function NotFound() {
             Quay lại
           </button>
         </div>
-
       </div>
 
       {/* Animated Background */}

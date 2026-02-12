@@ -12,7 +12,7 @@ const port: string | number = process.env.PORT || 5000;
 const app: Express = express();
 
 const corsOptions = {
-  origin: process.env.URL_FRONTEND || "http://localhost:5173",
+  origin: process.env.URL_FRONTEND || "http://localhost:5175",
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],

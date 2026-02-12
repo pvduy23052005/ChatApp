@@ -1,4 +1,4 @@
-import "../../assets/css/typingChat.css";
+import "../../styles/components/common/typingChat.css";
 
 function TypingChat({ user, showAvatar = true }) {
   return (

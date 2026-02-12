@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { userServiceAPI } from "../../services/userServiceAPI";
-import "../../assets/css/user.css";
+import "../../styles/pages/user/user.css";
 import { useUserAction } from "../../hook/user/useUserAction";
 
 function AcceptFriend() {

@@ -1,14 +1,14 @@
-import Header from "../components/common/Header";
+import Header from "../components/ui/Header";
 import { Outlet } from "react-router-dom";
 
 function MainLayout() {
   return (
-    <>
+    <div className="app-layout">
       <Header />
-      <div className="main">
+      <div className="main-content">
         <Outlet />
       </div>
-    </>
+    </div>
   );
 }
 

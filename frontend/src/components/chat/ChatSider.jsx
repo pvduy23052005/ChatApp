@@ -1,81 +1,124 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, NavLink } from "react-router-dom";
 import { useAuth } from "../../hook/auth/useAuth";
-import { NavLink } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ChatContext } from "../../context/ChatContext";
+import { IoSearchOutline } from "react-icons/io5";
+import "../../styles/pages/chat/chatSider.css";
+import { useLocation } from "react-router-dom";
 
 function ChatSider() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const currentRoomID = searchParams.get("roomId");
   const { rooms, onlineUserIDs } = useContext(ChatContext);
+  const [searchRoom, setSearchRoom] = useState("");
+  const location = useLocation();
 
-  const truncateText = (text, maxLength) => {
-    if (!text) return "";
-    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+  const formatLastTime = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    if (diffMins < 1) return "Vừa xong";
+    if (diffMins < 60) return `${diffMins}p`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}ng`;
   };
 
+  const filteredRooms = rooms?.filter((room) =>
+    room.title?.toLowerCase().includes(searchRoom.toLowerCase()),
+  );
+
   return (
-    <div className="chat-sider">
-      <div className="chat-header">
-        <div className="nav-header">
-          <NavLink to={"/chat"} end>
-            Tin nhắn
+    <aside className="sidebar-left">
+      {/* Header */}
+      <div className="sidebar-header">
+        <h2 className="sidebar-title">Tin nhắn</h2>
+
+        {/* Search room */}
+        <div className="sidebar-search">
+          <IoSearchOutline className="search-icon" />
+          <input
+            type="text"
+            placeholder="Tìm kiếm..."
+            value={searchRoom}
+            onChange={(e) => setSearchRoom(e.target.value)}
+          />
+        </div>
+
+        {/* nav-tabs */}
+        <div className="sidebar-tabs">
+          <NavLink
+            to="/chat"
+            end
+            className={({ isActive }) =>
+              `sidebar-tab ${isActive ? "active" : ""}`
+            }
+          >
+            Tất cả
           </NavLink>
-          <NavLink to={"/chat/not-friend"}>Tin nhắn chờ</NavLink>
+          <NavLink
+            to="/chat/not-friend"
+            className={({ isActive }) =>
+              `sidebar-tab ${isActive ? "active" : ""}`
+            }
+          >
+            Tin nhắn chờ
+          </NavLink>
         </div>
       </div>
-      {rooms &&
-        rooms.map((room) => {
-          const myId = user?._id || user?.id;
 
-          const lastMsg = room.lastMessage || {};
-          const isMe = lastMsg.user_id === myId;
+      {/* Conversation List */}
+      <div className="conversation-list">
+        {filteredRooms &&
+          filteredRooms.map((room) => {
+            const myId = user?._id || user?.id;
+            const lastMsg = room.lastMessage || {};
+            const isMe = lastMsg.user_id === myId;
+            const isRead = room.lastMessage?.readBy?.includes(myId);
+            const classRead = isRead ? "" : "unread";
+            const prefix = isMe ? "Bạn: " : "";
+            const messageContent = lastMsg.content || "Bắt đầu cuộc trò chuyện";
 
-          const isRead = room.lastMessage.readBy?.includes(myId);
-          const classRead = isRead ? "" : "unread";
+            const isOnline = onlineUserIDs.includes(room.otherUserId);
+            const isActive = currentRoomID === room._id;
 
-          const prefix = isMe ? "Bạn: " : `${user.fullName}:`;
-          const messageContent = lastMsg.content
-            ? truncateText(lastMsg.content, 10)
-            : "Bắt đầu trò chuyện";
-          const isOnline = onlineUserIDs.includes(room.otherUserId);
-          const isActive = currentRoomID === room._id;
-
-          return (
-            <Link
-              to={`${location.pathname}?roomId=${room._id}`}
-              key={room._id}
-              className={`box-friend ${isActive ? "active" : ""}`}
-              user_id={room.otherUserId}
-            >
-              <img
-                src={room.avatar || "/images/default-avatar.webp"}
-                alt="Avatar"
-              />
-
-              <div className="inner-content">
-                <span className="name">{truncateText(room.title, 25)}</span>
-                <span className={`last-message ${classRead}`}>
-                  {lastMsg.content ? (
-                    <>
-                      {prefix} {messageContent}
-                    </>
-                  ) : (
-                    "Bắt đầu trò chuyện"
-                  )}
-                </span>
-              </div>
-
-              {isOnline && (
-                <div className="inner-status" status={room.statusOnline}>
-                  <i className="fa-solid fa-circle"></i>
+            return (
+              <Link
+                to={`${location.pathname}?roomId=${room._id}`}
+                key={room._id}
+                className={`conversation-item ${isActive ? "active" : ""}`}
+              >
+                {/* Avatar */}
+                <div className="conv-avatar">
+                  <img
+                    src={room.avatar || "/images/default-avatar.webp"}
+                    alt={room.title}
+                  />
+                  {isOnline && <span className="online-dot"></span>}
                 </div>
-              )}
-            </Link>
-          );
-        })}
-    </div>
+
+                {/* Content */}
+                <div className="conv-content">
+                  <div className="conv-top">
+                    <span className="conv-name">{room.title}</span>
+                    <span className="conv-time">
+                      {formatLastTime(lastMsg.createdAt)}
+                    </span>
+                  </div>
+                  <p className={`conv-preview ${classRead}`}>
+                    {prefix}
+                    {messageContent}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+      </div>
+    </aside>
   );
 }
 

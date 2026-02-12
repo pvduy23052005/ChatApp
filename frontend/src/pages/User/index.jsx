@@ -1,4 +1,4 @@
-import "../../assets/css/user.css";
+import "../../styles/pages/user/user.css";
 import { useUserList } from "../../hook/user/useUserList";
 import { useUserAction } from "../../hook/user/useUserAction";
 
@@ -22,7 +22,7 @@ function UserList() {
   };
 
   return (
-    <div className="container py-3">
+    <div className="container py-3 user-list-page">
       <div className="container-user">
         <div className="header">
           <h3>Danh sách người dùng</h3>

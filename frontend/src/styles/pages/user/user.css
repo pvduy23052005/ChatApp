@@ -1,11 +1,16 @@
+.user-list-page {
+  height: 100%;
+  overflow-y: auto;
+}
+
 .container-user {
   box-shadow: var(--item-box-shadow);
   border-radius: 12px;
   padding: 50px;
 }
 
-.container-user h3{
-  color : var(--color-hover-primary);
+.container-user h3 {
+  color: var(--color-hover-primary);
   margin-bottom: 20px;
   border-bottom: 2px solid var(--color-hover-primary);
 }
@@ -153,7 +158,7 @@
   display: block;
 }
 
-.box-user.refuse .btn-accept-friend{
+.box-user.refuse .btn-accept-friend {
   display: none;
 }
 
@@ -169,6 +174,6 @@
   display: none;
 }
 
-.box-user.accepted .btn-refuse-friend{
+.box-user.accepted .btn-refuse-friend {
   display: none;
 }

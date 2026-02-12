@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import PreviewImage from "../attachments/PreviewImageAttachment";
 import { uploadFile } from "../../utils/uploadFile.utils";
 import { useAuth } from "../../hook/auth/useAuth";
+import "../../styles/pages/chat/chatFooter.css";
 
 function ChatMessageFooter() {
   const [content, setContent] = useState("");
@@ -60,57 +61,58 @@ function ChatMessageFooter() {
 
   return (
     <div className="chat-message-footer">
-      <form onSubmit={handleSubmit} style={{ position: "relative" }}>
+      <form onSubmit={handleSubmit} className="chat-footer-form">
         <PreviewImage
           files={files}
           setFiles={setFiles}
           inputRef={fileInputRef}
         />
 
-        <input
-          type="text"
-          placeholder="Nhập nội dung"
-          value={content}
-          onChange={handleInputChange}
-          ref={inputRef}
-        />
+        <div className="chat-input-wrapper">
+          <input
+            type="text"
+            placeholder="Type a message..."
+            value={content}
+            onChange={handleInputChange}
+            ref={inputRef}
+          />
 
-        {/* Emoji */}
-        <EmojiPickerAttachment
-          showEmoji={showEmoji}
-          setShowEmoji={setShowEmoji}
-          handleEmojiClick={handleEmojiClick}
-        />
+          {/* Action Buttons Grouped Inside Input */}
+          <div className="input-actions-group">
+            <button
+              className="input-action-btn"
+              type="button"
+              onClick={() => setShowEmoji(!showEmoji)}
+              title="Insert Emoji"
+            >
+              <MdInsertEmoticon size={22} />
+            </button>
 
-        {/* Nút kẹp ghim kích hoạt input file */}
-        <label
-          className="btn button-footer"
-          type="button" // Để type button để tránh submit form nhầm
-          htmlFor="preview-image"
-          style={{
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onClick={handleAttachmentClick}
-        >
-          <CgAttachment />
-        </label>
+            <label
+              className="input-action-btn"
+              htmlFor="preview-image"
+              title="Attach File"
+              onClick={handleAttachmentClick}
+            >
+              <CgAttachment size={22} />
+            </label>
 
-        <button
-          className="btn button-footer"
-          type="button"
-          onClick={() => {
-            setShowEmoji(!showEmoji);
-          }}
-        >
-          <MdInsertEmoticon />
-        </button>
-        {/* btn send */}
-        <button className="btn button-footer" type="submit">
-          <CiPaperplane />
-        </button>
+            <button
+              className="input-action-btn send-btn"
+              type="submit"
+              title="Send"
+            >
+              <CiPaperplane size={20} />
+            </button>
+          </div>
+
+          {/* Emoji Picker */}
+          <EmojiPickerAttachment
+            showEmoji={showEmoji}
+            setShowEmoji={setShowEmoji}
+            handleEmojiClick={handleEmojiClick}
+          />
+        </div>
       </form>
     </div>
   );

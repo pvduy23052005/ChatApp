@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "../../assets/css/previewImage.css";
+import "../../styles/components/attachments/previewImage.css";
 import FilePreview from "reactjs-file-preview";
 import { TiDelete } from "react-icons/ti";
 

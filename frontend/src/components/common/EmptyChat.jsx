@@ -1,4 +1,4 @@
-import "../../assets/css/emptyChat.css";
+import "../../styles/components/common/emptyChat.css";
 import { Link } from "react-router-dom";
 
 function EmptyChatState() {
@@ -24,7 +24,7 @@ function EmptyChatState() {
       <h3 className="empty-chat-title">Bắt đầu cuộc trò chuyện</h3>
       <p className="empty-chat-text">Bạn muốn nhắn tin với ai?</p>
       <div className="empty-chat-suggestions">
-        <Link to = "/user">
+        <Link to="/user">
           <div className="suggestion-item">
             <span className="suggestion-icon">👋</span>
             <span>Gửi lời chào</span>

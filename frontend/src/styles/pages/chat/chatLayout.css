@@ -1,0 +1,71 @@
+/* ================================================================
+   CHAT LAYOUT – Full-height 3-column layout
+   ================================================================ */
+.chat-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--color-bg-app);
+}
+
+/* --- 1. LEFT SIDEBAR --- */
+.sidebar-left {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  height: 100%;
+  background-color: var(--color-bg-sidebar);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+/* --- 2. MAIN CHAT AREA --- */
+.chat-main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--color-bg-chat);
+  position: relative;
+  min-width: 0; /* Important for flex child truncation */
+}
+
+.chat-main-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* --- 3. RIGHT SIDEBAR --- */
+.sidebar-right {
+  width: var(--info-panel-width);
+  min-width: var(--info-panel-width);
+  height: 100%;
+  background-color: var(--color-bg-sidebar);
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .sidebar-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    box-shadow: var(--shadow-xl);
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar-left {
+    width: 80px; /* Collapsed sidebar for tablet */
+  }
+}

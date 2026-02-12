@@ -1,0 +1,123 @@
+/* ================================================================
+   CHAT FOOTER – Message Input
+   ================================================================ */
+.chat-message-footer {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--color-bg-surface);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+  z-index: 20;
+}
+
+.chat-footer-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+/* ==================== INPUT WRAPPER (The Pill) ==================== */
+.chat-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--color-bg-input);
+  border-radius: 24px; /* radius-xl equivalent */
+  padding: 6px 8px 6px 16px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 100%;
+}
+
+.chat-input-wrapper:focus-within {
+  border-color: var(--color-primary-hover);
+  background: var(--color-bg-surface);
+  box-shadow: 0 0 0 3px var(--color-primary-subtle);
+}
+
+.chat-message-footer input[type="text"] {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  outline: none;
+  min-width: 0;
+}
+
+.chat-message-footer input[type="text"]::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+/* ==================== ACTIONS GROUP ==================== */
+.input-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ==================== BUTTONS ==================== */
+.input-action-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.input-action-btn:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-primary);
+}
+
+.input-action-btn.send-btn {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  width: 36px;
+  height: 36px;
+  margin-left: 4px;
+  font-size: 18px;
+}
+
+.input-action-btn.send-btn:hover {
+  background: var(--color-primary-hover);
+  transform: scale(1.05);
+}
+
+/* ==================== EMOJI PICKER ==================== */
+.emoji-picker-container {
+  position: absolute;
+  bottom: 55px;
+  right: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+/* ==================== PREVIEW IMAGE ==================== */
+.preview-images {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  padding-bottom: var(--spacing-sm);
+  width: 100%;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .chat-message-footer {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}

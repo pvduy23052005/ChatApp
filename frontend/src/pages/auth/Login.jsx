@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../../assets/css/auth.css";
+import "../../styles/pages/auth/auth.css";
 import { AppContext } from "../../context/AppContext";
 import { authServiceAPI } from "../../services/authServiceAPI";
 import { useContext } from "react";
@@ -26,7 +26,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
 
     try {
       const res = await authServiceAPI.login({ email, password });

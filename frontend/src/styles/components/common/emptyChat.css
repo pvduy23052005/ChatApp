@@ -1,0 +1,105 @@
+/* ================================================================
+   EMPTY CHAT STATE
+   ================================================================ */
+.empty-chat-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 60px 24px;
+  text-align: center;
+  background: var(--color-bg-chat, #f0f2f5);
+}
+
+.empty-chat-icon {
+  margin-bottom: 24px;
+  color: var(--color-text-muted, #94a3b8);
+  animation: emptyChatFadeIn 0.6s ease-out;
+}
+
+.empty-chat-icon svg {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.06));
+}
+
+.empty-chat-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-primary, #1a1d26);
+  margin-bottom: 8px;
+  animation: emptyChatFadeIn 0.7s ease-out;
+}
+
+.empty-chat-text {
+  font-size: 14px;
+  color: var(--color-text-secondary, #64748b);
+  margin: 0 0 32px 0;
+  animation: emptyChatFadeIn 0.8s ease-out;
+}
+
+.empty-chat-suggestions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: emptyChatFadeIn 0.9s ease-out;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--color-bg-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-full, 9999px);
+  font-size: 14px;
+  color: var(--color-text-secondary, #64748b);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(0, 0, 0, 0.04));
+}
+
+.suggestion-item:hover {
+  background: var(--color-primary-subtle, rgba(93, 110, 231, 0.1));
+  border-color: var(--color-primary-light, #818cf8);
+  color: var(--color-primary, #5d6ee7);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md, 0 4px 6px rgba(0, 0, 0, 0.07));
+}
+
+.suggestion-icon {
+  font-size: 18px;
+}
+
+@keyframes emptyChatFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .empty-chat-container {
+    padding: 40px 20px;
+  }
+
+  .empty-chat-icon svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .empty-chat-title {
+    font-size: 18px;
+  }
+
+  .suggestion-item {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}

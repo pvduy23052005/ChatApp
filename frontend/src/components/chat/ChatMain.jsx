@@ -5,15 +5,19 @@ import EmptyChatState from "../common/EmptyChat";
 import ChatHeader from "./ChatHeader";
 import { useContext } from "react";
 import { ChatContext } from "../../context/ChatContext";
+import "../../styles/pages/chat/chatLayout.css";
 
-function ChatMain() {
+function ChatMain({ toggleInfo }) {
   const { currentRoomID, currentRoomInfo } = useContext(ChatContext);
   const { chats, isShowTyping, typingUser } = useChatSocket(currentRoomID);
   return (
     <div className="chat-main-body">
       {currentRoomID ? (
         <>
-          <ChatHeader currentRoomInfo={currentRoomInfo} />
+          <ChatHeader
+            currentRoomInfo={currentRoomInfo}
+            toggleInfo={toggleInfo}
+          />
 
           <ChatMessageGroup
             chats={chats}

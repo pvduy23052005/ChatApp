@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../../assets/css/auth.css";
+import "../../styles/pages/auth/auth.css";
 import { authServiceAPI } from "../../services/authServiceAPI";
 
 function Register() {

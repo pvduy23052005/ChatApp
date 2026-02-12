@@ -1,26 +1,96 @@
-@import url("https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 :root {
-  /* Light theme colors */
-  --color-text-primary: #1f2936; /* màu chữ chính */
-  --color-text-placeholder: #798eae; /* màu placeholder */
-  --color-bg-primary: #f9fafb; /* nền chính */
-  --color-bg-secondary: #ececfd; /* nền phụ */
-  --color-bg-sidebar: #ffffff; /* nền sidebar */
-  --color-border-hr: #e2e8f0; /* màu viền/đường kẻ */
-  --color-hover-primary: #695cfe; /* màu hover chính */
-  --color-hover-secondary: #e2e2fb; /* màu hover phụ */
-  --color-shadow: rgba(0, 0, 0, 0.05); /* bóng đổ */
-  --item-box-shadow:
-    rgba(60, 64, 67, 0.1) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  /* ====== DESIGN SYSTEM: MODERN CHAT UI ====== */
 
-  --color-button: #5d6ee7;
-  --color-button-active: #00b591;
-  --color-button-revise: rgb(99, 99, 219);
-  --color-button-delete: rgb(234, 37, 37);
-  --color-button-inactive: rgb(214, 62, 62);
-  --color-button-detail: rgb(204, 204, 147);
+  /* --- COLORS: BRAND --- */
+  --color-primary: #6366f1; /* Indigo 500 */
+  --color-primary-hover: #4f46e5; /* Indigo 600 */
+  --color-primary-active: #4338ca; /* Indigo 700 */
+  --color-primary-light: #e0e7ff; /* Indigo 100 */
+  --color-primary-subtle: rgba(99, 102, 241, 0.1);
+
+  /* --- COLORS: NEUTRAL / TEXT --- */
+  --color-text-primary: #0f172a; /* Slate 900 */
+  --color-text-secondary: #475569; /* Slate 600 */
+  --color-text-muted: #94a3b8; /* Slate 400 */
+  --color-text-placeholder: #cbd5e1; /* Slate 300 */
+  --color-text-inverse: #ffffff;
+
+  /* --- COLORS: BACKGROUNDS --- */
+  --color-bg-app: #f8fafc; /* Slate 50 */
+  --color-bg-surface: #ffffff; /* White */
+  --color-bg-sidebar: #ffffff; /* White */
+  --color-bg-chat: #f1f5f9; /* Slate 100 */
+  --color-bg-hover: #f1f5f9; /* Slate 100 */
+  --color-bg-active: #e2e8f0; /* Slate 200 */
+  --color-bg-input: #f1f5f9; /* Slate 100 */
+
+  /* --- COLORS: BORDERS --- */
+  --color-border: #e2e8f0; /* Slate 200 */
+  --color-border-hover: #cbd5e1; /* Slate 300 */
+  --divider: 1px solid var(--color-border);
+
+  /* --- COLORS: STATUS --- */
+  --color-online: #10b981; /* Emerald 500 */
+  --color-offline: #94a3b8; /* Slate 400 */
+  --color-away: #f59e0b; /* Amber 500 */
+  --color-danger: #ef4444; /* Red 500 */
+  --color-success: #22c55e; /* Green 500 */
+  --color-warning: #f59e0b; /* Amber 500 */
+
+  /* --- COLORS: MESSAGES --- */
+  --bg-msg-sent: var(--color-primary);
+  --text-msg-sent: #ffffff;
+  --bg-msg-received: #ffffff;
+  --text-msg-received: var(--color-text-primary);
+
+  /* --- MAPPED / ALIASED COLORS --- */
+  --color-button: var(--color-primary);
+  --color-button-active: var(--color-primary-active);
+  --color-bg-primary: var(--color-bg-app);
+  --color-bg-secondary: var(--color-bg-active);
+  --color-hover-secondary: var(--color-border);
+  --color-border-hr: var(--color-border);
+  --color-hover-primary: var(--color-primary-hover);
+  --item-box-shadow: var(--shadow-sm);
+
+  /* --- SPACING & SIZING --- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+
+  --header-height: 64px;
+  --footer-height: 72px; /* Input area */
+  --sidebar-width: 320px;
+  --info-panel-width: 300px;
+
+  /* --- RADIUS --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --radius-bubble: 18px;
+
+  /* --- SHADOWS --- */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-input:
+    0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  /* --- TYPOGRAPHY --- */
+  --font-family: "Inter", system-ui, -apple-system, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
 }
 
 * {
