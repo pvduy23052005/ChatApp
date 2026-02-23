@@ -1,6 +1,6 @@
 import * as userRepository from "../repositories/user.repository";
-import md5 from "md5";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 export const login = async (email?: string, password?: string) => {
 
@@ -14,7 +14,9 @@ export const login = async (email?: string, password?: string) => {
     throw new Error("Email không chính xác");
   }
 
-  if (user.password !== md5(password)) {
+  const isPasswordMatch: boolean = await bcrypt.compare(password, user.password);
+
+  if (isPasswordMatch === false) {
     throw new Error("Mật khẩu không đúng");
   }
 
@@ -49,9 +51,8 @@ export const logout = async (userID: string) => {
 }
 
 export const registerUser = async (dataUser: any) => {
-  let { fullName, email, password, passwordConfirm } = dataUser;
+  const { fullName, email, password, passwordConfirm } = dataUser;
 
-  console.log(dataUser);
   if (!email || !fullName || !password || !passwordConfirm) {
     throw new Error("Vui lòng điền đầy đủ thông tin");
   }
@@ -65,9 +66,9 @@ export const registerUser = async (dataUser: any) => {
     throw new Error("Email đã tồn tại");
   }
 
-  password = md5(password);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await userRepository.createUser(fullName, email, password);
+  const newUser = await userRepository.createUser(fullName, email, hashedPassword);
 
   if (!newUser) {
     throw new Error("Đăng ký thất bại");

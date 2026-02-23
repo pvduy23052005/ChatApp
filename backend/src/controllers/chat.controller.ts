@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
-import getRoom from "../helper/getRoom.helper";
-import mongoose from "mongoose";
 import * as chatService from "../services/chat.service";
+import { getRoom } from "../services/room.service";
 
 // [get] /chat/rooms?status = accepted || waiting 
 export const getListRoom = async (req: Request, res: Response) => {
   try {
     const stastusRoom: string = req.query.status?.toString() || "";
+    const myID: string = res.locals.user.id.toString();
+
     let rooms: any = [];
 
     if (!stastusRoom) {
@@ -17,10 +18,10 @@ export const getListRoom = async (req: Request, res: Response) => {
     }
 
     if (stastusRoom === "accepted") {
-      rooms = await getRoom(res, stastusRoom);
+      rooms = await getRoom(myID, stastusRoom);
     }
     else {
-      rooms = await getRoom(res, stastusRoom);
+      rooms = await getRoom(myID, stastusRoom);
     }
 
     res.status(200).json({
@@ -40,10 +41,6 @@ export const getListRoom = async (req: Request, res: Response) => {
 export const getListChat = async (req: Request, res: Response) => {
   try {
     const roomID: string = (req.params.id?.toString()) || "";
-
-    if (!mongoose.Types.ObjectId.isValid(roomID)) {
-      return res.status(400).json({ message: "ID phòng không đúng định dạng" });
-    }
 
     const chats = await chatService.getChatHistory(roomID);
 

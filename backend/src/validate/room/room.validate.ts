@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { isUserInRoom } from '../../helper/isUserInRoom.helper';
+import { isUserInRoom } from '../../services/room.service';
 
 async function roomValidate(req: Request, res: Response, next: NextFunction) {
   try {
@@ -18,7 +18,7 @@ async function roomValidate(req: Request, res: Response, next: NextFunction) {
     if (!room) {
       return res.status(403).json({
         success: false,
-        message: "Bạn không có quyền truy cập phòng chat này."
+        message: "Bạn không có trong cuộc trò chuyện này"
       });
     }
 

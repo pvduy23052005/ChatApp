@@ -29,7 +29,7 @@ const authMiddleware = async (
     }).select("fullName friendAccepts friendList friendRequests");
 
     if (!user) {
-      return res.status(4001).json({
+      return res.status(401).json({
         success: false,
         message: "Tài khoản không tồn tại hoặc đã bị khóa."
       })

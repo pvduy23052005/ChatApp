@@ -1,17 +1,15 @@
-import { NextFunction } from 'express';
-import { Request, Response } from 'express';
-import { isUserInRoom } from '../../helper/isUserInRoom.helper';
-
+import { Request, Response, NextFunction } from 'express';
+import { isUserInRoom } from './../../services/room.service';
 
 async function chatValidate(req: Request, res: Response, next: NextFunction) {
   try {
     const roomID = req.params.id?.toString() || "";
     const myID = res.locals.user.id.toString();
 
-    const room = await isUserInRoom(roomID, myID);
+    const checkIsUserInRoom = await isUserInRoom(roomID, myID);
 
-    if (!room) {
-      return res.status(400).json({
+    if (!checkIsUserInRoom) {
+      return res.status(403).json({
         success: false,
         message: "Bạn không có trong cuộc trò chuyện này"
       });
