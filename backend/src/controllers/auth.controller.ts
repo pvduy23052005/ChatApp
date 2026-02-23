@@ -1,7 +1,5 @@
 import { Request, Response } from "express"
-import User from "../models/user.model";
-import md5 from "md5";
-import jwt from "jsonwebtoken";
+import * as authService from "../services/auth.service";
 
 // [post] auth/login . 
 export const loginPost = async (req: Request, res: Response) => {
@@ -9,54 +7,14 @@ export const loginPost = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Vui lòng điền đầy đủ thông tin"
-      });
-    }
-
-    const user = await User.findOne({
-      email: email,
-      deleted: false,
-    });
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "Email không chính xác"
-      });
-    }
-
-    if (user.password != md5(password)) {
-      return res.status(400).json({
-        success: false,
-        message: "Mật khẩu không đúng"
-      });
-    }
-
-    const payload = {
-      userId: user.id,
-    }
-
-    const token = jwt.sign(
-      payload,
-      process.env.ACCESS_TOKEN_SECRET as string, {
-      expiresIn: "1d"
-    })
+    const { user, token } = await authService.login(email, password);
 
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "none",
       path: "/",
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000 
-    });
-
-    await User.updateOne({
-      _id: user.id,
-    }, {
-      statusOnline: "online"
+      maxAge: 24 * 60 * 60 * 1000
     });
 
     // socket .
@@ -67,20 +25,15 @@ export const loginPost = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        avatar: user.avatar
-      },
+      user: user,
       token: token
     })
 
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
+  } catch (error: any) {
+    console.log("error loginpost:", error);
+    res.status(400).json({
       success: false,
-      message: "Lỗi hệ thống, vui lòng thử lại sau"
+      message: error.message || "Lỗi hệ thống, vui lòng thử lại sau"
     });
   }
 }
@@ -89,73 +42,54 @@ export const loginPost = async (req: Request, res: Response) => {
 export const logoutPost = async (req: Request, res: Response) => {
   try {
     const { myID } = req.body;
+
     res.clearCookie("token");
-    await User.updateOne({
-      _id: myID,
-    }, {
-      statusOnline: "offline"
-    });
+
+    const check: boolean = await authService.logout(myID);
+
     // socket .
     _io.emit("SERVER_RETURN_ROOM_STATUS", {
       userID: myID,
       status: "offline"
     });
+
     res.status(200).json({
       success: true,
       message: "Đăng xuất thành công!"
     });
-  } catch (error) {
-    res.status(500).json({
+
+  } catch (error: any) {
+    res.status(400).json({
       success: false,
-      message: "Lỗi hệ thống "
+      message: error.message || "Lỗi hệ thống "
     });
   }
 }
 
 // [post] auth/register . 
-export const register = async (req: Request, res: Response) => {
+export const registerPost = async (req: Request, res: Response) => {
   try {
 
     let { email, password, fullName, passwordConfirm } = req.body;
-    const user = await User.findOne({
-      email: email,
-    });
 
-    if (user) {
-      res.status(400).json({
-        success: false,
-        message: "Email đã tồn tại"
-      });
-    }
-
-    if (password != passwordConfirm) {
-      res.status(400).json({
-        success: false,
-        message: "Xác nhận mật khẩu không đúng"
-      })
-    }
-
-    password = md5(password);
-    const userObject = {
-      fullName: fullName,
-      email: email,
-      password: password,
-      statusOffline: "offline",
+    const dataUser = {
+      fullName: fullName.trim(),
+      email: email.trim(),
+      password: password.trim(),
+      passwordConfirm: passwordConfirm.trim(),
     };
 
-    const newUser = new User(userObject);
-    newUser.save();
-
+    const newUser = await authService.registerUser(dataUser)
 
     res.status(201).json({
       success: true,
       dataUser: newUser
-    })
+    });
 
-  } catch (error) {
-    res.status(500).json({
+  } catch (error: any) {
+    res.status(400).json({
       success: false,
-      message: "Lỗi hệ thống khi đăng xuất"
+      message: error.message || "Lỗi hệ thống khi đăng xuất"
     });
   }
 }
