@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { uploadCloud } from '../helper/uploadCloud.helper';
+import { uploadCloud_util } from '../utils/uploadCloud.util';
 
 export const uploadFile = async (req: Request, res: Response) => {
   try {
@@ -12,7 +12,7 @@ export const uploadFile = async (req: Request, res: Response) => {
       });
     }
 
-    const urls = await uploadCloud(files);
+    const urls = await uploadCloud_util(files);
 
     res.status(200).json({
       code: 200,

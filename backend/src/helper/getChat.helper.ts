@@ -5,14 +5,14 @@ const getChat = async (roomId: string) => {
     room_id: roomId,
     deleted: false
   })
-    .sort({ createdAt: 1 })
+    .sort({ createdAt: -1 })
     .populate({
       path: "user_id",
       select: "fullName avatar"
     })
     .lean();
 
-  return chats;
+  return chats.reverse();
 }
 
 export default getChat;

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import getRoom from "../helper/getRoom.helper";
-import getChat from "../helper/getChat.helper";
 import mongoose from "mongoose";
+import * as chatService from "../services/chat.service";
 
 // [get] /chat/rooms?status = accepted || waiting 
 export const getListRoom = async (req: Request, res: Response) => {
@@ -45,7 +45,7 @@ export const getListChat = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "ID phòng không đúng định dạng" });
     }
 
-    const chats = await getChat(roomID);
+    const chats = await chatService.getChatHistory(roomID);
 
     res.json({
       success: true,
