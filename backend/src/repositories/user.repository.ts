@@ -33,6 +33,16 @@ export const findUsersInList = async (listId: string[]) => {
   return await User.find({ _id: { $in: listId }, deleted: false }).select("fullName avatar");
 }
 
+export const findFriendNotInRoom = async (friendIDs: string[], memberIDs: string[]) => {
+  const friends = await User.find(
+    {
+      _id: { $in: friendIDs, $nin: memberIDs },
+      deleted: false
+    }).select("fullName avatar");
+
+  return friends;
+}
+
 export const updateProfile = async (userID: string, dataUpdate: any) => {
   const user = await User.findByIdAndUpdate(userID, dataUpdate, { new: true }).select("-password");
   return user;

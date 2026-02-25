@@ -9,13 +9,13 @@ router.post("/create", controller.createRoomPost);
 router.post("/delete/:id",
   roomValidate,
   roomActionValidate,
-  controller.deleteRoomPost
+  controller.deleteRoom
 )
 
 router.patch("/edit/:id",
   roomValidate,
   roomActionValidate,
-  controller.editRoomPost
+  controller.editRoom
 )
 
 router.get("/detail/:id",
