@@ -17,13 +17,24 @@ interface ObjectRoom {
 }
 
 export const getRoom = async (userID: string, status: string): Promise<ObjectRoom[]> => {
+
+  if (!status || !userID) {
+    throw new Error("Vui lòng cung cấp trạng thái phòng và ID người dùng");
+  }
+
+  const allowedStatus = ["accepted", "waiting"];
+
+  if (!allowedStatus.includes(status)) {
+    throw new Error("Trạng thái không hợp lệ");
+  }
+
   const rooms: any = await roomRepository.getRoomByUserAndStatus(userID, status);
 
   if (!rooms || rooms.length === 0) return [];
 
   const listRooms = rooms.map((room: any): ObjectRoom => {
     const otherMember = room.members.find(
-      (member: any) => member.user_id._id.toString() && member.user_id !== userID
+      (member: any) => member.user_id._id.toString() !== userID
     )
 
     let titleRoom = "";
@@ -78,6 +89,10 @@ export const getRoom = async (userID: string, status: string): Promise<ObjectRoo
 
 export const isUserInRoom = async (roomID: string, userID: string): Promise<any> => {
   try {
+
+    if (!roomID || !userID) {
+      throw new Error("Vui lòng cung cấp ID phòng và ID người dùng");
+    }
 
     const room = await roomRepository.findRoomWithUser(roomID, userID);
 

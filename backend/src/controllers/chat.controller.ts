@@ -5,24 +5,10 @@ import { getRoom } from "../services/room.service";
 // [get] /chat/rooms?status = accepted || waiting 
 export const getListRoom = async (req: Request, res: Response) => {
   try {
-    const stastusRoom: string = req.query.status?.toString() || "";
-    const myID: string = res.locals.user.id.toString();
+    const statusRoom: string = req.query.status?.toString() || "";
+    const myID: string = res.locals.user.id?.toString();
 
-    let rooms: any = [];
-
-    if (!stastusRoom) {
-      return res.status(400).json({
-        success: false,
-        message: "Chưa chuyền quer query status"
-      });
-    }
-
-    if (stastusRoom === "accepted") {
-      rooms = await getRoom(myID, stastusRoom);
-    }
-    else {
-      rooms = await getRoom(myID, stastusRoom);
-    }
+    const rooms = await getRoom(myID, statusRoom);
 
     res.status(200).json({
       success: true,
