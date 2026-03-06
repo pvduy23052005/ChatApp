@@ -1,12 +1,12 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 dotenv.config();
-import allRoute from "./routes/index.route";
-import { connectDatabase } from "./config/database";
+import allRoute from "./interface/http/routes/index.route";
+import { connectDatabase } from "./infrastructure/config/database";
 import cookieParser from "cookie-parser"
 import cors from "cors";
 import http from "http";
-import { socketInit } from "./socket";
+import { socketInit } from "./infrastructure/socket";
 
 const port: string | number = process.env.PORT || 5000;
 const app: Express = express();
