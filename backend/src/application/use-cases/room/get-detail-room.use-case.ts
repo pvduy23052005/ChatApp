@@ -1,7 +1,7 @@
 import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
-import * as userRepository from "../../../infrastructure/database/repositories/user.repository";
+import { IUserRepository } from "../../../domain/interfaces/user.interface";
 
-export const getDetailRoom = async (roomID: string, user: any) => {
+export const getDetailRoom = async (roomID: string, user: any, userRepository: IUserRepository) => {
 
   if (!roomID || !user) {
     throw new Error("Vui lòng cung cấp ID phòng và ID người dùng");

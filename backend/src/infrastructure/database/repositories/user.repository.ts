@@ -1,49 +1,76 @@
 import User from "../model/user.model";
+import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { UserEntity } from "../../../domain/entities/user.entity";
 
-export const findUserByEmail = async (email: string) => {
-  return await User.findOne({ email: email, deleted: false });
+const mapToEntity = (doc: any) => {
+
+  if (!doc) return null;
+
+  return new UserEntity(
+    doc._id,
+    doc.fullName,
+    doc.email,
+    doc.password,
+    doc.avatar,
+    doc.statusOnline,
+    doc.createdAt,
+    doc.updatedAt
+  );
 }
 
-export const findUserById = async (id: string) => {
-  return await User.findOne({ _id: id, deleted: false });
-}
+export class UserRepository implements IUserRepository {
 
-export const updateUserStatus = async (userID: string, status: string) => {
-  return await User.updateOne({ _id: userID }, { statusOnline: status });
-}
+  public async findUserByEmail(email: string): Promise<UserEntity | null> {
+    const user = await User.findOne({
+      email: email,
+      deleted: false,
+    });
 
-export const createUser = async (fullName: string, email: string, password: string) => {
-  const userObject = {
-    fullName: fullName,
-    email: email,
-    password: password,
-    statusOffline: "offline",
-  };
+    return mapToEntity(user);
+  }
 
-  const newUser = new User(userObject);
+  public async updateUserStatus(userID: string, status: string): Promise<any> {
+    return await User.updateOne({ _id: userID }, { statusOnline: status });
+  }
 
-  return await newUser.save();
-}
+  public async findUserById(userID: string): Promise<UserEntity | null> {
+    const user = await User.findOne({ _id: userID, deleted: false });
+    return mapToEntity(user);
+  }
 
-export const findUsersNotInList = async (listId: string[]) => {
-  return await User.find({ _id: { $nin: listId }, deleted: false }).select("fullName avatar");
-}
+  public async createUser(fullName: string, email: string, password: string): Promise<UserEntity | null> {
+    const userObject = {
+      fullName: fullName,
+      email: email,
+      password: password,
+      statusOffline: "offline",
+    };
 
-export const findUsersInList = async (listId: string[]) => {
-  return await User.find({ _id: { $in: listId }, deleted: false }).select("fullName avatar");
-}
+    const newUser = new User(userObject);
+    const savedUser = await newUser.save();
+    return mapToEntity(savedUser);
+  }
 
-export const findFriendNotInRoom = async (friendIDs: string[], memberIDs: string[]) => {
-  const friends = await User.find(
-    {
-      _id: { $in: friendIDs, $nin: memberIDs },
-      deleted: false
-    }).select("fullName avatar");
+  public async findUsersNotInList(listId: string[]): Promise<any[]> {
+    return await User.find({ _id: { $nin: listId }, deleted: false }).select("fullName avatar");
+  }
 
-  return friends;
-}
+  public async findUsersInList(listId: string[]): Promise<any[]> {
+    return await User.find({ _id: { $in: listId }, deleted: false }).select("fullName avatar");
+  }
 
-export const updateProfile = async (userID: string, dataUpdate: any) => {
-  const user = await User.findByIdAndUpdate(userID, dataUpdate, { new: true }).select("-password");
-  return user;
+  public async findFriendNotInRoom(friendIDs: string[], memberIDs: string[]): Promise<any[]> {
+    const friends = await User.find(
+      {
+        _id: { $in: friendIDs, $nin: memberIDs },
+        deleted: false
+      }).select("fullName avatar");
+
+    return friends;
+  }
+
+  public async updateProfile(userID: string, dataUpdate: any): Promise<any> {
+    const user = await User.findByIdAndUpdate(userID, dataUpdate, { new: true }).select("-password");
+    return user;
+  }
 }

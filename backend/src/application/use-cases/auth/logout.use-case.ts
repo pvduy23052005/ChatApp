@@ -1,11 +1,18 @@
-import * as userRepository from "../../../infrastructure/database/repositories/user.repository";
+import { IUserRepository } from "../../../domain/interfaces/user.interface";
 
-export const logout = async (userID: string) => {
-  if (!userID) {
-    throw new Error("Không tìm thấy thông tin người dùng");
+export class LogoutUseCase {
+
+  private readonly userRepository: IUserRepository;
+
+  constructor(userRepository: IUserRepository) {
+    this.userRepository = userRepository;
   }
 
-  await userRepository.updateUserStatus(userID, "offline");
+  public async execute(userID: string) {
+    if (!userID) {
+      throw new Error("Không tìm thấy thông tin người dùng");
+    }
+    await this.userRepository.updateUserStatus(userID, "offline");
 
-  return true;
+  }
 }

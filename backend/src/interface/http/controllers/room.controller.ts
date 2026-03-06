@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 
 import * as roomUseCase from "../../../application/use-cases/room";
+import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
 
 // [post] /room/create.
 export const createRoomPost = async (req: Request, res: Response) => {
@@ -32,7 +33,8 @@ export const roomDetail = async (req: Request, res: Response) => {
     const roomID: string = req.params.id?.toString() || "";
     const user: any = res.locals.user;
 
-    const { detailRoom, friends } = await roomUseCase.getDetailRoom(roomID, user);
+    const userRepository = new UserRepository();
+    const { detailRoom, friends } = await roomUseCase.getDetailRoom(roomID, user, userRepository);
 
     res.status(200).json({
       success: true,

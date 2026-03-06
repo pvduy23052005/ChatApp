@@ -1,12 +1,20 @@
-import * as userRepository from "../../../infrastructure/database/repositories/user.repository";
+import { IUserRepository } from "../../../domain/interfaces/user.interface";
 
-export const getFriends = async (user: any) => {
+export class GetFriendsUseCase {
+  private readonly userRepository: IUserRepository;
 
-  if (!user.friendList || user.friendList.length === 0) {
-    return [];
+  constructor(userRepository: IUserRepository) {
+    this.userRepository = userRepository;
   }
 
-  const friendIDs: string[] = user.friendList.map((item: any) => item.user_id);
-  const users = await userRepository.findUsersInList(friendIDs);
-  return users;
+  public async execute(user: any) {
+
+    if (!user.friendList || user.friendList.length === 0) {
+      return [];
+    }
+
+    const friendIDs: string[] = user.friendList.map((item: any) => item.user_id);
+    const users = await this.userRepository.findUsersInList(friendIDs);
+    return users;
+  }
 }

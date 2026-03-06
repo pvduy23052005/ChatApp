@@ -1,41 +1,56 @@
-import * as userRepository from "../../../infrastructure/database/repositories/user.repository";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IPasswordService } from "../../../domain/interfaces/password.interface";
+import { ITokenService } from "../../../domain/interfaces/token.interface";
 
-export const login = async (email?: string, password?: string) => {
 
-  if (!email || !password) {
-    throw new Error("Vui lòng điền đầy đủ thông tin");
+export interface LoginResponse {
+  user: any;
+  token: string;
+}
+
+export class LoginUseCase {
+
+  private readonly userRepository: IUserRepository;
+  private readonly passwordService: IPasswordService;
+  private readonly tokenService: ITokenService;
+
+  constructor(userRepo: IUserRepository, passwordService: IPasswordService, tokenService: ITokenService) {
+    this.userRepository = userRepo;
+    this.passwordService = passwordService;
+    this.tokenService = tokenService;
   }
 
-  const user = await userRepository.findUserByEmail(email);
+  public async execute(email?: string, password?: string): Promise<LoginResponse> {
+    if (!email || !password) {
+      throw new Error("Vui lòng điền đầy đủ thông tin");
+    }
 
-  if (!user) {
-    throw new Error("Email không chính xác");
+    const user = await this.userRepository.findUserByEmail(email);
+
+    if (!user) {
+      throw new Error("Email không chính xác");
+    }
+
+    if (user.isActive()) {
+      throw new Error("Tài khoản đã bị khóa");
+    }
+
+    const isPasswordMatch: boolean = await this.passwordService.comparePassword(password, user.getPassword());
+
+    if (!isPasswordMatch) {
+      throw new Error("Mật khẩu không đúng");
+    }
+
+    const payload = { userId: user.getID() };
+    const token = await this.tokenService.generateToken(payload);
+
+    await this.userRepository.updateUserStatus(user.getID(), "online");
+
+    return {
+      user: user.getProfile(),
+      token
+    };
   }
 
-  const isPasswordMatch: boolean = await bcrypt.compare(password, user.password);
-
-  if (isPasswordMatch === false) {
-    throw new Error("Mật khẩu không đúng");
-  }
-
-  const payload = { userId: user.id };
-  const token = jwt.sign(
-    payload,
-    process.env.ACCESS_TOKEN_SECRET as string,
-    { expiresIn: "1d" }
-  );
-
-  await userRepository.updateUserStatus(user.id, "online");
-
-  return {
-    user: {
-      id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      avatar: user.avatar
-    },
-    token
-  };
 }

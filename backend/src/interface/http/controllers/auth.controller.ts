@@ -1,6 +1,13 @@
 import { Request, Response } from "express"
 
-import * as authUseCase from "../../../application/use-cases/auth";
+import { LoginUseCase } from "../../../application/use-cases/auth/login.use-case";
+import { LogoutUseCase } from "../../../application/use-cases/auth/logout.use-case";
+import { RegisterUserUseCase } from "../../../application/use-cases/auth/register.use-case";
+
+import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
+
+import { BcryptHashService } from "../../../infrastructure/external-service/bcrypt-hash.service";
+import { TokenService } from "../../../infrastructure/external-service/token.service";
 
 // [post] auth/login . 
 export const login = async (req: Request, res: Response) => {
@@ -8,7 +15,11 @@ export const login = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    const { user, token } = await authUseCase.login(email, password);
+    const userRepository = new UserRepository();
+    const bcryptService = new BcryptHashService();
+    const tokenService = new TokenService();
+    const loginUseCase = new LoginUseCase(userRepository, bcryptService, tokenService);
+    const { user, token } = await loginUseCase.execute(email, password);
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -39,14 +50,17 @@ export const login = async (req: Request, res: Response) => {
   }
 }
 
-// [post] auth/login . 
+// [post] auth/logout . 
 export const logout = async (req: Request, res: Response) => {
   try {
     const { myID } = req.body;
 
     res.clearCookie("token");
 
-    const check: boolean = await authUseCase.logout(myID);
+    const userRepository = new UserRepository();
+    const logoutUseCase = new LogoutUseCase(userRepository);
+
+    await logoutUseCase.execute(myID);
 
     // socket .
     _io.emit("SERVER_RETURN_ROOM_STATUS", {
@@ -80,7 +94,9 @@ export const register = async (req: Request, res: Response) => {
       passwordConfirm: passwordConfirm.trim(),
     };
 
-    const newUser = await authUseCase.registerUser(dataUser)
+    const userRepository = new UserRepository();
+    const registerUserUseCase = new RegisterUserUseCase(userRepository);
+    const newUser = await registerUserUseCase.execute(dataUser);
 
     res.status(201).json({
       success: true,
@@ -90,7 +106,7 @@ export const register = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error.message || "Lỗi hệ thống khi đăng xuất"
+      message: error.message || "Lỗi hệ thống"
     });
   }
 }

@@ -1,20 +1,28 @@
-import * as userRepository from "../../../infrastructure/database/repositories/user.repository";
+import { IUserRepository } from "../../../domain/interfaces/user.interface";
 
-export const getUsers = async (user: any) => {
+export class GetUsersUseCase {
+  private readonly userRepository: IUserRepository;
 
-  const myID = user.id.toString();
-  const friendIDs: string[] = user.friendList.map((item: any) => item.user_id);
-  const acceptIDs: string[] = user.friendAccepts.map((item: any) => item.toString());
-  const requestIDs: string[] = user.friendRequests.map((item: any) => item.toString());
+  constructor(userRepository: IUserRepository) {
+    this.userRepository = userRepository;
+  }
 
-  const listId = [
-    myID,
-    ...friendIDs,
-    ...acceptIDs,
-    ...requestIDs,
-  ];
+  public async execute(user: any) {
 
-  const users = await userRepository.findUsersNotInList(listId);
+    const myID = user.id.toString();
+    const friendIDs: string[] = user.friendList.map((item: any) => item.user_id);
+    const acceptIDs: string[] = user.friendAccepts.map((item: any) => item.toString());
+    const requestIDs: string[] = user.friendRequests.map((item: any) => item.toString());
 
-  return users;
+    const listId = [
+      myID,
+      ...friendIDs,
+      ...acceptIDs,
+      ...requestIDs,
+    ];
+
+    const users = await this.userRepository.findUsersNotInList(listId);
+
+    return users;
+  }
 }
