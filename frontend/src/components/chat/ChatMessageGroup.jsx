@@ -22,14 +22,14 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
 
           if (isSystem) {
             return (
-              <div className="system-message" key={chat._id || index}>
+              <div className="system-message" key={chat.id || index}>
                 <span>{chat.content}</span>
               </div>
             );
           }
 
-          const sender = chat.user_id;
-          const senderId = sender?._id?.toString();
+          const sender = chat.sender;
+          const senderId = sender?.id?.toString();
           const isMe = senderId === myID?.toString();
           const time = formatTime(chat.createdAt);
           const isSeen = chat.readBy?.length > 1;
@@ -39,11 +39,11 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
           const isLastInGroup =
             !nextChat ||
             nextChat.type === "system" ||
-            nextChat.user_id?._id?.toString() !== senderId;
+            nextChat.sender?.id?.toString() !== senderId;
 
           return (
             <div
-              key={chat._id || index}
+              key={chat.id || index}
               className={`message-row ${isMe ? "outgoing" : "incoming"} ${
                 isLastInGroup ? "last-in-group" : ""
               }`}

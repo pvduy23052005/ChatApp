@@ -7,11 +7,12 @@ import { EditProfileUseCase } from "../../../application/use-cases/user/edit-pro
 
 import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
 
+const userRepository = new UserRepository();
+
 // [get] /users
 export const getUsers = async (req: Request, res: Response) => {
   try {
 
-    const userRepository = new UserRepository();
     const getUsersUseCase = new GetUsersUseCase(userRepository);
     const users = await getUsersUseCase.execute(res.locals.user);
 
@@ -31,7 +32,6 @@ export const getUsers = async (req: Request, res: Response) => {
 // [get] /user/friend-accepts . 
 export const friendAccepts = async (req: Request, res: Response) => {
   try {
-    const userRepository = new UserRepository();
     const getFriendAcceptsUseCase = new GetFriendAcceptsUseCase(userRepository);
     const users = await getFriendAcceptsUseCase.execute(res.locals.user);
 
@@ -52,7 +52,7 @@ export const friendAccepts = async (req: Request, res: Response) => {
 // [get] /user/friends
 export const getFriends = async (req: Request, res: Response) => {
   try {
-    const userRepository = new UserRepository();
+
     const getFriendsUseCase = new GetFriendsUseCase(userRepository);
     const friends = await getFriendsUseCase.execute(res.locals.user);
 
@@ -93,7 +93,6 @@ export const editProfile = async (req: Request, res: Response) => {
       });
     }
 
-    const userRepository = new UserRepository();
     const editProfileUseCase = new EditProfileUseCase(userRepository);
     const user = await editProfileUseCase.execute(myID, updateData);
 

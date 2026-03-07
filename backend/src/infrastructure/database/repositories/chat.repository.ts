@@ -1,17 +1,48 @@
 import Chat from "../model/chat.model"
+import { IChatInterface } from "../../../domain/interfaces/chat.interface";
+import { ChatEntity } from "../../../domain/entities/chat.entity";
 
-export const getMessageByRoomID = async (roomID: string) => {
-  const query: any = {
-    room_id: roomID,
-    deleted: false,
+const mapToEntity = (doc: any) => {
+  if (!doc) return null;
+
+  return new ChatEntity({
+    id: doc._id.toString(),
+    room_id: doc.room_id.toString(),
+    user_id: doc.user_id._id.toString(),
+    content: doc.content?.trim(),
+    images: doc.images,
+    type: doc.type,
+    status: doc.status,
+    readBy: doc.readBy,
+
+    sender: {
+      id: doc.user_id._id.toString(),
+      fullName: doc.user_id.fullName,
+      avatar: doc.user_id.avatar
+    },
+
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
+    deleted: doc.deleted,
+    deletedAt: doc.deletedAt,
+  });
+}
+
+export class ChatRepository implements IChatInterface {
+  public async getMessageByRoomID(roomID: string): Promise<any | null> {
+    const query: any = {
+      room_id: roomID,
+      deleted: false,
+    }
+
+    const messages = await Chat.find(query)
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "user_id",
+        select: "fullName avatar"
+      }).lean();
+
+    const listMessages = messages.map((message: any) => mapToEntity(message));
+    return listMessages.reverse();
   }
-
-  const messages = await Chat.find(query)
-    .sort({ createdAt: -1 })
-    .populate({
-      path: "user_id",
-      select: "fullName avatar"
-    });
-
-  return messages.reverse();
 }

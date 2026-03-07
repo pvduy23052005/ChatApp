@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
-import * as chatUseCase from "../../../application/use-cases/chat";
+
 import * as roomUseCase from "../../../application/use-cases/room";
+import { GetChatHistoryUseCase } from "../../../application/use-cases/chat/get-chat-history.use-case";
+
+import { ChatRepository } from "../../../infrastructure/database/repositories/chat.repository";
+
+const chatRepository = new ChatRepository();
 
 // [get] /chat/rooms?status = accepted || waiting 
 export const getListRoom = async (req: Request, res: Response) => {
@@ -28,7 +33,8 @@ export const getListChat = async (req: Request, res: Response) => {
   try {
     const roomID: string = (req.params.id?.toString()) || "";
 
-    const chats = await chatUseCase.getChatHistory(roomID);
+    const getChatHistoryUseCase = new GetChatHistoryUseCase(chatRepository);
+    const chats = await getChatHistoryUseCase.execute(roomID);
 
     res.json({
       success: true,

@@ -28,6 +28,7 @@ export const ChatProvider = ({ children }) => {
   useEffect(() => {
     currentRoomIDRef.current = currentRoomID;
   }, [currentRoomID]);
+  
   useEffect(() => {
     userRef.current = user;
   }, [user]);
