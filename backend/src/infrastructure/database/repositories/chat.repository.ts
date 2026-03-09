@@ -1,5 +1,5 @@
 import Chat from "../model/chat.model"
-import { IChatInterface } from "../../../domain/interfaces/chat.interface";
+import { IChatRepository } from "../../../domain/interfaces/chat.interface";
 import { ChatEntity } from "../../../domain/entities/chat.entity";
 
 const mapToEntity = (doc: any) => {
@@ -28,8 +28,8 @@ const mapToEntity = (doc: any) => {
   });
 }
 
-export class ChatRepository implements IChatInterface {
-  public async getMessageByRoomID(roomID: string): Promise<any | null> {
+export class ChatRepository implements IChatRepository {
+  public async getMessageByRoomID(roomID: string): Promise<ChatEntity[] | null> {
     const query: any = {
       room_id: roomID,
       deleted: false,
@@ -42,7 +42,7 @@ export class ChatRepository implements IChatInterface {
         select: "fullName avatar"
       }).lean();
 
-    const listMessages = messages.map((message: any) => mapToEntity(message));
+    const listMessages = messages.map((message: any) => mapToEntity(message)).filter((message: ChatEntity | null) => message !== null);
     return listMessages.reverse();
   }
 }

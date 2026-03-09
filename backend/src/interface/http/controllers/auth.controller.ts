@@ -9,15 +9,16 @@ import { UserRepository } from "../../../infrastructure/database/repositories/us
 import { BcryptHashService } from "../../../infrastructure/external-service/bcrypt-hash.service";
 import { TokenService } from "../../../infrastructure/external-service/token.service";
 
+const userRepository = new UserRepository();
+const bcryptService = new BcryptHashService();
+const tokenService = new TokenService();
+
 // [post] auth/login . 
 export const login = async (req: Request, res: Response) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
 
-    const userRepository = new UserRepository();
-    const bcryptService = new BcryptHashService();
-    const tokenService = new TokenService();
     const loginUseCase = new LoginUseCase(userRepository, bcryptService, tokenService);
     const { user, token } = await loginUseCase.execute(email, password);
 

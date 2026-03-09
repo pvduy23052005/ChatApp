@@ -1,3 +1,5 @@
-export interface IChatInterface {
-  getMessageByRoomID(roomID: string): Promise<any | null>;
+import { ChatEntity } from "../entities/chat.entity";
+
+export interface IChatRepository {
+  getMessageByRoomID(roomID: string): Promise<ChatEntity[] | null>;
 }

@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 
-import * as roomUseCase from "../../../application/use-cases/room";
 import { GetChatHistoryUseCase } from "../../../application/use-cases/chat/get-chat-history.use-case";
+import { GetRoomUseCase } from "../../../application/use-cases/room/get-room.use-case";
 
 import { ChatRepository } from "../../../infrastructure/database/repositories/chat.repository";
+import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
 
 const chatRepository = new ChatRepository();
+const roomRepository = new RoomRepository();
 
 // [get] /chat/rooms?status = accepted || waiting 
 export const getListRoom = async (req: Request, res: Response) => {
@@ -13,7 +15,8 @@ export const getListRoom = async (req: Request, res: Response) => {
     const statusRoom: string = req.query.status?.toString() || "";
     const myID: string = res.locals.user.id?.toString();
 
-    const rooms = await roomUseCase.getRoom(myID, statusRoom);
+    const getRoomUseCase = new GetRoomUseCase(roomRepository);
+    const rooms = await getRoomUseCase.execute(myID, statusRoom);
 
     res.status(200).json({
       success: true,
@@ -47,5 +50,4 @@ export const getListChat = async (req: Request, res: Response) => {
       message: "Lỗi hệ thống, vui lòng thử lại sau"
     });
   }
-
 }

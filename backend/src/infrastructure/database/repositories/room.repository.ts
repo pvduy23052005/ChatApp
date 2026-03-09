@@ -1,5 +1,55 @@
 import Room from "../model/room.model";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { RoomEntity } from "../../../domain/entities/room.entity";
 import mongoose from "mongoose";
+
+const mapToEntity = (doc: any): RoomEntity => {
+  return new RoomEntity({
+    id: doc._id.toString(),
+    title: doc.title,
+    typeRoom: doc.typeRoom,
+    avatar: doc.avatar,
+    status: doc.status,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
+    members: doc.members,
+    lastMessageId: doc.lastMessageId
+  })
+}
+
+export class RoomRepository implements IRoomRepository {
+
+  async getRoomByUserAndStatus(userID: string, status: string): Promise<RoomEntity[] | []> {
+    const userObjectID = new mongoose.Types.ObjectId(userID);
+
+    const rooms = await Room.find(
+      {
+        "members": {
+          $elemMatch: {
+            user_id: userObjectID,
+            status: status
+          }
+        },
+        deleted: false
+      }
+    )
+      .sort({ updatedAt: -1 })
+      .populate({
+        path: "members.user_id",
+        select: "fullName avatar statusOnline",
+      })
+      .populate({
+        path: "lastMessageId",
+        select: "content status user_id readBy"
+      }).lean();
+
+    if (!rooms || rooms.length === 0) return [];
+
+    const roomsEntity: RoomEntity[] = rooms.map((room: any) => mapToEntity(room));
+
+    return roomsEntity;
+  }
+}
 
 export const findRoomWithUser = async (roomID: string, userID: string) => {
 
@@ -12,32 +62,6 @@ export const findRoomWithUser = async (roomID: string, userID: string) => {
   return room;
 }
 
-export const getRoomByUserAndStatus = async (userID: string, status: string) => {
-  const userObjectID = new mongoose.Types.ObjectId(userID);
-
-  const rooms = await Room.find(
-    {
-      "members": {
-        $elemMatch: {
-          user_id: userObjectID,
-          status: status
-        }
-      },
-      deleted: false
-    }
-  )
-    .sort({ updatedAt: -1 })
-    .populate({
-      path: "members.user_id",
-      select: "fullName avatar statusOnline",
-    })
-    .populate({
-      path: "lastMessageId",
-      select: "content status user_id readBy"
-    }).lean();
-
-  return rooms;
-}
 
 export const checkRoomExist = async (myID: string, userID: string) => {
 
