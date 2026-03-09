@@ -1,14 +1,18 @@
-import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 
-export const assignAdmin = async (roomID: string, newAdminID: string, myID: string) => {
+export class AssignAdminUseCase {
+  constructor(private readonly roomRepository: IRoomRepository) { }
 
-  if (!newAdminID) {
-    throw new Error("Vui lòng chọn thành viên để chỉ định làm quản trị viên");
+  async execute(roomID: string, newAdminID: string, myID: string) {
+
+    if (!newAdminID) {
+      throw new Error("Vui lòng chọn thành viên để chỉ định làm quản trị viên");
+    }
+
+    if (newAdminID === myID) {
+      throw new Error("Bạn đã là quản trị viên của phòng");
+    }
+
+    await this.roomRepository.assignAdminRole(roomID, newAdminID);
   }
-
-  if (newAdminID === myID) {
-    throw new Error("Bạn đã là quản trị viên của phòng");
-  }
-
-  await roomRepository.assignAdminRole(roomID, newAdminID);
 }

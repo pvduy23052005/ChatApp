@@ -1,12 +1,16 @@
-import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 
-export const removeMember = async (roomID: string, removeMemberID: string, myID: string) => {
+export class RemoveMemberUseCase {
+  constructor(private readonly roomRepository: IRoomRepository) { }
 
-  if (removeMemberID === myID) {
-    throw new Error("Không thể xóa chính mình khỏi nhóm");
+  async execute(roomID: string, removeMemberID: string, myID: string) {
+
+    if (removeMemberID === myID) {
+      throw new Error("Không thể xóa chính mình khỏi nhóm");
+    }
+
+    await this.roomRepository.removeMemberFromRoom(roomID, removeMemberID);
+
+    return removeMemberID;
   }
-
-  await roomRepository.removeMemberFromRoom(roomID, removeMemberID);
-
-  return removeMemberID;
 }

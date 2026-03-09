@@ -1,29 +1,36 @@
-import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 import { IUserRepository } from "../../../domain/interfaces/user.interface";
 
-export const getDetailRoom = async (roomID: string, user: any, userRepository: IUserRepository) => {
+export class GetDetailRoomUseCase {
+  constructor(
+    private readonly roomRepository: IRoomRepository,
+    private readonly userRepository: IUserRepository
+  ) { }
 
-  if (!roomID || !user) {
-    throw new Error("Vui lòng cung cấp ID phòng và ID người dùng");
-  }
+  async execute(roomID: string, user: any) {
 
-  const existRoom = await roomRepository.findRoomById(roomID);
+    if (!roomID || !user) {
+      throw new Error("Vui lòng cung cấp ID phòng và ID người dùng");
+    }
 
-  if (!existRoom) {
-    throw new Error("Phòng không tồn tại");
-  }
+    const existRoom = await this.roomRepository.findRoomById(roomID);
 
-  const memberIDs = existRoom.members.map(
-    (member: any) => member.user_id._id.toString());
-  const friendIDs = user?.friendList?.map(
-    (user: any) => user.user_id.toString()
-  ) || [];
+    if (!existRoom) {
+      throw new Error("Phòng không tồn tại");
+    }
+
+    const memberIDs = existRoom.members.map(
+      (member: any) => member.user_id._id.toString());
+    const friendIDs = user?.friendList?.map(
+      (user: any) => user.user_id.toString()
+    ) || [];
 
 
-  const friends = await userRepository.findFriendNotInRoom(friendIDs, memberIDs);
+    const friends = await this.userRepository.findFriendNotInRoom(friendIDs, memberIDs);
 
-  return {
-    detailRoom: existRoom,
-    friends: friends
+    return {
+      detailRoom: existRoom,
+      friends: friends
+    }
   }
 }

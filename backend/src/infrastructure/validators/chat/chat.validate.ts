@@ -1,12 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
-import { isUserInRoom } from '../../../application/use-cases/room';
+
+import { RoomRepository } from '../../database/repositories/room.repository';
+
+import { IsUserInRoomUseCase } from '../../../application/use-cases/room/is-user-in-room.use-case';
+
+const roomRepository = new RoomRepository();
 
 async function chatValidate(req: Request, res: Response, next: NextFunction) {
   try {
-    const roomID = req.params.id?.toString() || "";
-    const myID = res.locals.user.id.toString();
+    const roomID: string = req.params.id?.toString() || "";
+    const myID: string = res.locals.user.id.toString();
 
-    const checkIsUserInRoom = await isUserInRoom(roomID, myID);
+    const isUserInRoomUseCase = new IsUserInRoomUseCase(roomRepository);
+    const checkIsUserInRoom = await isUserInRoomUseCase.execute(roomID, myID);
 
     if (!checkIsUserInRoom) {
       return res.status(403).json({

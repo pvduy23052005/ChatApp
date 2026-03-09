@@ -1,14 +1,18 @@
-import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 
-export const leaveRoom = async (roomID: string, myID: string, room: any) => {
+export class LeaveRoomUseCase {
+  constructor(private readonly roomRepository: IRoomRepository) { }
 
-  const myInfo = room.members.find(
-    (member: any) => member.user_id.toString() === myID
-  );
+  async execute(roomID: string, myID: string, room: any) {
 
-  if (myInfo && myInfo.role === "superAdmin") {
-    throw new Error("Vui lòng chỉ định người khác làm Trưởng nhóm trước khi rời");
+    const myInfo = room.members.find(
+      (member: any) => member.user_id.toString() === myID
+    );
+
+    if (myInfo && myInfo.role === "superAdmin") {
+      throw new Error("Vui lòng chỉ định người khác làm Trưởng nhóm trước khi rời");
+    }
+
+    await this.roomRepository.removeMemberFromRoom(roomID, myID);
   }
-
-  await roomRepository.removeMemberFromRoom(roomID, myID);
 }

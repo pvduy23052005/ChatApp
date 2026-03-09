@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { isUserInRoom } from '../../../application/use-cases/room';
+import { IsUserInRoomUseCase } from '../../../application/use-cases/room/is-user-in-room.use-case';
+
+import { RoomRepository } from '../../database/repositories/room.repository';
+
+const roomRepository = new RoomRepository();
+
 
 async function roomValidate(req: Request, res: Response, next: NextFunction) {
   try {
@@ -13,7 +18,9 @@ async function roomValidate(req: Request, res: Response, next: NextFunction) {
       });
     }
 
-    const room = await isUserInRoom(roomID, myID);
+    const isUserInRoomUseCase = new IsUserInRoomUseCase(roomRepository);
+    const room = await isUserInRoomUseCase.execute(roomID, myID);
+
 
     if (!room) {
       return res.status(403).json({

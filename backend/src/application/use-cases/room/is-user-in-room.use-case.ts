@@ -1,17 +1,21 @@
-import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 
-export const isUserInRoom = async (roomID: string, userID: string): Promise<any> => {
-  try {
+export class IsUserInRoomUseCase {
+  constructor(private readonly roomRepository: IRoomRepository) { }
 
-    if (!roomID || !userID) {
-      throw new Error("Vui lòng cung cấp ID phòng và ID người dùng");
+  async execute(roomID: string, userID: string): Promise<any> {
+    try {
+
+      if (!roomID || !userID) {
+        throw new Error("Vui lòng cung cấp ID phòng và ID người dùng");
+      }
+
+      const room = await this.roomRepository.findRoomWithUser(roomID, userID);
+
+      return room;
+    } catch (error) {
+      console.error("Lỗi check user in room:", error);
+      return false;
     }
-
-    const room = await roomRepository.findRoomWithUser(roomID, userID);
-
-    return room;
-  } catch (error) {
-    console.error("Lỗi check user in room:", error);
-    return false;
   }
 }

@@ -1,17 +1,21 @@
-import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 
-export const editRoom = async (roomID: string, title: string) => {
+export class EditRoomUseCase {
+  constructor(private readonly roomRepository: IRoomRepository) { }
 
-  if (!title || title.trim() === "") {
-    throw new Error("Tên phòng không được để trống!");
+  async execute(roomID: string, title: string) {
+
+    if (!title || title.trim() === "") {
+      throw new Error("Tên phòng không được để trống!");
+    }
+
+    const trimmedTitle = title.trim();
+
+    await this.roomRepository.updateRoomTitle(roomID, trimmedTitle);
+
+    return {
+      _id: roomID,
+      title: trimmedTitle
+    };
   }
-
-  const trimmedTitle = title.trim();
-
-  await roomRepository.updateRoomTitle(roomID, trimmedTitle);
-
-  return {
-    _id: roomID,
-    title: trimmedTitle
-  };
 }

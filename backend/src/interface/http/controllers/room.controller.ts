@@ -1,7 +1,19 @@
 import { Response, Request } from 'express';
 
-import * as roomUseCase from "../../../application/use-cases/room";
 import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
+import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
+
+import { GetDetailRoomUseCase } from "../../../application/use-cases/room/get-detail-room.use-case";
+import { EditRoomUseCase } from "../../../application/use-cases/room/edit-room.use-case";
+import { AddMemberUseCase } from "../../../application/use-cases/room/add-member.use-case";
+import { RemoveMemberUseCase } from "../../../application/use-cases/room/remove-member.use-case";
+import { DeleteRoomUseCase } from "../../../application/use-cases/room/delete-room.use-case";
+import { LeaveRoomUseCase } from "../../../application/use-cases/room/leave-room.use-case";
+import { AssignAdminUseCase } from "../../../application/use-cases/room/assign-admin.use-case";
+import { CreateNewRoomUseCase } from "../../../application/use-cases/room/create-new-room.use-case";
+
+const roomRepository = new RoomRepository();
+const userRepository = new UserRepository();
 
 // [post] /room/create.
 export const createRoomPost = async (req: Request, res: Response) => {
@@ -9,7 +21,8 @@ export const createRoomPost = async (req: Request, res: Response) => {
     const myID: string = res.locals.user.id.toString() || "";
     const { titleRoom, members } = req.body;
 
-    const newRoom = await roomUseCase.createNewRoom(myID, titleRoom, members);
+    const createNewRoomUseCase = new CreateNewRoomUseCase(roomRepository);
+    const newRoom = await createNewRoomUseCase.execute(myID, titleRoom, members);
 
     res.status(201).json({
       success: true,
@@ -33,8 +46,8 @@ export const roomDetail = async (req: Request, res: Response) => {
     const roomID: string = req.params.id?.toString() || "";
     const user: any = res.locals.user;
 
-    const userRepository = new UserRepository();
-    const { detailRoom, friends } = await roomUseCase.getDetailRoom(roomID, user, userRepository);
+    const getDetailRoomUseCase = new GetDetailRoomUseCase(roomRepository, userRepository);
+    const { detailRoom, friends } = await getDetailRoomUseCase.execute(roomID, user);
 
     res.status(200).json({
       success: true,
@@ -56,7 +69,8 @@ export const editRoom = async (req: Request, res: Response) => {
     const roomID: string = req.params.id?.toString() || "";
     const { title } = req.body;
 
-    const updatedRoom = await roomUseCase.editRoom(roomID, title);
+    const editRoomUseCase = new EditRoomUseCase(roomRepository);
+    const updatedRoom = await editRoomUseCase.execute(roomID, title);
 
     return res.status(200).json({
       success: true,
@@ -78,7 +92,8 @@ export const addMember = async (req: Request, res: Response) => {
     const { newMemberIDs } = req.body;
     const room = res.locals.room;
 
-    const addedMemberIDs = await roomUseCase.addMember(roomID, newMemberIDs, room);
+    const addMemberUseCase = new AddMemberUseCase(roomRepository);
+    const addedMemberIDs = await addMemberUseCase.execute(roomID, newMemberIDs, room);
 
     res.status(200).json({
       success: true,
@@ -100,7 +115,8 @@ export const removeMember = async (req: Request, res: Response) => {
     const { removeMemberID } = req.body;
     const myID: string = res.locals.user.id.toString();
 
-    const removedID = await roomUseCase.removeMember(roomID, removeMemberID, myID);
+    const removeMemberUseCase = new RemoveMemberUseCase(roomRepository);
+    const removedID = await removeMemberUseCase.execute(roomID, removeMemberID, myID);
 
     res.status(200).json({
       success: true,
@@ -120,7 +136,8 @@ export const deleteRoom = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
 
-    await roomUseCase.deleteRoom(roomID);
+    const deleteRoomUseCase = new DeleteRoomUseCase(roomRepository);
+    await deleteRoomUseCase.execute(roomID);
 
     res.status(200).json({
       success: true,
@@ -141,7 +158,8 @@ export const leaveRoom = async (req: Request, res: Response) => {
     const myID: string = res.locals.user.id.toString();
     const room = res.locals.room;
 
-    await roomUseCase.leaveRoom(roomID, myID, room);
+    const leaveRoomUseCase = new LeaveRoomUseCase(roomRepository);
+    await leaveRoomUseCase.execute(roomID, myID, room);
 
     res.status(200).json({
       success: true,
@@ -162,7 +180,8 @@ export const assignAdmin = async (req: Request, res: Response) => {
     const { newAdminID } = req.body;
     const myID: string = res.locals.user.id.toString();
 
-    await roomUseCase.assignAdmin(roomID, newAdminID, myID);
+    const assignAdminUseCase = new AssignAdminUseCase(roomRepository);
+    await assignAdminUseCase.execute(roomID, newAdminID, myID);
 
     res.status(200).json({
       success: true,

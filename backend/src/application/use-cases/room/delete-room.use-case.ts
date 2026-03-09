@@ -1,10 +1,14 @@
-import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 
-export const deleteRoom = async (roomID: string) => {
+export class DeleteRoomUseCase {
+  constructor(private readonly roomRepository: IRoomRepository) { }
 
-  if (!roomID) {
-    throw new Error("Vui lòng cung cấp ID phòng");
+  async execute(roomID: string) {
+
+    if (!roomID) {
+      throw new Error("Vui lòng cung cấp ID phòng");
+    }
+
+    await this.roomRepository.softDeleteRoom(roomID);
   }
-
-  await roomRepository.softDeleteRoom(roomID);
 }

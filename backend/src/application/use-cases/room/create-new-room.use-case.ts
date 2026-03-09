@@ -1,49 +1,53 @@
-import * as roomRepository from "../../../infrastructure/database/repositories/room.repository";
+import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 
-export const createNewRoom = async (myID: string, titleRoom: string, members: string[]) => {
+export class CreateNewRoomUseCase {
+  constructor(private readonly roomRepository: IRoomRepository) { }
 
-  if (!titleRoom) {
-    throw new Error("Nhập tên phòng");
-  }
+  async execute(myID: string, titleRoom: string, members: string[]) {
 
-  if (!members) {
-    throw new Error("Vui lòng chọn thành viên");
-  }
-
-  const memberIDs: string[] = Array.isArray(members)
-    ? [...members]
-    : [members];
-
-
-  if (memberIDs.length === 1) {
-    const userID: string = memberIDs[0]!;
-    const existRoom = await roomRepository.checkRoomExist(myID, userID);
-    if (existRoom) {
-      throw new Error("Phòng này đã tồn tại");
+    if (!titleRoom) {
+      throw new Error("Nhập tên phòng");
     }
-  }
 
-  const newRoomData = {
-    title: titleRoom,
-    typeRoom: "group",
-    members: [
-      {
-        user_id: myID,
-        role: "superAdmin",
-        status: "accepted"
+    if (!members) {
+      throw new Error("Vui lòng chọn thành viên");
+    }
+
+    const memberIDs: string[] = Array.isArray(members)
+      ? [...members]
+      : [members];
+
+
+    if (memberIDs.length === 1) {
+      const userID: string = memberIDs[0]!;
+      const existRoom = await this.roomRepository.checkRoomExist(myID, userID);
+      if (existRoom) {
+        throw new Error("Phòng này đã tồn tại");
       }
-    ]
+    }
+
+    const newRoomData = {
+      title: titleRoom,
+      typeRoom: "group",
+      members: [
+        {
+          user_id: myID,
+          role: "superAdmin",
+          status: "accepted"
+        }
+      ]
+    }
+
+    memberIDs.forEach((memberID) => {
+      newRoomData.members.push({
+        user_id: memberID,
+        role: "member",
+        status: "accepted"
+      })
+    });
+
+    const newRoom = await this.roomRepository.createNewRoom(newRoomData);
+
+    return newRoom;
   }
-
-  memberIDs.forEach((memberID) => {
-    newRoomData.members.push({
-      user_id: memberID,
-      role: "member",
-      status: "accepted"
-    })
-  });
-
-  const newRoom = await roomRepository.createNewRoom(newRoomData);
-
-  return newRoom;
 }
