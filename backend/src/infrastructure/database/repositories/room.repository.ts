@@ -132,4 +132,11 @@ export class RoomRepository implements IRoomRepository {
       }
     );
   }
+
+  async updateMemberStatus(roomID: string, status: string): Promise<void> {
+    await Room.updateOne(
+      { _id: roomID },
+      { $set: { "members.$[].status": status } }
+    ).exec();
+  }
 }

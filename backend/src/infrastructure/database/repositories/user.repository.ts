@@ -73,4 +73,36 @@ export class UserRepository implements IUserRepository {
     const user = await User.findByIdAndUpdate(userID, dataUpdate, { new: true }).select("-password");
     return user;
   }
+
+  public async addFriendRequest(myID: string, friendID: string): Promise<void> {
+    await User.updateOne({ _id: myID }, { $addToSet: { friendRequests: friendID } });
+  }
+
+  public async addFriendAccept(myID: string, friendID: string): Promise<void> {
+    await User.updateOne({ _id: myID }, { $addToSet: { friendAccepts: friendID } });
+  }
+
+  public async removeFriendRequest(myID: string, friendID: string): Promise<void> {
+    await User.updateOne({ _id: myID }, { $pull: { friendRequests: friendID } });
+  }
+
+  public async removeFriendAccept(myID: string, friendID: string): Promise<void> {
+    await User.updateOne({ _id: myID }, { $pull: { friendAccepts: friendID } });
+  }
+
+  public async addFriendToList(myID: string, friendID: string, roomChatId: string): Promise<void> {
+    await User.updateOne(
+      { _id: myID },
+      {
+        $addToSet: {
+          friendList: { user_id: friendID, room_chat_id: roomChatId },
+        }
+      }
+    );
+  }
+
+  public async findUserFullName(userID: string): Promise<string | undefined> {
+    const user = await User.findOne({ _id: userID, deleted: false }).select("fullName").lean();
+    return user?.fullName;
+  }
 }

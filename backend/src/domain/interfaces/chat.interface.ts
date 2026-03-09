@@ -5,4 +5,6 @@ export interface IChatRepository {
   getMessageByRoomID(roomID: string): Promise<ChatEntity[] | null>;
 
   createNewMessage(dataChat: IDataChat): Promise<ChatEntity | null>;
+
+  createSystemMessage(roomID: string, content: string): Promise<any>;
 }

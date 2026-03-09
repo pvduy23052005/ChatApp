@@ -1,150 +1,73 @@
 import { Server, Socket } from "socket.io";
-import Room from "../../../infrastructure/database/model/room.model";
-import User from "../../../infrastructure/database/model/user.model";
+
+import { ChatNotFriendUseCase } from "../../../application/use-cases/user/chat-not-friend.use-case";
+import { FriendRequestUseCase } from "../../../application/use-cases/user/friend-request.use-case";
+import { FriendCancelUseCase } from "../../../application/use-cases/user/friend-cancel.use-case";
+import { RefuseFriendUseCase } from "../../../application/use-cases/user/refuse-friend.use-case";
+import { AcceptFriendUseCase } from "../../../application/use-cases/user/accept-friend.use-case";
+
+import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
+
+const roomRepo = new RoomRepository();
+const userRepo = new UserRepository();
 
 export const userSocket = (io: Server, socket: Socket) => {
-  const myID = socket.data.user.userId;
+  const myID: string = socket.data.user.userId;
 
   // chatNotFriend
   socket.on("CLIENT_SEND_CHAT", async (data) => {
     const userID = data.userID;
-    const existRoom = await Room.findOne({
-      typeRoom: "single",
-      "members.user_id": {
-        $all: [myID, userID]
-      }
-    });
-    if (existRoom) {
-      socket.emit("SERVER_SEND_ROOM_NOT_FRIEND_ID", { roomID: existRoom.id });
-    } else {
-      const newRoom = new Room(
-        {
-          typeRoom: "single",
-          members: [
-            {
-              user_id: myID,
-              role: "member",
-              status: "waiting",
-            },
-            {
-              user_id: userID,
-              role: "member",
-              status: "waiting",
-            }
-          ]
-        });
-      await newRoom.save();
-      socket.emit("SERVER_SEND_ROOM_NOT_FRIEND_ID", { roomID: newRoom.id });
-    }
-  });
-  // end chatNotFriend
-
-  // friend request . 
-  socket.on("CIENT_FRIEND_REQUEST", async (data) => {
     try {
-      await Promise.all([
-        // add userB to firnedRequest of userA 
-        User.updateOne({ _id: myID }, { $addToSet: { friendRequests: data.userID } }),
-        //  add userA to friendAccepts of userB . 
-        User.updateOne({ _id: data.userID }, { $addToSet: { friendAccepts: myID } })
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  });
-  // end friend request 
+      const chatNotFriendUseCase = new ChatNotFriendUseCase(roomRepo);
 
-  // friend cancel 
-  socket.on("CLIENT_FRIEND_CANCEL", async (data) => {
-    try {
-      await Promise.all([
-        // delete userB to firnedRequest of userA 
-        User.updateOne({ _id: myID }, { $pull: { friendRequests: data.userID } }),
-        //  delete userA to friendAccepts of userB . 
-        User.updateOne({ _id: data.userID }, { $pull: { friendAccepts: myID } })
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  });
-  // end friend cancel 
+      const roomID = await chatNotFriendUseCase.execute(myID, userID);
 
-
-  // refuse friend 
-  socket.on("CLIENT_REFUSE_FRIEND", async (data) => {
-    try {
-      await Promise.all([
-        User.updateOne({
-          _id: myID,
-        }, {
-          $pull: { friendAccepts: data.userID }
-        }),
-        User.updateOne({
-          _id: data.userID,
-        }, {
-          $pull: { friendRequests: myID, }
-        })
-      ])
-    } catch (error) {
-      console.log(error);
-    }
-  });
-  // end refuse friend 
-
-  // accept friend . 
-  socket.on("CLIENT_ACCEPT_FRIEND", async (data) => {
-    const userID = data.userID;
-
-    try {
-      let existRoom = await Room.findOne({
-        typeRoom: "single",
-        "members.user_id": { $all: [myID, userID] },
-      })
-        .select("_id")
-        .lean();
-      let roomChatId;
-
-      if (existRoom) {
-        roomChatId = existRoom._id;
-        Room.updateOne(
-          { _id: roomChatId },
-          { $set: { "members.$[].status": "accepted" } }
-        ).exec();
-      } else {
-        const newRoom = await Room.create({
-          typeRoom: "single",
-          members: [
-            { user_id: myID, status: "accepted" },
-            { user_id: userID, status: "accepted" },
-          ],
-        });
-        roomChatId = newRoom._id;
-      }
-
-      await Promise.all([
-        User.updateOne(
-          { _id: myID },
-          {
-            $addToSet: {
-              friendList: { user_id: userID, room_chat_id: roomChatId },
-            },
-            $pull: { friendAccepts: userID },
-          }
-        ),
-        User.updateOne(
-          { _id: userID },
-          {
-            $addToSet: {
-              friendList: { user_id: myID, room_chat_id: roomChatId },
-            },
-            $pull: { friendRequests: myID },
-          }
-        ),
-      ]);
-
+      socket.emit("SERVER_SEND_ROOM_NOT_FRIEND_ID", { roomID });
     } catch (error) {
       console.error(error);
     }
   });
-  // end accept friend .
-}
+
+  // friend request
+  socket.on("CIENT_FRIEND_REQUEST", async (data) => {
+    try {
+      const friendRequestUseCase = new FriendRequestUseCase(userRepo);
+      await friendRequestUseCase.execute(myID, data.userID);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  // friend cancel
+  socket.on("CLIENT_FRIEND_CANCEL", async (data) => {
+    try {
+
+      const friendCancelUseCase = new FriendCancelUseCase(userRepo);
+
+      await friendCancelUseCase.execute(myID, data.userID);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  // refuse friend
+  socket.on("CLIENT_REFUSE_FRIEND", async (data) => {
+    try {
+      const refuseFriendUseCase = new RefuseFriendUseCase(userRepo);
+      await refuseFriendUseCase.execute(myID, data.userID);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  // accept friend
+  socket.on("CLIENT_ACCEPT_FRIEND", async (data) => {
+    try {
+      const acceptFriendUseCase = new AcceptFriendUseCase(roomRepo, userRepo);
+      await acceptFriendUseCase.execute(myID, data.userID);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+};

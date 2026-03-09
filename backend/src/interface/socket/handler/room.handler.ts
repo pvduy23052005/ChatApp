@@ -1,45 +1,30 @@
 import { Server, Socket } from "socket.io";
-import User from "../../../infrastructure/database/model/user.model";
-import Chat from "../../../infrastructure/database/model/chat.model";
-import Room from "../../../infrastructure/database/model/room.model";
+import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { ChatRepository } from "../../../infrastructure/database/repositories/chat.repository";
+import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
+
+import { NotifyRemoveMemberUseCase } from "../../../application/use-cases/room/notify-remove-member.use-case";
+import { NotifyAddMemberUseCase } from "../../../application/use-cases/room/notify-add-member.use-case";
+import { NotifyLeaveRoomUseCase } from "../../../application/use-cases/room/notify-leave-room.use-case";
+import { NotifyAssignAdminUseCase } from "../../../application/use-cases/room/notify-assign-admin.use-case";
+
+const roomRepo = new RoomRepository();
+const chatRepo = new ChatRepository();
+const userRepo = new UserRepository();
 
 export const roomSocket = async (io: Server, socket: Socket) => {
   const myID = socket.data.user.userId;
 
-  const admin = await User.findOne(({
-    _id: myID,
-    deleted: false,
-  })).select("fullName").lean();
-
   // notify remove member 
   socket.on("CLINET_REMOVE_MEMBER", async (data) => {
     try {
-      const { roomID, memberID, fullName } = data;
-      const content = `${admin?.fullName} đã xóa ${fullName} khỏi nhóm `;
-
+      const { roomID, fullName } = data;
       socket.join(roomID);
 
-      const dataChat = {
-        type: "system",
-        content: content,
-        room_id: roomID,
-      }
-      const newChat = new Chat(dataChat);
+      const notifyRemoveMemberUseCase = new NotifyRemoveMemberUseCase(roomRepo, chatRepo, userRepo);
+      const newChat = await notifyRemoveMemberUseCase.execute(roomID, myID, fullName);
 
-      // save db . 
-      await Promise.all([
-        newChat.save(),
-        Room.updateOne(
-          { _id: roomID },
-          { lastMessageId: newChat._id }
-        )
-      ]);
-
-      io.to(roomID).emit("SERVER_RETURN_MESSAGE", {
-        ...dataChat,
-        _id: newChat._id,
-        createdAt: newChat.createdAt
-      });
+      io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
     } catch (error) {
       console.error("Lỗi Socket Remove Member:", error);
     }
@@ -48,32 +33,13 @@ export const roomSocket = async (io: Server, socket: Socket) => {
   // notify add member 
   socket.on("CLINET_ADD_MEMBER", async (data) => {
     try {
-      const { roomID, memberIDs, listFullNames } = data;
-      const fullNames = listFullNames.join(", ");
-      const content = `${admin?.fullName} thêm ${fullNames} vào nhóm.`;
-
+      const { roomID, listFullNames } = data;
       socket.join(roomID);
 
-      const dataChat = {
-        content: content,
-        type: "system",
-        room_id: roomID
-      }
-      const newChat = new Chat(dataChat);
+      const notifyAddMemberUseCase = new NotifyAddMemberUseCase(roomRepo, chatRepo, userRepo);
+      const newChat = await notifyAddMemberUseCase.execute(roomID, myID, listFullNames);
 
-      await Promise.all([
-        newChat.save(),
-        Room.updateOne(
-          { _id: roomID },
-          { lastMessageId: newChat._id }
-        )
-      ]);
-
-      io.to(roomID).emit("SERVER_RETURN_MESSAGE", {
-        ...dataChat,
-        _id: newChat._id,
-        createdAt: newChat.createdAt
-      });
+      io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
     } catch (error) {
       console.error("Lỗi Socket Add Member:", error);
     }
@@ -83,31 +49,14 @@ export const roomSocket = async (io: Server, socket: Socket) => {
   socket.on("CLINET_MEMBER_LEAVE_ROOM", async (data) => {
     try {
       const { roomID, fullName } = data;
-      const content = `${fullName} đã rời nhóm`;
-
       socket.join(roomID);
 
-      const dataChat = {
-        room_id: roomID,
-        content: content,
-        type: "system"
-      }
-      const newChat = new Chat(dataChat);
+      const notifyLeaveRoomUseCase = new NotifyLeaveRoomUseCase(roomRepo, chatRepo);
+      const newChat = await notifyLeaveRoomUseCase.execute(roomID, fullName);
 
-      await Promise.all([
-        newChat.save(),
-        Room.updateOne(
-          { _id: roomID },
-          { lastMessageId: newChat._id })
-      ])
-
-      io.to(roomID).emit("SERVER_RETURN_MESSAGE", {
-        ...dataChat,
-        _id: newChat._id,
-        createdAt: newChat.createdAt
-      });
+      io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
     } catch (error) {
-      console.error("Lỗi Socket Remove Member:", error);
+      console.error("Lỗi Socket Leave Room:", error);
     }
   });
 
@@ -115,32 +64,14 @@ export const roomSocket = async (io: Server, socket: Socket) => {
   socket.on("CLIENT_ASSIGN_ADMIN", async (data) => {
     try {
       const { roomID, fullName } = data;
-      const content = `${admin?.fullName} đã phong ${fullName} làm quản trị viên nhóm`;
-
       socket.join(roomID);
 
-      const dataChat = {
-        room_id: roomID,
-        content: content,
-        type: "system"
-      }
-      const newChat = new Chat(dataChat);
+      const notifyAssignAdminUseCase = new NotifyAssignAdminUseCase(roomRepo, chatRepo, userRepo);
+      const newChat = await notifyAssignAdminUseCase.execute(roomID, myID, fullName);
 
-      await Promise.all([
-        newChat.save(),
-        Room.updateOne(
-          { _id: roomID },
-          { lastMessageId: newChat._id }
-        )
-      ]);
-
-      io.to(roomID).emit("SERVER_RETURN_MESSAGE", {
-        ...dataChat,
-        _id: newChat._id,
-        createdAt: newChat.createdAt
-      });
+      io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
     } catch (error) {
       console.log("Lỗi Socket Assign Admin:", error);
     }
-  })
-}
+  });
+};

@@ -22,4 +22,6 @@ export interface IRoomRepository {
   assignAdminRole(roomID: string, memberID: string): Promise<void>;
 
   updateLastMessage(roomID: string, messageID: any): Promise<void>;
+
+  updateMemberStatus(roomID: string, status: string): Promise<void>;
 }
