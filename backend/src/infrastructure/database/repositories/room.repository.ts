@@ -120,4 +120,16 @@ export class RoomRepository implements IRoomRepository {
       { $set: { "members.$.role": "superAdmin" } }
     );
   }
+
+  async updateLastMessage(roomID: string, messageID: any): Promise<void> {
+
+    const id = new mongoose.Types.ObjectId(messageID);
+    await Room.updateOne(
+      { _id: roomID },
+      {
+        lastMessageId: messageID,
+        updatedAt: new Date()
+      }
+    );
+  }
 }

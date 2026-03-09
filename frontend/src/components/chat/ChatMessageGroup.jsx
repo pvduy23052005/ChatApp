@@ -43,7 +43,7 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
 
           return (
             <div
-              key={chat.id || index}
+              key={chat.id  || index}
               className={`message-row ${isMe ? "outgoing" : "incoming"} ${
                 isLastInGroup ? "last-in-group" : ""
               }`}

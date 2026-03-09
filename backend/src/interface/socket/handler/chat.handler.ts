@@ -2,30 +2,28 @@ import { Server, Socket } from "socket.io";
 import Chat from "../../../infrastructure/database/model/chat.model";
 import Room from "../../../infrastructure/database/model/room.model";
 
+import { SendMessageUseCase } from "../../../application/use-cases/chat/send-message.use-case";
+
+import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { ChatRepository } from "../../../infrastructure/database/repositories/chat.repository";
+
+const roomRepo = new RoomRepository();
+const chatRepo = new ChatRepository();
+
 export const chatSocket = (io: Server, socket: Socket) => {
   const myID = socket.data.user.userId;
 
   socket.on("CLIENT_SEND_MESSAGE", async (data) => {
     const roomID = data.roomID;
     socket.join(roomID);
-    const newChat = new Chat({
-      user_id: myID,
-      content: data.content,
-      room_id: roomID,
-      images: data.images,
-      readBy: [myID]
-    });
 
-    await Promise.all([
-      newChat.save().then(t => t.populate("user_id", "fullName avatar")),
-      Room.updateOne(
-        { _id: roomID },
-        {
-          lastMessageId: newChat._id,
-          updatedAt: new Date()
-        }
-      )
-    ]);
+    const sendMessageUseCase = new SendMessageUseCase(chatRepo, roomRepo)
+    const newChat = await sendMessageUseCase.execute({
+      user_id: myID,
+      room_id: roomID,
+      content: data.content,
+      images: data.images,
+    });
     io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
   })
 

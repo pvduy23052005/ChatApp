@@ -1,6 +1,7 @@
 import Chat from "../model/chat.model"
 import { IChatRepository } from "../../../domain/interfaces/chat.interface";
 import { ChatEntity } from "../../../domain/entities/chat.entity";
+import { IDataChat } from "../../../application/use-cases/chat/send-message.use-case";
 
 const mapToEntity = (doc: any) => {
   if (!doc) return null;
@@ -44,5 +45,20 @@ export class ChatRepository implements IChatRepository {
 
     const listMessages = messages.map((message: any) => mapToEntity(message)).filter((message: ChatEntity | null) => message !== null);
     return listMessages.reverse();
+  }
+
+  public async createNewMessage(dataChat: IDataChat): Promise<ChatEntity | null> {
+
+    const newChat = new Chat({
+      user_id: dataChat.user_id,
+      content: dataChat.content,
+      room_id: dataChat.room_id,
+      images: dataChat.images,
+      readBy: [dataChat.user_id]
+    });
+
+    await newChat.save().then(t => t.populate("user_id", "fullName avatar"));
+
+    return mapToEntity(newChat);
   }
 }
