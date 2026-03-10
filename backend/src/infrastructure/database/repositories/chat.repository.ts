@@ -72,4 +72,10 @@ export class ChatRepository implements IChatRepository {
     await newChat.save();
     return newChat;
   }
+
+  public async markMessageAsRead(messageID: string, userID: string): Promise<void> {
+    await Chat.findByIdAndUpdate(messageID, {
+      $addToSet: { readBy: userID }
+    });
+  }
 }

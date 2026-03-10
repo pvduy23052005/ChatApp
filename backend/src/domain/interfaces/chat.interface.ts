@@ -7,4 +7,6 @@ export interface IChatRepository {
   createNewMessage(dataChat: IDataChat): Promise<ChatEntity | null>;
 
   createSystemMessage(roomID: string, content: string): Promise<any>;
+
+  markMessageAsRead(messageID: string, userID: string): Promise<void>;
 }

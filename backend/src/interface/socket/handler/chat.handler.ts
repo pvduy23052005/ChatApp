@@ -1,8 +1,6 @@
 import { Server, Socket } from "socket.io";
-import Chat from "../../../infrastructure/database/model/chat.model";
-import Room from "../../../infrastructure/database/model/room.model";
-
 import { SendMessageUseCase } from "../../../application/use-cases/chat/send-message.use-case";
+import { ReadRoomUseCase } from "../../../application/use-cases/chat/read-room.use-case";
 
 import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
 import { ChatRepository } from "../../../infrastructure/database/repositories/chat.repository";
@@ -17,7 +15,7 @@ export const chatSocket = (io: Server, socket: Socket) => {
     const roomID = data.roomID;
     socket.join(roomID);
 
-    const sendMessageUseCase = new SendMessageUseCase(chatRepo, roomRepo)
+    const sendMessageUseCase = new SendMessageUseCase(chatRepo, roomRepo);
     const newChat = await sendMessageUseCase.execute({
       user_id: myID,
       room_id: roomID,
@@ -25,7 +23,7 @@ export const chatSocket = (io: Server, socket: Socket) => {
       images: data.images,
     });
     io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
-  })
+  });
 
   socket.on("CLIENT_SEND_TYPING", (data) => {
     socket.join(data.roomID);
@@ -36,19 +34,13 @@ export const chatSocket = (io: Server, socket: Socket) => {
     const { roomID, userID } = data;
 
     try {
-      const room = await Room.findById(roomID);
-
-      if (room && room.lastMessageId) {
-        await Chat.findByIdAndUpdate(room.lastMessageId, {
-          $addToSet: { readBy: userID }
-        });
-      }
+      const readRoomUseCase = new ReadRoomUseCase(roomRepo, chatRepo);
+      await readRoomUseCase.execute(roomID, userID);
 
       io.emit("SERVER_RETURN_UPDATE_READ_STATUS", data);
-
     } catch (error) {
       console.error("Error in CLIENT_READ_ROOM:", error);
     }
   });
-}
+};
 
