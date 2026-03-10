@@ -1,19 +1,20 @@
 import { IRoomRepository } from "../../../domain/interfaces/room.interface";
-import { IChatRepository } from "../../../domain/interfaces/chat.interface";
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
+import { IUserReadRepository } from "../../../domain/interfaces/user.interface";
 
 export class NotifyAssignAdminUseCase {
   constructor(
     private readonly roomRepo: IRoomRepository,
-    private readonly chatRepo: IChatRepository,
-    private readonly userRepo: IUserRepository
+    private readonly chatWriteRepo: IChatWriteRepository,
+    private readonly useReadrRepo: IUserReadRepository
   ) { }
 
   async execute(roomID: string, adminID: string, assignedMemberFullName: string): Promise<any> {
-    const adminFullName = await this.userRepo.findUserFullName(adminID);
+    const adminFullName = await this.useReadrRepo.findUserFullName(adminID);
+    
     const content = `${adminFullName} đã phong ${assignedMemberFullName} làm quản trị viên nhóm`;
 
-    const newChat = await this.chatRepo.createSystemMessage(roomID, content);
+    const newChat = await this.chatWriteRepo.createSystemMessage(roomID, content);
 
     await this.roomRepo.updateLastMessage(roomID, newChat._id);
 

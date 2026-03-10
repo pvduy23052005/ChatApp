@@ -1,12 +1,11 @@
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IUserWriteRepository, IUserReadRepository } from "../../../domain/interfaces/user.interface";
 import bcrypt from "bcrypt";
 
 export class RegisterUserUseCase {
-  private readonly userRepository: IUserRepository;
-
-  constructor(userRepository: IUserRepository) {
-    this.userRepository = userRepository;
-  }
+  constructor(
+    private readonly userReadRepo: IUserReadRepository,
+    private readonly userWriteRepo: IUserWriteRepository
+  ) { }
 
   public async execute(dataUser: any) {
     const { fullName, email, password, passwordConfirm } = dataUser;
@@ -19,14 +18,14 @@ export class RegisterUserUseCase {
       throw new Error("Xác nhận mật khẩu không đúng");
     }
 
-    const user = await this.userRepository.findUserByEmail(email);
+    const user = await this.userReadRepo.findUserByEmail(email);
     if (user) {
       throw new Error("Email đã tồn tại");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await this.userRepository.createUser(fullName, email, hashedPassword);
+    const newUser = await this.userWriteRepo.createUser(fullName, email, hashedPassword);
 
     if (!newUser) {
       throw new Error("Đăng ký thất bại");

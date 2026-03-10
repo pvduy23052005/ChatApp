@@ -1,10 +1,8 @@
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IUserReadRepository } from "../../../domain/interfaces/user.interface";
 
 export class GetUsersUseCase {
-  private readonly userRepository: IUserRepository;
 
-  constructor(userRepository: IUserRepository) {
-    this.userRepository = userRepository;
+  constructor(private readonly userReadRepo: IUserReadRepository) {
   }
 
   public async execute(user: any) {
@@ -21,7 +19,7 @@ export class GetUsersUseCase {
       ...requestIDs,
     ];
 
-    const users = await this.userRepository.findUsersNotInList(listId);
+    const users = await this.userReadRepo.findUsersNotInList(listId);
 
     return users;
   }

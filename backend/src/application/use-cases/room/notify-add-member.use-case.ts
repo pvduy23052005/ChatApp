@@ -1,12 +1,12 @@
 import { IRoomRepository } from "../../../domain/interfaces/room.interface";
-import { IChatRepository } from "../../../domain/interfaces/chat.interface";
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
+import { IUserReadRepository } from "../../../domain/interfaces/user.interface";
 
 export class NotifyAddMemberUseCase {
   constructor(
     private readonly roomRepo: IRoomRepository,
-    private readonly chatRepo: IChatRepository,
-    private readonly userRepo: IUserRepository
+    private readonly chatRepo: IChatWriteRepository,
+    private readonly userRepo: IUserReadRepository
   ) { }
 
   async execute(roomID: string, adminID: string, listFullNames: string[]): Promise<any> {

@@ -5,15 +5,16 @@ import { GetFriendsUseCase } from "../../../application/use-cases/user/get-frien
 import { GetFriendAcceptsUseCase } from "../../../application/use-cases/user/get-friend-accepts.use-case";
 import { EditProfileUseCase } from "../../../application/use-cases/user/edit-profile.use-case";
 
-import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
+import { UserReadRepository, UserWriteRepository } from "../../../infrastructure/database/repositories/user.repository";
 
-const userRepository = new UserRepository();
+const userReadRepo = new UserReadRepository();
+const userWriteRepo = new UserWriteRepository();
 
 // [get] /users
 export const getUsers = async (req: Request, res: Response) => {
   try {
 
-    const getUsersUseCase = new GetUsersUseCase(userRepository);
+    const getUsersUseCase = new GetUsersUseCase(userReadRepo);
     const users = await getUsersUseCase.execute(res.locals.user);
 
     res.status(200).json({
@@ -32,7 +33,7 @@ export const getUsers = async (req: Request, res: Response) => {
 // [get] /user/friend-accepts . 
 export const friendAccepts = async (req: Request, res: Response) => {
   try {
-    const getFriendAcceptsUseCase = new GetFriendAcceptsUseCase(userRepository);
+    const getFriendAcceptsUseCase = new GetFriendAcceptsUseCase(userReadRepo);
     const users = await getFriendAcceptsUseCase.execute(res.locals.user);
 
     res.status(200).json({
@@ -53,7 +54,7 @@ export const friendAccepts = async (req: Request, res: Response) => {
 export const getFriends = async (req: Request, res: Response) => {
   try {
 
-    const getFriendsUseCase = new GetFriendsUseCase(userRepository);
+    const getFriendsUseCase = new GetFriendsUseCase(userReadRepo);
     const friends = await getFriendsUseCase.execute(res.locals.user);
 
     res.status(200).json({
@@ -93,7 +94,7 @@ export const editProfile = async (req: Request, res: Response) => {
       });
     }
 
-    const editProfileUseCase = new EditProfileUseCase(userRepository);
+    const editProfileUseCase = new EditProfileUseCase(userWriteRepo);
     const user = await editProfileUseCase.execute(myID, updateData);
 
     if (!user) {

@@ -1,11 +1,8 @@
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IUserWriteRepository } from "../../../domain/interfaces/user.interface";
 
 export class EditProfileUseCase {
-  private readonly userRepository: IUserRepository;
 
-  constructor(userRepository: IUserRepository) {
-    this.userRepository = userRepository;
-  }
+  constructor(private readonly userReadRepo: IUserWriteRepository) { };
 
   public async execute(userID: string, data: any) {
     const { fullName, avatar } = data;
@@ -28,7 +25,7 @@ export class EditProfileUseCase {
       throw new Error("Không có dữ liệu cập nhật!");
     }
 
-    const user = await this.userRepository.updateProfile(userID, updateData);
+    const user = await this.userReadRepo.updateProfile(userID, updateData);
 
     if (!user) {
       throw new Error("Cập nhật thất bại!");

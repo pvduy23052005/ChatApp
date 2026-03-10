@@ -1,10 +1,8 @@
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IUserReadRepository } from "../../../domain/interfaces/user.interface";
 
 export class GetFriendsUseCase {
-  private readonly userRepository: IUserRepository;
 
-  constructor(userRepository: IUserRepository) {
-    this.userRepository = userRepository;
+  constructor(private readonly userReadRepo: IUserReadRepository) {
   }
 
   public async execute(user: any) {
@@ -14,7 +12,7 @@ export class GetFriendsUseCase {
     }
 
     const friendIDs: string[] = user.friendList.map((item: any) => item.user_id);
-    const users = await this.userRepository.findUsersInList(friendIDs);
+    const users = await this.userReadRepo.findUsersInList(friendIDs);
     return users;
   }
 }

@@ -7,10 +7,10 @@ import { RefuseFriendUseCase } from "../../../application/use-cases/user/refuse-
 import { AcceptFriendUseCase } from "../../../application/use-cases/user/accept-friend.use-case";
 
 import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
-import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
+import { FriendShipRepository } from "../../../infrastructure/database/repositories/user.repository";
 
+const friendShipRepo = new FriendShipRepository();
 const roomRepo = new RoomRepository();
-const userRepo = new UserRepository();
 
 export const userSocket = (io: Server, socket: Socket) => {
   const myID: string = socket.data.user.userId;
@@ -32,7 +32,7 @@ export const userSocket = (io: Server, socket: Socket) => {
   // friend request
   socket.on("CIENT_FRIEND_REQUEST", async (data) => {
     try {
-      const friendRequestUseCase = new FriendRequestUseCase(userRepo);
+      const friendRequestUseCase = new FriendRequestUseCase(friendShipRepo);
       await friendRequestUseCase.execute(myID, data.userID);
     } catch (error) {
       console.log(error);
@@ -43,7 +43,7 @@ export const userSocket = (io: Server, socket: Socket) => {
   socket.on("CLIENT_FRIEND_CANCEL", async (data) => {
     try {
 
-      const friendCancelUseCase = new FriendCancelUseCase(userRepo);
+      const friendCancelUseCase = new FriendCancelUseCase(friendShipRepo);
 
       await friendCancelUseCase.execute(myID, data.userID);
     } catch (error) {
@@ -54,7 +54,7 @@ export const userSocket = (io: Server, socket: Socket) => {
   // refuse friend
   socket.on("CLIENT_REFUSE_FRIEND", async (data) => {
     try {
-      const refuseFriendUseCase = new RefuseFriendUseCase(userRepo);
+      const refuseFriendUseCase = new RefuseFriendUseCase(friendShipRepo);
       await refuseFriendUseCase.execute(myID, data.userID);
     } catch (error) {
       console.log(error);
@@ -64,7 +64,7 @@ export const userSocket = (io: Server, socket: Socket) => {
   // accept friend
   socket.on("CLIENT_ACCEPT_FRIEND", async (data) => {
     try {
-      const acceptFriendUseCase = new AcceptFriendUseCase(roomRepo, userRepo);
+      const acceptFriendUseCase = new AcceptFriendUseCase(roomRepo, friendShipRepo);
       await acceptFriendUseCase.execute(myID, data.userID);
     } catch (error) {
       console.error(error);

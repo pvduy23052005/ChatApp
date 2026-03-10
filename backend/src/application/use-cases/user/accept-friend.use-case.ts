@@ -1,10 +1,10 @@
 import { IRoomRepository } from "../../../domain/interfaces/room.interface";
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IFriendShipRepository } from "../../../domain/interfaces/user.interface";
 
 export class AcceptFriendUseCase {
   constructor(
     private readonly roomRepo: IRoomRepository,
-    private readonly userRepo: IUserRepository
+    private readonly friendShipRepo: IFriendShipRepository
   ) { }
 
   async execute(myID: string, userID: string): Promise<void> {
@@ -27,11 +27,11 @@ export class AcceptFriendUseCase {
       }
 
       await Promise.all([
-        this.userRepo.addFriendToList(myID, userID, roomChatId),
-        this.userRepo.removeFriendAccept(myID, userID),
+        this.friendShipRepo.addFriendToList(myID, userID, roomChatId),
+        this.friendShipRepo.removeFriendAccept(myID, userID),
 
-        this.userRepo.addFriendToList(userID, myID, roomChatId),
-        this.userRepo.removeFriendRequest(userID, myID),
+        this.friendShipRepo.addFriendToList(userID, myID, roomChatId),
+        this.friendShipRepo.removeFriendRequest(userID, myID),
       ]);
     } catch (error) {
       console.error(error);

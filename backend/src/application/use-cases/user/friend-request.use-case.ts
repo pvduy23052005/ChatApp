@@ -1,13 +1,13 @@
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IFriendShipRepository } from "../../../domain/interfaces/user.interface";
 
 export class FriendRequestUseCase {
-  constructor(private readonly userRepo: IUserRepository) { }
+  constructor(private readonly friendShipRepo: IFriendShipRepository) { }
 
   async execute(myID: string, userID: string): Promise<void> {
     try {
       await Promise.all([
-        this.userRepo.addFriendRequest(myID, userID),
-        this.userRepo.addFriendAccept(userID, myID),
+        this.friendShipRepo.addFriendRequest(myID, userID),
+        this.friendShipRepo.addFriendAccept(userID, myID),
       ]);
     } catch (error) {
       console.log(error);
