@@ -1,11 +1,11 @@
-import * as chatRepository from "../../../infrastructure/database/repositories/chat.repository";
+import { IChatReadRepository } from "../../../domain/interfaces/chat.interface";
 import mongoose from "mongoose";
 
 
 export class GetChatHistoryUseCase {
-  private readonly chatRepository: chatRepository.ChatRepository;
+  private readonly chatRepository: IChatReadRepository;
 
-  constructor(chatRepository: chatRepository.ChatRepository) {
+  constructor(chatRepository: IChatReadRepository) {
     this.chatRepository = chatRepository;
   }
 

@@ -3,10 +3,10 @@ import { Request, Response } from "express";
 import { GetChatHistoryUseCase } from "../../../application/use-cases/chat/get-chat-history.use-case";
 import { GetRoomUseCase } from "../../../application/use-cases/room/get-room.use-case";
 
-import { ChatRepository } from "../../../infrastructure/database/repositories/chat.repository";
+import { ChatReadRepository } from "../../../infrastructure/database/repositories/chat.repository";
 import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
 
-const chatRepository = new ChatRepository();
+const chatReadRepository = new ChatReadRepository();
 const roomRepository = new RoomRepository();
 
 // [get] /chat/rooms?status = accepted || waiting 
@@ -36,7 +36,7 @@ export const getListChat = async (req: Request, res: Response) => {
   try {
     const roomID: string = (req.params.id?.toString()) || "";
 
-    const getChatHistoryUseCase = new GetChatHistoryUseCase(chatRepository);
+    const getChatHistoryUseCase = new GetChatHistoryUseCase(chatReadRepository);
     const chats = await getChatHistoryUseCase.execute(roomID);
 
     res.json({

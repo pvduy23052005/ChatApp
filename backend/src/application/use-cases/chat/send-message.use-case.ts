@@ -1,4 +1,4 @@
-import { IChatRepository } from "../../../domain/interfaces/chat.interface";
+import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
 import { IRoomRepository } from "../../../domain/interfaces/room.interface";
 
 export interface IDataChat {
@@ -11,14 +11,14 @@ export interface IDataChat {
 export class SendMessageUseCase {
 
   constructor(
-    private readonly chatRepo: IChatRepository,
+    private readonly chatWriteRepo: IChatWriteRepository,
     private readonly roomRepo: IRoomRepository,
   ) { }
 
   async execute(dataChat: IDataChat) {
     const { user_id, room_id, content, images } = dataChat;
 
-    const newChat = await this.chatRepo.createNewMessage({
+    const newChat = await this.chatWriteRepo.createNewMessage({
       user_id: user_id,
       room_id: room_id,
       content: content,

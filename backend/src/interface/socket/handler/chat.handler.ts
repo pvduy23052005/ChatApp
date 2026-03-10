@@ -3,10 +3,11 @@ import { SendMessageUseCase } from "../../../application/use-cases/chat/send-mes
 import { ReadRoomUseCase } from "../../../application/use-cases/chat/read-room.use-case";
 
 import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
-import { ChatRepository } from "../../../infrastructure/database/repositories/chat.repository";
+import { ChatWriteRepository } from "../../../infrastructure/database/repositories/chat.repository";
+
 
 const roomRepo = new RoomRepository();
-const chatRepo = new ChatRepository();
+const chatWriteRepo = new ChatWriteRepository();
 
 export const chatSocket = (io: Server, socket: Socket) => {
   const myID = socket.data.user.userId;
@@ -15,7 +16,7 @@ export const chatSocket = (io: Server, socket: Socket) => {
     const roomID = data.roomID;
     socket.join(roomID);
 
-    const sendMessageUseCase = new SendMessageUseCase(chatRepo, roomRepo);
+    const sendMessageUseCase = new SendMessageUseCase(chatWriteRepo, roomRepo);
     const newChat = await sendMessageUseCase.execute({
       user_id: myID,
       room_id: roomID,
@@ -34,7 +35,7 @@ export const chatSocket = (io: Server, socket: Socket) => {
     const { roomID, userID } = data;
 
     try {
-      const readRoomUseCase = new ReadRoomUseCase(roomRepo, chatRepo);
+      const readRoomUseCase = new ReadRoomUseCase(roomRepo, chatWriteRepo);
       await readRoomUseCase.execute(roomID, userID);
 
       io.emit("SERVER_RETURN_UPDATE_READ_STATUS", data);

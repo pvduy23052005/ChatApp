@@ -1,5 +1,5 @@
 import Chat from "../model/chat.model"
-import { IChatRepository } from "../../../domain/interfaces/chat.interface";
+import { IChatReadRepository, IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
 import { ChatEntity } from "../../../domain/entities/chat.entity";
 import { IDataChat } from "../../../application/use-cases/chat/send-message.use-case";
 
@@ -29,7 +29,7 @@ const mapToEntity = (doc: any) => {
   });
 }
 
-export class ChatRepository implements IChatRepository {
+export class ChatReadRepository implements IChatReadRepository {
   public async getMessageByRoomID(roomID: string): Promise<ChatEntity[] | null> {
     const query: any = {
       room_id: roomID,
@@ -46,7 +46,9 @@ export class ChatRepository implements IChatRepository {
     const listMessages = messages.map((message: any) => mapToEntity(message)).filter((message: ChatEntity | null) => message !== null);
     return listMessages.reverse();
   }
+}
 
+export class ChatWriteRepository implements IChatWriteRepository {
   public async createNewMessage(dataChat: IDataChat): Promise<ChatEntity | null> {
 
     const newChat = new Chat({
