@@ -1,7 +1,7 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomReadRepository } from "../../../domain/interfaces/room.interface";
 
 export class IsUserInRoomUseCase {
-  constructor(private readonly roomRepository: IRoomRepository) { }
+  constructor(private readonly roomRepository: IRoomReadRepository) { }
 
   async execute(roomID: string, userID: string): Promise<any> {
     try {

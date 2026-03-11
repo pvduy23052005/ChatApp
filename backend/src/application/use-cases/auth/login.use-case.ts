@@ -1,8 +1,6 @@
-import jwt from "jsonwebtoken";
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IUserReadRepository , IUserWriteRepository } from "../../../domain/interfaces/user.interface";
 import { IPasswordService } from "../../../domain/interfaces/password.interface";
 import { ITokenService } from "../../../domain/interfaces/token.interface";
-
 
 export interface LoginResponse {
   user: any;
@@ -10,29 +8,25 @@ export interface LoginResponse {
 }
 
 export class LoginUseCase {
-
-  private readonly userRepository: IUserRepository;
-  private readonly passwordService: IPasswordService;
-  private readonly tokenService: ITokenService;
-
-  constructor(userRepo: IUserRepository, passwordService: IPasswordService, tokenService: ITokenService) {
-    this.userRepository = userRepo;
-    this.passwordService = passwordService;
-    this.tokenService = tokenService;
-  }
+  constructor(
+    private readonly userReadRepo: IUserReadRepository,
+    private readonly userWriteRepo: IUserWriteRepository,
+    private readonly passwordService: IPasswordService,
+    private readonly tokenService: ITokenService,
+  ) { }
 
   public async execute(email?: string, password?: string): Promise<LoginResponse> {
     if (!email || !password) {
       throw new Error("Vui lòng điền đầy đủ thông tin");
     }
 
-    const user = await this.userRepository.findUserByEmail(email);
+    const user = await this.userReadRepo.findUserByEmail(email);
 
     if (!user) {
       throw new Error("Email không chính xác");
     }
 
-    if (user.isActive()) {
+    if (!user.isActive()) {
       throw new Error("Tài khoản đã bị khóa");
     }
 
@@ -45,12 +39,11 @@ export class LoginUseCase {
     const payload = { userId: user.getID() };
     const token = await this.tokenService.generateToken(payload);
 
-    await this.userRepository.updateUserStatus(user.getID(), "online");
+    await this.userWriteRepo.updateUserStatus(user.getID(), "online");
 
     return {
       user: user.getProfile(),
       token
     };
   }
-
 }

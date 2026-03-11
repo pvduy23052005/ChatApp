@@ -1,5 +1,5 @@
 import Room from "../model/room.model";
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../../domain/interfaces/room.interface";
 import { RoomEntity } from "../../../domain/entities/room.entity";
 import mongoose from "mongoose";
 
@@ -17,7 +17,7 @@ const mapToEntity = (doc: any): RoomEntity => {
   })
 }
 
-export class RoomRepository implements IRoomRepository {
+export class RoomReadRepository implements IRoomReadRepository {
 
   async getRoomByUserAndStatus(userID: string, status: string): Promise<RoomEntity[] | []> {
     const userObjectID = new mongoose.Types.ObjectId(userID);
@@ -71,12 +71,6 @@ export class RoomRepository implements IRoomRepository {
     return room;
   }
 
-  async createNewRoom(newRoomData: any) {
-    const newRoom = new Room(newRoomData);
-    await newRoom.save();
-    return newRoom;
-  }
-
   async findRoomById(roomID: string) {
     const room = await Room.findOne({
       _id: roomID,
@@ -85,6 +79,15 @@ export class RoomRepository implements IRoomRepository {
 
     return room;
   }
+}
+
+export class RoomWriteRepository implements IRoomWriteRepository {
+
+  async createNewRoom(newRoomData: any) {
+    const newRoom = new Room(newRoomData);
+    await newRoom.save();
+    return newRoom;
+  }
 
   async updateRoomTitle(roomID: string, title: string) {
     await Room.updateOne(
@@ -92,6 +95,26 @@ export class RoomRepository implements IRoomRepository {
       { $set: { title: title } }
     );
   }
+
+  async softDeleteRoom(roomID: string) {
+    await Room.updateOne(
+      { _id: roomID },
+      { deleted: true, deletedAt: new Date() }
+    );
+  }
+
+  async updateLastMessage(roomID: string, messageID: any): Promise<void> {
+    await Room.updateOne(
+      { _id: roomID },
+      {
+        lastMessageId: messageID,
+        updatedAt: new Date()
+      }
+    );
+  }
+}
+
+export class RoomMemberRepository implements IRoomMemberRepository {
 
   async addMembersToRoom(roomID: string, newMembers: { user_id: string, role: string, status: string }[]) {
     await Room.updateOne(
@@ -107,13 +130,6 @@ export class RoomRepository implements IRoomRepository {
     );
   }
 
-  async softDeleteRoom(roomID: string) {
-    await Room.updateOne(
-      { _id: roomID },
-      { deleted: true, deletedAt: new Date() }
-    );
-  }
-
   async assignAdminRole(roomID: string, memberID: string) {
     await Room.updateOne(
       { _id: roomID, "members.user_id": memberID },
@@ -121,22 +137,10 @@ export class RoomRepository implements IRoomRepository {
     );
   }
 
-  async updateLastMessage(roomID: string, messageID: any): Promise<void> {
-
-    const id = new mongoose.Types.ObjectId(messageID);
-    await Room.updateOne(
-      { _id: roomID },
-      {
-        lastMessageId: messageID,
-        updatedAt: new Date()
-      }
-    );
-  }
-
   async updateMemberStatus(roomID: string, status: string): Promise<void> {
     await Room.updateOne(
       { _id: roomID },
       { $set: { "members.$[].status": status } }
-    ).exec();
+    );
   }
 }

@@ -1,5 +1,5 @@
 import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
 
 export interface IDataChat {
   user_id: string;
@@ -12,7 +12,7 @@ export class SendMessageUseCase {
 
   constructor(
     private readonly chatWriteRepo: IChatWriteRepository,
-    private readonly roomRepo: IRoomRepository,
+    private readonly roomRepo: IRoomWriteRepository,
   ) { }
 
   async execute(dataChat: IDataChat) {

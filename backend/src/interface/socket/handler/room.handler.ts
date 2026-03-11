@@ -6,11 +6,11 @@ import { NotifyAddMemberUseCase } from "../../../application/use-cases/room/noti
 import { NotifyLeaveRoomUseCase } from "../../../application/use-cases/room/notify-leave-room.use-case";
 import { NotifyAssignAdminUseCase } from "../../../application/use-cases/room/notify-assign-admin.use-case";
 
-import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { RoomWriteRepository } from "../../../infrastructure/database/repositories/room.repository";
 import { ChatWriteRepository } from "../../../infrastructure/database/repositories/chat.repository";
 import { UserReadRepository, } from "../../../infrastructure/database/repositories/user.repository";
 
-const roomRepo = new RoomRepository();
+const roomWriteRepo = new RoomWriteRepository();
 const chatWriteRepo = new ChatWriteRepository();
 const userReadRepo = new UserReadRepository();
 
@@ -23,7 +23,7 @@ export const roomSocket = async (io: Server, socket: Socket) => {
       const { roomID, fullName } = data;
       socket.join(roomID);
 
-      const notifyRemoveMemberUseCase = new NotifyRemoveMemberUseCase(roomRepo, chatWriteRepo, userReadRepo);
+      const notifyRemoveMemberUseCase = new NotifyRemoveMemberUseCase(roomWriteRepo, chatWriteRepo, userReadRepo);
       const newChat = await notifyRemoveMemberUseCase.execute(roomID, myID, fullName);
 
       io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
@@ -38,7 +38,7 @@ export const roomSocket = async (io: Server, socket: Socket) => {
       const { roomID, listFullNames } = data;
       socket.join(roomID);
 
-      const notifyAddMemberUseCase = new NotifyAddMemberUseCase(roomRepo, chatWriteRepo, userReadRepo);
+      const notifyAddMemberUseCase = new NotifyAddMemberUseCase(roomWriteRepo, chatWriteRepo, userReadRepo);
       const newChat = await notifyAddMemberUseCase.execute(roomID, myID, listFullNames);
 
       io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
@@ -53,7 +53,7 @@ export const roomSocket = async (io: Server, socket: Socket) => {
       const { roomID, fullName } = data;
       socket.join(roomID);
 
-      const notifyLeaveRoomUseCase = new NotifyLeaveRoomUseCase(roomRepo, chatWriteRepo);
+      const notifyLeaveRoomUseCase = new NotifyLeaveRoomUseCase(roomWriteRepo, chatWriteRepo);
       const newChat = await notifyLeaveRoomUseCase.execute(roomID, fullName);
 
       io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);
@@ -68,7 +68,7 @@ export const roomSocket = async (io: Server, socket: Socket) => {
       const { roomID, fullName } = data;
       socket.join(roomID);
 
-      const notifyAssignAdminUseCase = new NotifyAssignAdminUseCase(roomRepo, chatWriteRepo, userReadRepo);
+      const notifyAssignAdminUseCase = new NotifyAssignAdminUseCase(roomWriteRepo, chatWriteRepo, userReadRepo);
       const newChat = await notifyAssignAdminUseCase.execute(roomID, myID, fullName);
 
       io.to(roomID).emit("SERVER_RETURN_MESSAGE", newChat);

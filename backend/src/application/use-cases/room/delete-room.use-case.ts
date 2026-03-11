@@ -1,7 +1,7 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
 
 export class DeleteRoomUseCase {
-  constructor(private readonly roomRepository: IRoomRepository) { }
+  constructor(private readonly roomRepository: IRoomWriteRepository) { }
 
   async execute(roomID: string) {
 

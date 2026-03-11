@@ -1,9 +1,9 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomReadRepository } from "../../../domain/interfaces/room.interface";
 import { RoomEntity } from "../../../domain/entities/room.entity";
 import { IGetRoom } from "../../../domain/entities/room.entity";
 
 export class GetRoomUseCase {
-  constructor(private readonly roomRepo: IRoomRepository) { }
+  constructor(private readonly roomRepo: IRoomReadRepository) { }
 
   async execute(userID: string, status: string): Promise<IGetRoom[]> {
     if (!status || !userID) {

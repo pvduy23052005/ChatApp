@@ -4,10 +4,10 @@ import { GetChatHistoryUseCase } from "../../../application/use-cases/chat/get-c
 import { GetRoomUseCase } from "../../../application/use-cases/room/get-room.use-case";
 
 import { ChatReadRepository } from "../../../infrastructure/database/repositories/chat.repository";
-import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { RoomReadRepository } from "../../../infrastructure/database/repositories/room.repository";
 
 const chatReadRepository = new ChatReadRepository();
-const roomRepository = new RoomRepository();
+const roomReadRepo = new RoomReadRepository();
 
 // [get] /chat/rooms?status = accepted || waiting 
 export const getListRoom = async (req: Request, res: Response) => {
@@ -15,7 +15,7 @@ export const getListRoom = async (req: Request, res: Response) => {
     const statusRoom: string = req.query.status?.toString() || "";
     const myID: string = res.locals.user.id?.toString();
 
-    const getRoomUseCase = new GetRoomUseCase(roomRepository);
+    const getRoomUseCase = new GetRoomUseCase(roomReadRepo);
     const rooms = await getRoomUseCase.execute(myID, statusRoom);
 
     res.status(200).json({

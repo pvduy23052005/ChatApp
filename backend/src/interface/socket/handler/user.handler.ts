@@ -6,11 +6,13 @@ import { FriendCancelUseCase } from "../../../application/use-cases/user/friend-
 import { RefuseFriendUseCase } from "../../../application/use-cases/user/refuse-friend.use-case";
 import { AcceptFriendUseCase } from "../../../application/use-cases/user/accept-friend.use-case";
 
-import { RoomRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { RoomReadRepository, RoomWriteRepository, RoomMemberRepository } from "../../../infrastructure/database/repositories/room.repository";
 import { FriendShipRepository } from "../../../infrastructure/database/repositories/user.repository";
 
 const friendShipRepo = new FriendShipRepository();
-const roomRepo = new RoomRepository();
+const roomReadRepo = new RoomReadRepository();
+const roomWriteRepo = new RoomWriteRepository();
+const roomMemberRepo = new RoomMemberRepository();
 
 export const userSocket = (io: Server, socket: Socket) => {
   const myID: string = socket.data.user.userId;
@@ -19,7 +21,7 @@ export const userSocket = (io: Server, socket: Socket) => {
   socket.on("CLIENT_SEND_CHAT", async (data) => {
     const userID = data.userID;
     try {
-      const chatNotFriendUseCase = new ChatNotFriendUseCase(roomRepo);
+      const chatNotFriendUseCase = new ChatNotFriendUseCase(roomReadRepo, roomWriteRepo);
 
       const roomID = await chatNotFriendUseCase.execute(myID, userID);
 
@@ -64,7 +66,7 @@ export const userSocket = (io: Server, socket: Socket) => {
   // accept friend
   socket.on("CLIENT_ACCEPT_FRIEND", async (data) => {
     try {
-      const acceptFriendUseCase = new AcceptFriendUseCase(roomRepo, friendShipRepo);
+      const acceptFriendUseCase = new AcceptFriendUseCase(roomReadRepo, roomWriteRepo, roomMemberRepo, friendShipRepo);
       await acceptFriendUseCase.execute(myID, data.userID);
     } catch (error) {
       console.error(error);

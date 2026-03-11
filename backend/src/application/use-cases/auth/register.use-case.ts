@@ -1,10 +1,11 @@
+import { IPasswordService } from "../../../domain/interfaces/password.interface";
 import { IUserWriteRepository, IUserReadRepository } from "../../../domain/interfaces/user.interface";
-import bcrypt from "bcrypt";
 
 export class RegisterUserUseCase {
   constructor(
     private readonly userReadRepo: IUserReadRepository,
-    private readonly userWriteRepo: IUserWriteRepository
+    private readonly userWriteRepo: IUserWriteRepository,
+    private readonly passwordService: IPasswordService
   ) { }
 
   public async execute(dataUser: any) {
@@ -23,7 +24,7 @@ export class RegisterUserUseCase {
       throw new Error("Email đã tồn tại");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await this.passwordService.hashPassword(password);
 
     const newUser = await this.userWriteRepo.createUser(fullName, email, hashedPassword);
 

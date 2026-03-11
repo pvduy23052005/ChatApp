@@ -1,9 +1,9 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomReadRepository } from "../../../domain/interfaces/room.interface";
 import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
 
 export class ReadRoomUseCase {
   constructor(
-    private readonly roomRepo: IRoomRepository,
+    private readonly roomRepo: IRoomReadRepository,
     private readonly chatWriteRepo: IChatWriteRepository
   ) { }
 

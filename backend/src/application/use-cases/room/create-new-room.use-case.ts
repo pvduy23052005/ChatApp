@@ -1,7 +1,10 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomReadRepository, IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
 
 export class CreateNewRoomUseCase {
-  constructor(private readonly roomRepository: IRoomRepository) { }
+  constructor(
+    private readonly roomReadRepo: IRoomReadRepository,
+    private readonly roomWriteRepo: IRoomWriteRepository
+  ) { }
 
   async execute(myID: string, titleRoom: string, members: string[]) {
 
@@ -20,7 +23,7 @@ export class CreateNewRoomUseCase {
 
     if (memberIDs.length === 1) {
       const userID: string = memberIDs[0]!;
-      const existRoom = await this.roomRepository.checkRoomExist(myID, userID);
+      const existRoom = await this.roomReadRepo.checkRoomExist(myID, userID);
       if (existRoom) {
         throw new Error("Phòng này đã tồn tại");
       }
@@ -46,7 +49,7 @@ export class CreateNewRoomUseCase {
       })
     });
 
-    const newRoom = await this.roomRepository.createNewRoom(newRoomData);
+    const newRoom = await this.roomWriteRepo.createNewRoom(newRoomData);
 
     return newRoom;
   }

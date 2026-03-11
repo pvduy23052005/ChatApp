@@ -1,10 +1,10 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
 import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
 import { IUserReadRepository } from "../../../domain/interfaces/user.interface";
 
 export class NotifyRemoveMemberUseCase {
   constructor(
-    private readonly roomRepo: IRoomRepository,
+    private readonly roomRepo: IRoomWriteRepository,
     private readonly chatRepo: IChatWriteRepository,
     private readonly userRepo: IUserReadRepository
   ) { }

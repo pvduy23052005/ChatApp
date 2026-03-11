@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { RoomRepository } from '../../database/repositories/room.repository';
+import { RoomReadRepository } from '../../database/repositories/room.repository';
 
 import { IsUserInRoomUseCase } from '../../../application/use-cases/room/is-user-in-room.use-case';
 
-const roomRepository = new RoomRepository();
+const roomReadRepo = new RoomReadRepository();
 
 async function chatValidate(req: Request, res: Response, next: NextFunction) {
   try {
     const roomID: string = req.params.id?.toString() || "";
     const myID: string = res.locals.user.id.toString();
 
-    const isUserInRoomUseCase = new IsUserInRoomUseCase(roomRepository);
+    const isUserInRoomUseCase = new IsUserInRoomUseCase(roomReadRepo);
     const checkIsUserInRoom = await isUserInRoomUseCase.execute(roomID, myID);
 
     if (!checkIsUserInRoom) {

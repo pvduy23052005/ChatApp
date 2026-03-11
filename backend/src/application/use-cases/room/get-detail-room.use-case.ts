@@ -1,10 +1,10 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IRoomReadRepository } from "../../../domain/interfaces/room.interface";
+import { IUserReadRepository } from "../../../domain/interfaces/user.interface";
 
 export class GetDetailRoomUseCase {
   constructor(
-    private readonly roomRepository: IRoomRepository,
-    private readonly userRepository: IUserRepository
+    private readonly roomRepository: IRoomReadRepository,
+    private readonly userRepository: IUserReadRepository
   ) { }
 
   async execute(roomID: string, user: any) {

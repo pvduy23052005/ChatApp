@@ -1,7 +1,7 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomMemberRepository } from "../../../domain/interfaces/room.interface";
 
 export class AssignAdminUseCase {
-  constructor(private readonly roomRepository: IRoomRepository) { }
+  constructor(private readonly roomRepository: IRoomMemberRepository) { }
 
   async execute(roomID: string, newAdminID: string, myID: string) {
 

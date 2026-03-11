@@ -1,12 +1,8 @@
-import { IUserRepository } from "../../../domain/interfaces/user.interface";
+import { IUserWriteRepository } from "../../../domain/interfaces/user.interface";
 
 export class LogoutUseCase {
 
-  private readonly userRepository: IUserRepository;
-
-  constructor(userRepository: IUserRepository) {
-    this.userRepository = userRepository;
-  }
+  constructor(private readonly userRepository: IUserWriteRepository) { }
 
   public async execute(userID: string) {
     if (!userID) {

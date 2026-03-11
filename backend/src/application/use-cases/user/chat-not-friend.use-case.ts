@@ -1,15 +1,18 @@
-import { IRoomRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomReadRepository, IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
 
 export class ChatNotFriendUseCase {
-  constructor(private readonly roomRepo: IRoomRepository) { }
+  constructor(
+    private readonly roomReadRepo: IRoomReadRepository,
+    private readonly roomWriteRepo: IRoomWriteRepository
+  ) { }
 
   async execute(myID: string, userID: string): Promise<string> {
-    const existRoom = await this.roomRepo.checkRoomExist(myID, userID);
+    const existRoom = await this.roomReadRepo.checkRoomExist(myID, userID);
 
     if (existRoom) {
       return existRoom._id.toString();
     } else {
-      const newRoom = await this.roomRepo.createNewRoom({
+      const newRoom = await this.roomWriteRepo.createNewRoom({
         typeRoom: "single",
         members: [
           { user_id: myID, role: "member", status: "waiting" },

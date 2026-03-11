@@ -4,12 +4,14 @@ import { LoginUseCase } from "../../../application/use-cases/auth/login.use-case
 import { LogoutUseCase } from "../../../application/use-cases/auth/logout.use-case";
 import { RegisterUserUseCase } from "../../../application/use-cases/auth/register.use-case";
 
-import { UserRepository } from "../../../infrastructure/database/repositories/user.repository";
+import { UserReadRepository } from "../../../infrastructure/database/repositories/user.repository";
+import { UserWriteRepository } from "../../../infrastructure/database/repositories/user.repository";
 
 import { BcryptHashService } from "../../../infrastructure/external-service/bcrypt-hash.service";
 import { TokenService } from "../../../infrastructure/external-service/token.service";
 
-const userRepository = new UserRepository();
+const userReadRepository = new UserReadRepository();
+const userWriteRepository = new UserWriteRepository();
 const bcryptService = new BcryptHashService();
 const tokenService = new TokenService();
 
@@ -19,7 +21,7 @@ export const login = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    const loginUseCase = new LoginUseCase(userRepository, bcryptService, tokenService);
+    const loginUseCase = new LoginUseCase(userReadRepository, userWriteRepository, bcryptService, tokenService);
     const { user, token } = await loginUseCase.execute(email, password);
 
     res.cookie("token", token, {
@@ -58,8 +60,7 @@ export const logout = async (req: Request, res: Response) => {
 
     res.clearCookie("token");
 
-    const userRepository = new UserRepository();
-    const logoutUseCase = new LogoutUseCase(userRepository);
+    const logoutUseCase = new LogoutUseCase(userWriteRepository);
 
     await logoutUseCase.execute(myID);
 
@@ -95,8 +96,7 @@ export const register = async (req: Request, res: Response) => {
       passwordConfirm: passwordConfirm.trim(),
     };
 
-    const userRepository = new UserRepository();
-    const registerUserUseCase = new RegisterUserUseCase(userRepository);
+    const registerUserUseCase = new RegisterUserUseCase(userReadRepository, userWriteRepository, bcryptService);
     const newUser = await registerUserUseCase.execute(dataUser);
 
     res.status(201).json({
