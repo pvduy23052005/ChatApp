@@ -75,6 +75,9 @@ export class RoomReadRepository implements IRoomReadRepository {
     const room = await Room.findOne({
       _id: roomID,
       deleted: false
+    }).populate({
+      path: "members.user_id",
+      select: "fullName avatar ",
     }).lean();
 
     return room;

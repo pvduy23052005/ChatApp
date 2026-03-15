@@ -21,10 +21,10 @@ export class GetDetailRoomUseCase {
 
     const memberIDs = existRoom.members.map(
       (member: any) => member.user_id._id.toString());
+
     const friendIDs = user?.friendList?.map(
       (user: any) => user.user_id.toString()
     ) || [];
-
 
     const friends = await this.userRepository.findFriendNotInRoom(friendIDs, memberIDs);
 

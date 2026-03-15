@@ -9,8 +9,8 @@ export const chatServiceAPI = {
     const res = await API.get("/chat/rooms?status=waiting");
     return res;
   },
-  getChats: async (roomID) => {
-    const res = await API.get(`/chat/room/${roomID}`);
+  getChats: async (roomID, cursor = "") => {
+    const res = await API.get(`/chat/room/${roomID}?cursor=${cursor}`);
     return res;
   },
 };

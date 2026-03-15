@@ -1,21 +1,58 @@
 import { useAuth } from "../../hook/auth/useAuth";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useLayoutEffect } from "react";
 import { formatTime } from "../../utils/chat.utils";
 import FileAttachment from "../attachments/FileAttachment";
 import TypingChat from "../common/TypingChat";
 import "../../styles/pages/chat/chatMessages.css";
 
-function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
+function ChatMessageGroup({
+  chats,
+  isShowTyping,
+  typingUser,
+  onLoadMore,
+  hasMore,
+}) {
   const { user } = useAuth();
   const myID = user?._id || user?.id;
-  const scrollTopRef = useRef();
+
+  const containerRef = useRef(null);
+  const bottomRef = useRef(null);
+  const oldScrollHeightRef = useRef(0);
+  const isFetchingOldRef = useRef(false);
+
+  const handleScroll = (e) => {
+    if (e.currentTarget.scrollTop === 0 && hasMore) {
+      isFetchingOldRef.current = true;
+      oldScrollHeightRef.current = e.currentTarget.scrollHeight;
+      if (onLoadMore) {
+        onLoadMore();
+      }
+    }
+  };
+
+
+  useLayoutEffect(() => {
+    if (isFetchingOldRef.current) {
+      const newScrollHeight = containerRef.current.scrollHeight;
+      containerRef.current.scrollTop =
+        newScrollHeight - oldScrollHeightRef.current;
+    } else {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chats]);
 
   useEffect(() => {
-    scrollTopRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chats, isShowTyping]);
+    if (isShowTyping) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [isShowTyping]);
 
   return (
-    <div className="chat-message-body">
+    <div
+      className="chat-message-body"
+      ref={containerRef}
+      onScroll={handleScroll}
+    >
       {chats &&
         chats.map((chat, index) => {
           const isSystem = chat.type === "system";
@@ -43,7 +80,7 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
 
           return (
             <div
-              key={chat.id  || index}
+              key={chat.id || index}
               className={`message-row ${isMe ? "outgoing" : "incoming"} ${
                 isLastInGroup ? "last-in-group" : ""
               }`}
@@ -63,7 +100,6 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
               )}
 
               <div className="message-content-wrapper">
-
                 <div className="message-bubble">
                   {chat.content && <p className="text">{chat.content}</p>}
 
@@ -88,8 +124,10 @@ function ChatMessageGroup({ chats, isShowTyping, typingUser }) {
             </div>
           );
         })}
+
       {isShowTyping && <TypingChat user={typingUser} />}
-      <div ref={scrollTopRef}></div>
+
+      <div ref={bottomRef}></div>
     </div>
   );
 }

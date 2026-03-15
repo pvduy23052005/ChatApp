@@ -9,7 +9,15 @@ import "../../styles/pages/chat/chatLayout.css";
 
 function ChatMain({ toggleInfo }) {
   const { currentRoomID, currentRoomInfo } = useContext(ChatContext);
-  const { chats, isShowTyping, typingUser } = useChatSocket(currentRoomID);
+  const { 
+    chats, 
+    isShowTyping, 
+    typingUser,
+    loadMoreChats,
+    hasMore,
+    isLoadingMore
+  } = useChatSocket(currentRoomID);
+  
   return (
     <div className="chat-main-body">
       {currentRoomID ? (
@@ -23,6 +31,9 @@ function ChatMain({ toggleInfo }) {
             chats={chats}
             isShowTyping={isShowTyping}
             typingUser={typingUser}
+            onLoadMore={loadMoreChats}
+            hasMore={hasMore}
+            isLoadingMore={isLoadingMore}
           />
 
           <ChatMessageFooter />

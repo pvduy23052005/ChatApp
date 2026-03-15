@@ -49,14 +49,12 @@ function Detail() {
     <div className="container my-4">
       <div className="row justify-content-center">
         <div className="col-12 col-lg-8">
-          {/* HEADER */}
           <RoomHeader
             room={room}
             isSuperAdmin={isSuperAdmin}
             deleteRoomFunc={deleteRoom}
           />
 
-          {/* --- PHẦN 2: DANH SÁCH THÀNH VIÊN --- */}
           <div className="card shadow-sm">
             <div className="card-header bg-white d-flex justify-content-between align-items-center py-3">
               <h6 className="mb-0 fw-bold text-primary">
@@ -123,7 +121,6 @@ function Detail() {
                       </small>
                     </div>
 
-                    {/* Nút xóa thành viên (Chỉ hiện khi mình là SuperAdmin và không xóa chính mình) */}
                     {isSuperAdmin && !isMe && (
                       <button
                         className="btn btn-sm btn-light text-danger"

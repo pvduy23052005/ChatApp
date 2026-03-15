@@ -3,6 +3,7 @@
    ================================================================ */
 .chat-message-body {
   flex: 1;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   padding: var(--spacing-lg);

@@ -3,27 +3,68 @@ import { chatServiceAPI } from "../../services/chatServiceAPI";
 import { socket } from "../../socket";
 import { useEffect, useRef, useState } from "react";
 import { updateSatusMessmasge_util } from "../../utils/room.util";
+import { chatServiceSocket } from "../../socket/services/chatServiceSocket";
+import { useAuth } from "../auth/useAuth";
 
 export const useChatSocket = (currentRoomID) => {
   const [chats, setChats] = useState([]);
   const typingTimeoutRef = useRef();
   const [typingUser, setTypingUser] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const myID = user?._id || user?.id;
+
+  const loadMoreChats = async () => {
+    if (!hasMore || chats.length === 0) return;
+
+    try {
+      const cursor = chats[0].id;
+      console.log(cursor);
+      const res = await chatServiceAPI.getChats(currentRoomID, cursor);
+
+      if (res.success) {
+        const olderChats = res.chats || [];
+
+        if (olderChats.length < 10) {
+          setHasMore(false);
+        }
+        setChats((prevChats) => [...olderChats, ...prevChats]);
+      }
+    } catch (error) {
+      console.log("Lỗi tải thêm tin nhắn:", error);
+    }
+  };
 
   useEffect(() => {
     if (!currentRoomID) return;
 
-    const handleGetChats = async () => {
+    const fetchInitialChats = async () => {
       try {
         const res = await chatServiceAPI.getChats(currentRoomID);
+
         if (res.success) {
-          setChats(res.chats || []);
+          const fetchedChats = res.chats || [];
+          setChats(fetchedChats);
+
+          if (fetchedChats.length < 10) {
+            setHasMore(false);
+          } else {
+            setHasMore(true);
+          }
+
+          chatServiceSocket.userReadLastMessage({
+            roomID: currentRoomID,
+            userID: myID,
+          });
         }
       } catch (error) {
         console.log("Lỗi lấy tin nhắn:", error);
         navigate("/chat");
       }
     };
+
+    fetchInitialChats();
 
     const handleTyping = (data) => {
       if (data.roomID !== currentRoomID) return;
@@ -37,6 +78,10 @@ export const useChatSocket = (currentRoomID) => {
     const handleNewMessage = (newMessage) => {
       if (newMessage.room_id === currentRoomID) {
         setChats((prev) => [...prev, newMessage]);
+        chatServiceSocket.userReadLastMessage({
+          roomID: currentRoomID,
+          userID: myID,
+        });
       }
     };
 
@@ -53,9 +98,7 @@ export const useChatSocket = (currentRoomID) => {
         });
       }
     };
-    // fetch api
-    handleGetChats();
-
+    fetchInitialChats();
     // socket.
     socket.on("SERVER_RETURN_MESSAGE", handleNewMessage);
     socket.on("SERVER_RETURN_TYPING", handleTyping);
@@ -64,7 +107,7 @@ export const useChatSocket = (currentRoomID) => {
     return () => {
       socket.off("SERVER_RETURN_MESSAGE", handleNewMessage);
       socket.off("SERVER_RETURN_TYPING", handleTyping);
-      socket.off("SERVER_UPDATE_READ_STATUS", handleUpdateReadMessage);
+      socket.off("SERVER_RETURN_UPDATE_READ_STATUS", handleUpdateReadMessage);
 
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
       setChats([]);
@@ -76,5 +119,7 @@ export const useChatSocket = (currentRoomID) => {
     chats,
     typingUser,
     isShowTyping: !!typingUser,
+    loadMoreChats,
+    hasMore,
   };
 };

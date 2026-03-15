@@ -56,7 +56,6 @@ export const roomDetail = async (req: Request, res: Response) => {
       room: detailRoom,
       friends: friends,
     })
-
   } catch (error: any) {
     res.status(500).json({
       success: false,

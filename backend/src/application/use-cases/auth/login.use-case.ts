@@ -26,7 +26,7 @@ export class LoginUseCase {
       throw new Error("Email không chính xác");
     }
 
-    if (!user.isActive()) {
+    if (user.isActive()) {
       throw new Error("Tài khoản đã bị khóa");
     }
 

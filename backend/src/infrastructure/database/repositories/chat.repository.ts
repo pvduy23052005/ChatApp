@@ -30,14 +30,19 @@ const mapToEntity = (doc: any) => {
 }
 
 export class ChatReadRepository implements IChatReadRepository {
-  public async getMessageByRoomID(roomID: string): Promise<ChatEntity[] | null> {
+  public async getMessageByRoomID(roomID: string, cursor?: string, limit: number = 10): Promise<ChatEntity[] | null> {
     const query: any = {
       room_id: roomID,
       deleted: false,
     }
 
+    if (cursor) {
+      query._id = { $lt: cursor }
+    }
+
     const messages = await Chat.find(query)
       .sort({ createdAt: -1 })
+      .limit(limit)
       .populate({
         path: "user_id",
         select: "fullName avatar"

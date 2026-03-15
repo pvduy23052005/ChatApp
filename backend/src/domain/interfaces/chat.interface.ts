@@ -3,7 +3,7 @@ import { ChatEntity } from "../entities/chat.entity";
 
 
 export interface IChatReadRepository {
-  getMessageByRoomID(roomID: string): Promise<ChatEntity[] | null>;
+  getMessageByRoomID(roomID: string, cursor?: string, limit: number): Promise<ChatEntity[] | null>;
 }
 
 export interface IChatWriteRepository {

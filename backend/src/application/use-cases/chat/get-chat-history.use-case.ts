@@ -9,7 +9,7 @@ export class GetChatHistoryUseCase {
     this.chatRepository = chatRepository;
   }
 
-  public async execute(roomID: string) {
+  public async execute(roomID: string, cursor?: string, limit: number = 15) {
     if (!roomID) {
       throw new Error("Vui lòng cung cấp ID phòng");
     }
@@ -18,8 +18,7 @@ export class GetChatHistoryUseCase {
       throw new Error("ID phòng không đúng định dạng");
     }
 
-
-    const listMessages = await this.chatRepository.getMessageByRoomID(roomID);
+    const listMessages = await this.chatRepository.getMessageByRoomID(roomID, cursor, limit);
 
     return listMessages;
   }
