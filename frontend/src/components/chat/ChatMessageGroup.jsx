@@ -30,7 +30,6 @@ function ChatMessageGroup({
     }
   };
 
-
   useLayoutEffect(() => {
     if (isFetchingOldRef.current) {
       const newScrollHeight = containerRef.current.scrollHeight;

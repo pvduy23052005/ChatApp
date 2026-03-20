@@ -20,7 +20,6 @@ export const useChatSocket = (currentRoomID) => {
 
     try {
       const cursor = chats[0].id;
-      console.log(cursor);
       const res = await chatServiceAPI.getChats(currentRoomID, cursor);
 
       if (res.success) {

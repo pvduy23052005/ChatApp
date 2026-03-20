@@ -5,7 +5,7 @@ import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import userRoute from "./userRoute";
 import roomRoute from "./roomRoute";
-import chatRoute from "./charRoute";
+import chatRoute from "./chatRoute";
 
 function AllRoute() {
   const elements = useRoutes([
