@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 dotenv.config();
-import allRoute from "./interface/http/routes/index.route";
+import allRoute from "./presentation/http/routes/index.route";
 import { connectDatabase } from "./infrastructure/config/database";
 import cookieParser from "cookie-parser"
 import cors from "cors";
