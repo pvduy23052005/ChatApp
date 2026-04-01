@@ -1,6 +1,6 @@
 import { IRoomReadRepository } from "../../ports/room.port";
-import { RoomEntity } from "../../../domain/entities/room.entity";
-import { IGetRoom } from "../../../domain/entities/room.entity";
+import { RoomEntity } from "../../../domain/entities/room/room.entity";
+import { IGetRoom } from "../../../domain/entities/room/room.type";
 
 export class GetRoomUseCase {
   constructor(private readonly roomRepo: IRoomReadRepository) { }

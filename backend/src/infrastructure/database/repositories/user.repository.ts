@@ -1,21 +1,21 @@
 import User from "../model/user.model";
 import { IUserReadRepository, IUserWriteRepository, IFriendShipRepository } from "../../../application/ports/user.port";
-import { UserEntity } from "../../../domain/entities/user.entity";
+import { UserEntity } from "../../../domain/entities/user/user.entity";
 
 const mapToEntity = (doc: any) => {
 
   if (!doc) return null;
 
-  return new UserEntity(
-    doc._id,
-    doc.fullName,
-    doc.email,
-    doc.password,
-    doc.avatar,
-    doc.statusOnline,
-    doc.createdAt,
-    doc.updatedAt
-  );
+  return new UserEntity({
+    id: doc._id,
+    fullName: doc.fullName,
+    email: doc.email,
+    password: doc.password,
+    avatar: doc.avatar,
+    status: doc.statusOnline,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt
+  });
 }
 
 export class UserReadRepository implements IUserReadRepository {

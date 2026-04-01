@@ -1,3 +1,5 @@
+import { IUserProps } from "./user.type";
+
 export class UserEntity {
   private id: string;
   private fullName: string;
@@ -8,15 +10,15 @@ export class UserEntity {
   private createdAt: Date;
   private updatedAt: Date;
 
-  constructor(id: string, fullName: string, email: string, password: string, avatar: string, status: string, createdAt: Date, updatedAt: Date) {
-    this.id = id.toString();
-    this.fullName = fullName;
-    this.email = email;
-    this.password = password;
-    this.avatar = avatar;
-    this.status = status;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
+  constructor(data: IUserProps) {
+    this.id = data.id.toString();
+    this.fullName = data.fullName;
+    this.email = data.email;
+    this.password = data.password;
+    this.avatar = data.avatar;
+    this.status = data.status;
+    this.createdAt = data.createdAt;
+    this.updatedAt = data.updatedAt;
   }
 
   public isActive(): boolean {
@@ -40,6 +42,4 @@ export class UserEntity {
   public getPassword(): string {
     return this.password;
   }
-
-
 }

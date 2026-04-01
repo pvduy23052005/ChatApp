@@ -1,6 +1,6 @@
 import Room from "../model/room.model";
 import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../../application/ports/room.port";
-import { RoomEntity } from "../../../domain/entities/room.entity";
+import { RoomEntity } from "../../../domain/entities/room/room.entity";
 import mongoose from "mongoose";
 
 const mapToEntity = (doc: any): RoomEntity => {
