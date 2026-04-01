@@ -2,8 +2,10 @@ import { IUserReadRepository , IUserWriteRepository } from "../../ports/user.por
 import { IPasswordService } from "../../ports/password.port";
 import { ITokenService } from "../../ports/token.port";
 
+import { IUserProfile } from "../../../domain/entities/user/user.type";
+
 export interface LoginResponse {
-  user: any;
+  user: IUserProfile;
   token: string;
 }
 
@@ -26,20 +28,17 @@ export class LoginUseCase {
       throw new Error("Email không chính xác");
     }
 
-    if (user.isActive()) {
-      throw new Error("Tài khoản đã bị khóa");
-    }
-
     const isPasswordMatch: boolean = await this.passwordService.comparePassword(password, user.getPassword());
 
     if (!isPasswordMatch) {
       throw new Error("Mật khẩu không đúng");
     }
 
+    user.setStatus("online");
+    await this.userWriteRepo.updateProfile(user);
+
     const payload = { userId: user.getID() };
     const token = await this.tokenService.generateToken(payload);
-
-    await this.userWriteRepo.updateUserStatus(user.getID(), "online");
 
     return {
       user: user.getProfile(),

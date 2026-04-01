@@ -70,16 +70,10 @@ export class UserWriteRepository implements IUserWriteRepository {
     return await User.updateOne({ _id: userID }, { statusOnline: status });
   }
 
-  public async createUser(fullName: string, email: string, password: string): Promise<UserEntity | null> {
-    const userObject = {
-      fullName: fullName,
-      email: email,
-      password: password,
-      statusOffline: "offline",
-    };
-
-    const newUser = new User(userObject);
+  public async createUser(user: UserEntity): Promise<UserEntity | null> {
+    const newUser = new User(user.toCreateObject());
     const savedUser = await newUser.save();
+
     return mapToEntity(savedUser);
   }
 

@@ -60,7 +60,7 @@ export const logout = async (req: Request, res: Response) => {
 
     res.clearCookie("token");
 
-    const logoutUseCase = new LogoutUseCase(userWriteRepository);
+    const logoutUseCase = new LogoutUseCase(userReadRepository, userWriteRepository);
 
     await logoutUseCase.execute(myID);
 

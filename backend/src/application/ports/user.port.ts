@@ -12,7 +12,7 @@ export interface IUserReadRepository {
 
 export interface IUserWriteRepository {
   updateUserStatus(userID: string, status: string): Promise<any>;
-  createUser(fullName: string, email: string, password: string): Promise<UserEntity | null>;
+  createUser(user: UserEntity): Promise<UserEntity | null>;
   updateProfile(user: UserEntity): Promise<UserEntity | null>;
 }
 

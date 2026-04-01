@@ -1,6 +1,6 @@
 import { IPasswordService } from "../../ports/password.port";
 import { IUserWriteRepository, IUserReadRepository } from "../../ports/user.port";
-
+import { UserEntity } from "../../../domain/entities/user/user.entity";
 export class RegisterUserUseCase {
   constructor(
     private readonly userReadRepo: IUserReadRepository,
@@ -26,7 +26,13 @@ export class RegisterUserUseCase {
 
     const hashedPassword = await this.passwordService.hashPassword(password);
 
-    const newUser = await this.userWriteRepo.createUser(fullName, email, hashedPassword);
+    const userEntity = UserEntity.create({
+      fullName,
+      email,
+      password: hashedPassword,
+    });
+
+    const newUser = await this.userWriteRepo.createUser(userEntity);
 
     if (!newUser) {
       throw new Error("Đăng ký thất bại");

@@ -1,14 +1,25 @@
-import { IUserWriteRepository } from "../../ports/user.port";
+import { IUserReadRepository, IUserWriteRepository } from "../../ports/user.port";
 
 export class LogoutUseCase {
 
-  constructor(private readonly userRepository: IUserWriteRepository) { }
+  constructor(
+    private readonly userReadRepo: IUserReadRepository,
+    private readonly userWriteRepo: IUserWriteRepository
+  ) { }
 
   public async execute(userID: string) {
     if (!userID) {
       throw new Error("Không tìm thấy thông tin người dùng");
     }
-    await this.userRepository.updateUserStatus(userID, "offline");
 
+    const user = await this.userReadRepo.findUserById(userID);
+
+    if (!user) {
+      throw new Error("Không tìm thấy người dùng");
+    }
+
+    user.setStatus("offline");
+
+    await this.userWriteRepo.updateProfile(user);
   }
 }

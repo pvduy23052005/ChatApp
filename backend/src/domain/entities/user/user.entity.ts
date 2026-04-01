@@ -53,10 +53,32 @@ export class UserEntity {
     this.updatedAt = new Date();
   }
 
+  public getStatus(): string {
+    return this.status;
+  }
+
+  public setStatus(status: string): void {
+    this.status = status;
+    this.updatedAt = new Date();
+  }
+
   public toUpdateObject(): any {
     return {
       fullName: this.fullName,
       avatar: this.avatar,
+      statusOnline: this.status, // Match mongoose schema
+      updatedAt: this.updatedAt
+    };
+  }
+
+  public toCreateObject(): any {
+    return {
+      fullName: this.fullName,
+      email: this.email,
+      password: this.password,
+      avatar: this.avatar,
+      statusOnline: this.status,
+      createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };
   }
