@@ -1,4 +1,4 @@
-import { IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomWriteRepository } from "../../ports/room.port";
 
 export class DeleteRoomUseCase {
   constructor(private readonly roomRepository: IRoomWriteRepository) { }

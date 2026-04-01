@@ -1,9 +1,8 @@
-import { IDataChat } from "../../application/use-cases/chat/send-message.use-case";
-import { ChatEntity } from "../entities/chat.entity";
-
+import { IDataChat } from "../use-cases/chat/send-message.use-case";
+import { ChatEntity } from "../../domain/entities/chat.entity";
 
 export interface IChatReadRepository {
-  getMessageByRoomID(roomID: string, cursor?: string, limit: number): Promise<ChatEntity[] | null>;
+  getMessageByRoomID(roomID: string, cursor?: string, limit?: number): Promise<ChatEntity[] | null>;
 }
 
 export interface IChatWriteRepository {

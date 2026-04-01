@@ -41,7 +41,6 @@ function Login() {
         <div className="login-card">
           {/* --- Logo & Title --- */}
           <div className="logo-container">
-            <h1 className="login-title">Chào mừng trở lại</h1>
             <p className="login-subtitle">Đăng nhập vào hệ thống</p>
           </div>
 

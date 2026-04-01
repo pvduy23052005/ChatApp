@@ -1,4 +1,4 @@
-import { IChatReadRepository } from "../../../domain/interfaces/chat.interface";
+import { IChatReadRepository } from "../../ports/chat.port";
 import mongoose from "mongoose";
 
 

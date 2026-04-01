@@ -1,4 +1,4 @@
-import { IUserReadRepository } from "../../../domain/interfaces/user.interface";
+import { IUserReadRepository } from "../../ports/user.port";
 
 export class GetUsersUseCase {
 

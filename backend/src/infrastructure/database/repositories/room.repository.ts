@@ -1,5 +1,5 @@
 import Room from "../model/room.model";
-import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../../application/ports/room.port";
 import { RoomEntity } from "../../../domain/entities/room.entity";
 import mongoose from "mongoose";
 

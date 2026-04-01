@@ -1,5 +1,5 @@
 import User from "../model/user.model";
-import { IUserReadRepository, IUserWriteRepository, IFriendShipRepository } from "../../../domain/interfaces/user.interface";
+import { IUserReadRepository, IUserWriteRepository, IFriendShipRepository } from "../../../application/ports/user.port";
 import { UserEntity } from "../../../domain/entities/user.entity";
 
 const mapToEntity = (doc: any) => {

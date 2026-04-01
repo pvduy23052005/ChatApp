@@ -1,4 +1,4 @@
-import { IUserWriteRepository } from "../../../domain/interfaces/user.interface";
+import { IUserWriteRepository } from "../../ports/user.port";
 
 export class LogoutUseCase {
 

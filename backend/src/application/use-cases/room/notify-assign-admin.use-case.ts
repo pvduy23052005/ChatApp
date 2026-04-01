@@ -1,6 +1,6 @@
-import { IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
-import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
-import { IUserReadRepository } from "../../../domain/interfaces/user.interface";
+import { IRoomWriteRepository } from "../../ports/room.port";
+import { IChatWriteRepository } from "../../ports/chat.port";
+import { IUserReadRepository } from "../../ports/user.port";
 
 export class NotifyAssignAdminUseCase {
   constructor(

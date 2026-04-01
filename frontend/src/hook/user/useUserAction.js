@@ -1,26 +1,25 @@
-import { useCallback } from "react";
 import { userServiceSocket } from "../../socket/services/userServiceSocket";
 
 export const useUserAction = () => {
-  const handleChatNotFriend = useCallback((userID) => {
+  const handleChatNotFriend = (userID) => {
     userServiceSocket.chatNotFriend(userID);
-  }, []);
+  };
 
-  const handleFriendRequest = useCallback((userID) => {
+  const handleFriendRequest = (userID) => {
     userServiceSocket.friendRequest(userID);
-  }, []);
+  };
 
-  const handleFriendCancel = useCallback((userID) => {
+  const handleFriendCancel = (userID) => {
     userServiceSocket.cancelRequest(userID);
-  }, []);
+  };
 
-  const handleFriendRefuse = useCallback((userID) => {
+  const handleFriendRefuse = (userID) => {
     userServiceSocket.refuseFriend(userID);
-  }, []);
+  };
 
-  const handleFriendAccept = useCallback((userID) => {
+  const handleFriendAccept = (userID) => {
     userServiceSocket.acceptFriend(userID);
-  }, []);
+  };
 
   return {
     handleChatNotFriend,

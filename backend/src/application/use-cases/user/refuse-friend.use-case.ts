@@ -1,4 +1,4 @@
-import { IFriendShipRepository } from "../../../domain/interfaces/user.interface";
+import { IFriendShipRepository } from "../../ports/user.port";
 
 export class RefuseFriendUseCase {
   constructor(

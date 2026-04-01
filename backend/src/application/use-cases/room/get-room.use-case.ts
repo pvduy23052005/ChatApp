@@ -1,4 +1,4 @@
-import { IRoomReadRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomReadRepository } from "../../ports/room.port";
 import { RoomEntity } from "../../../domain/entities/room.entity";
 import { IGetRoom } from "../../../domain/entities/room.entity";
 

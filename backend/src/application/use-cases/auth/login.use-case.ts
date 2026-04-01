@@ -1,6 +1,6 @@
-import { IUserReadRepository , IUserWriteRepository } from "../../../domain/interfaces/user.interface";
-import { IPasswordService } from "../../../domain/interfaces/password.interface";
-import { ITokenService } from "../../../domain/interfaces/token.interface";
+import { IUserReadRepository , IUserWriteRepository } from "../../ports/user.port";
+import { IPasswordService } from "../../ports/password.port";
+import { ITokenService } from "../../ports/token.port";
 
 export interface LoginResponse {
   user: any;

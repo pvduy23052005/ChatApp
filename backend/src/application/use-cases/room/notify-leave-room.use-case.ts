@@ -1,5 +1,5 @@
-import { IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
-import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
+import { IRoomWriteRepository } from "../../ports/room.port";
+import { IChatWriteRepository } from "../../ports/chat.port";
 
 export class NotifyLeaveRoomUseCase {
   constructor(

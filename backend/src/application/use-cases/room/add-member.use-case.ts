@@ -1,4 +1,4 @@
-import { IRoomMemberRepository } from "../../../domain/interfaces/room.interface";
+import { IRoomMemberRepository } from "../../ports/room.port";
 
 export class AddMemberUseCase {
   constructor(private readonly roomRepository: IRoomMemberRepository) { }

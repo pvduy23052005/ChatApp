@@ -1,5 +1,5 @@
-import { IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
-import { IRoomWriteRepository } from "../../../domain/interfaces/room.interface";
+import { IChatWriteRepository } from "../../ports/chat.port";
+import { IRoomWriteRepository } from "../../ports/room.port";
 
 export interface IDataChat {
   user_id: string;

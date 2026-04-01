@@ -1,5 +1,5 @@
-import { IPasswordService } from "../../../domain/interfaces/password.interface";
-import { IUserWriteRepository, IUserReadRepository } from "../../../domain/interfaces/user.interface";
+import { IPasswordService } from "../../ports/password.port";
+import { IUserWriteRepository, IUserReadRepository } from "../../ports/user.port";
 
 export class RegisterUserUseCase {
   constructor(

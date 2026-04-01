@@ -1,5 +1,5 @@
 import Chat from "../model/chat.model"
-import { IChatReadRepository, IChatWriteRepository } from "../../../domain/interfaces/chat.interface";
+import { IChatReadRepository, IChatWriteRepository } from "../../../application/ports/chat.port";
 import { ChatEntity } from "../../../domain/entities/chat.entity";
 import { IDataChat } from "../../../application/use-cases/chat/send-message.use-case";
 

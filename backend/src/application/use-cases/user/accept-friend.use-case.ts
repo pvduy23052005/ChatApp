@@ -1,5 +1,5 @@
-import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../../domain/interfaces/room.interface";
-import { IFriendShipRepository } from "../../../domain/interfaces/user.interface";
+import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../ports/room.port";
+import { IFriendShipRepository } from "../../ports/user.port";
 
 export class AcceptFriendUseCase {
   constructor(
