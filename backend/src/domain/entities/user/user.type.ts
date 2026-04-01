@@ -29,3 +29,8 @@ export interface IUserRestore {
   createdAt?: Date | undefined;
   updatedAt?: Date | undefined;
 }
+
+export interface IUpdateProfile {
+  fullName?: string;
+  avatar?: string;
+}

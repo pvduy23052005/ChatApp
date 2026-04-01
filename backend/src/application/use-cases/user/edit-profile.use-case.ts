@@ -1,36 +1,28 @@
-import { IUserWriteRepository } from "../../ports/user.port";
+import { IUserReadRepository, IUserWriteRepository } from "../../ports/user.port";
+import { IUpdateProfile } from "../../../domain/entities/user/user.type";
 
 export class EditProfileUseCase {
 
-  constructor(private readonly userReadRepo: IUserWriteRepository) { };
+  constructor(
+    private readonly userReadRepo: IUserReadRepository,
+    private readonly userWriteRepo: IUserWriteRepository
+  ) { };
 
-  public async execute(userID: string, data: any) {
-    const { fullName, avatar } = data;
+  public async execute(userID: string, data: IUpdateProfile) {
+    const user = await this.userReadRepo.findUserById(userID);
 
-    if (!userID) {
+    if (!user) {
       throw new Error("Không tìm thấy người dùng!");
     }
 
-    const updateData: any = {};
+    user.updateProfile(data);
 
-    if (fullName) {
-      updateData.fullName = fullName;
-    }
+    const updatedUser = await this.userWriteRepo.updateProfile(user);
 
-    if (avatar) {
-      updateData.avatar = avatar;
-    }
-
-    if (Object.keys(updateData).length === 0) {
-      throw new Error("Không có dữ liệu cập nhật!");
-    }
-
-    const user = await this.userReadRepo.updateProfile(userID, updateData);
-
-    if (!user) {
+    if (!updatedUser) {
       throw new Error("Cập nhật thất bại!");
     }
 
-    return user;
+    return updatedUser;
   }
 }

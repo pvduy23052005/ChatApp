@@ -4,6 +4,7 @@ import { GetUsersUseCase } from "../../../application/use-cases/user/get-users.u
 import { GetFriendsUseCase } from "../../../application/use-cases/user/get-friends.use-case";
 import { GetFriendAcceptsUseCase } from "../../../application/use-cases/user/get-friend-accepts.use-case";
 import { EditProfileUseCase } from "../../../application/use-cases/user/edit-profile.use-case";
+import type { IUpdateProfile } from "../../../domain/entities/user/user.type";
 
 import { UserReadRepository, UserWriteRepository } from "../../../infrastructure/database/repositories/user.repository";
 
@@ -77,7 +78,7 @@ export const editProfile = async (req: Request, res: Response) => {
 
     const { fullName, avatar } = req.body;
 
-    const updateData: any = {};
+    const updateData: IUpdateProfile = {};
 
     if (fullName) {
       updateData.fullName = fullName.trim();
@@ -94,7 +95,7 @@ export const editProfile = async (req: Request, res: Response) => {
       });
     }
 
-    const editProfileUseCase = new EditProfileUseCase(userWriteRepo);
+    const editProfileUseCase = new EditProfileUseCase(userReadRepo, userWriteRepo);
     const user = await editProfileUseCase.execute(myID, updateData);
 
     if (!user) {
@@ -109,10 +110,10 @@ export const editProfile = async (req: Request, res: Response) => {
       success: true,
       message: "Cập nhật thông tin thành công!",
       user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        avatar: user.avatar
+        id: user.getID(),
+        fullName: user.getProfile().fullName,
+        email: user.getProfile().email,
+        avatar: user.getProfile().avatar
       },
     });
 

@@ -1,4 +1,4 @@
-import { IUserProps, IUserProfile, IUserRestore } from "./user.type";
+import { IUserProps, IUserProfile, IUserRestore, IUpdateProfile } from "./user.type";
 
 export class UserEntity {
   private id: string;
@@ -41,6 +41,24 @@ export class UserEntity {
 
   public getPassword(): string {
     return this.password;
+  }
+
+  public updateProfile(data: IUpdateProfile): void {
+    if (data.fullName) {
+      this.fullName = data.fullName;
+    }
+    if (data.avatar) {
+      this.avatar = data.avatar;
+    }
+    this.updatedAt = new Date();
+  }
+
+  public toUpdateObject(): any {
+    return {
+      fullName: this.fullName,
+      avatar: this.avatar,
+      updatedAt: this.updatedAt
+    };
   }
 
   public static create(data: IUserProps): UserEntity {

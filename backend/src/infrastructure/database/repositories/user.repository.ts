@@ -83,9 +83,13 @@ export class UserWriteRepository implements IUserWriteRepository {
     return mapToEntity(savedUser);
   }
 
-  public async updateProfile(userID: string, dataUpdate: any): Promise<any> {
-    const user = await User.findByIdAndUpdate(userID, dataUpdate, { new: true }).select("-password");
-    return user;
+  public async updateProfile(user: UserEntity): Promise<UserEntity | null> {
+    const updatedDoc = await User.findByIdAndUpdate(
+      user.getID(),
+      user.toUpdateObject(),
+      { new: true }
+    );
+    return mapToEntity(updatedDoc);
   }
 }
 
