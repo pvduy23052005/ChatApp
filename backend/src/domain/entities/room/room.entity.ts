@@ -23,7 +23,6 @@ export class RoomEntity {
     this.lastMessageId = data.lastMessageId;
   }
 
-
   public getRoom(currentUserID: string): IGetRoom {
     const { title, avatar, otherUserId } = this.getTitleRoom(currentUserID);
 

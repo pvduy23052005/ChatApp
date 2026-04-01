@@ -1,11 +1,17 @@
 import { IUserReadRepository } from "../../ports/user.port";
 
+export interface IOutputUserDTO {
+  id: string;
+  fullName: string;
+  avatar: string;
+}
+
 export class GetUsersUseCase {
 
   constructor(private readonly userReadRepo: IUserReadRepository) {
   }
 
-  public async execute(user: any) {
+  public async execute(user: any): Promise<IOutputUserDTO[]> {
 
     const myID = user.id.toString();
     const friendIDs: string[] = user.friendList.map((item: any) => item.user_id);

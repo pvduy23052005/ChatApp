@@ -1,21 +1,12 @@
 import User from "../model/user.model";
 import { IUserReadRepository, IUserWriteRepository, IFriendShipRepository } from "../../../application/ports/user.port";
 import { UserEntity } from "../../../domain/entities/user/user.entity";
+import type { IOutputUserDTO } from "../../../application/use-cases/user/get-users.use-case";
 
-const mapToEntity = (doc: any) => {
-
+const mapToEntity = (doc: any): UserEntity | null => {
   if (!doc) return null;
 
-  return new UserEntity({
-    id: doc._id,
-    fullName: doc.fullName,
-    email: doc.email,
-    password: doc.password,
-    avatar: doc.avatar,
-    status: doc.statusOnline,
-    createdAt: doc.createdAt,
-    updatedAt: doc.updatedAt
-  });
+  return UserEntity.restore(doc);
 }
 
 export class UserReadRepository implements IUserReadRepository {
@@ -34,12 +25,26 @@ export class UserReadRepository implements IUserReadRepository {
     return mapToEntity(user);
   }
 
-  public async findUsersNotInList(listId: string[]): Promise<any[]> {
-    return await User.find({ _id: { $nin: listId }, deleted: false }).select("fullName avatar");
+  public async findUsersNotInList(listId: string[]): Promise<IOutputUserDTO[]> {
+    const users = await User.find({ _id: { $nin: listId }, deleted: false }).select("fullName avatar").lean();
+    return users.map((user) => {
+      return {
+        id: user._id.toString(),
+        fullName: user.fullName,
+        avatar: user.avatar,
+      };
+    });
   }
 
-  public async findUsersInList(listId: string[]): Promise<any[]> {
-    return await User.find({ _id: { $in: listId }, deleted: false }).select("fullName avatar");
+  public async findUsersInList(listId: string[]): Promise<IOutputUserDTO[]> {
+    const users = await User.find({ _id: { $in: listId }, deleted: false }).select("fullName avatar").lean();
+    return users.map((user) => {
+      return {
+        id: user._id.toString(),
+        fullName: user.fullName,
+        avatar: user.avatar,
+      };
+    });
   }
 
   public async findFriendNotInRoom(friendIDs: string[], memberIDs: string[]): Promise<any[]> {
@@ -110,6 +115,6 @@ export class FriendShipRepository implements IFriendShipRepository {
           friendList: { user_id: friendID, room_chat_id: roomChatId },
         }
       }
-    );  
+    );
   }
 }

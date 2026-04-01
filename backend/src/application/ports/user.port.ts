@@ -1,10 +1,11 @@
 import { UserEntity } from "../../domain/entities/user/user.entity";
+import { IOutputUserDTO } from "../use-cases/user/get-users.use-case";
 
 export interface IUserReadRepository {
   findUserByEmail(email: string): Promise<UserEntity | null>;
   findUserById(userID: string): Promise<UserEntity | null>;
-  findUsersNotInList(listId: string[]): Promise<any[]>;
-  findUsersInList(listId: string[]): Promise<any[]>;
+  findUsersNotInList(listId: string[]): Promise<IOutputUserDTO[]>;
+  findUsersInList(listId: string[]): Promise<IOutputUserDTO[]>;
   findFriendNotInRoom(friendIDs: string[], memberIDs: string[]): Promise<any[]>;
   findUserFullName(userID: string): Promise<string | undefined>;
 }
