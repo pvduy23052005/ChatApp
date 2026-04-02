@@ -1,18 +1,17 @@
-import { IRoomWriteRepository } from "../../ports/repositories/room.port";
-import { IChatWriteRepository } from "../../ports/repositories/chat.port";
-import { IUserReadRepository } from "../../ports/repositories/user.port";
+import { IRoomWriteRepository } from "../../../ports/repositories/room.port";
+import { IChatWriteRepository } from "../../../ports/repositories/chat.port";
+import { IUserReadRepository } from "../../../ports/repositories/user.port";
 
-export class NotifyAddMemberUseCase {
+export class NotifyRemoveMemberUseCase {
   constructor(
     private readonly roomRepo: IRoomWriteRepository,
     private readonly chatRepo: IChatWriteRepository,
     private readonly userRepo: IUserReadRepository
   ) { }
 
-  async execute(roomID: string, adminID: string, listFullNames: string[]): Promise<any> {
+  async execute(roomID: string, adminID: string, removedMemberFullName: string): Promise<any> {
     const adminFullName = await this.userRepo.findUserFullName(adminID);
-    const fullNamesStr = listFullNames.join(", ");
-    const content = `${adminFullName} thêm ${fullNamesStr} vào nhóm.`;
+    const content = `${adminFullName} đã xóa ${removedMemberFullName} khỏi nhóm`;
 
     const newChat = await this.chatRepo.createSystemMessage(roomID, content);
 

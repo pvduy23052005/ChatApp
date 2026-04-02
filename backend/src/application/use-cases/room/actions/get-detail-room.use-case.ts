@@ -1,5 +1,5 @@
-import { IRoomReadRepository } from "../../ports/repositories/room.port";
-import { IUserReadRepository } from "../../ports/repositories/user.port";
+import { IRoomReadRepository } from "../../../ports/repositories/room.port";
+import { IUserReadRepository } from "../../../ports/repositories/user.port";
 
 export class GetDetailRoomUseCase {
   constructor(

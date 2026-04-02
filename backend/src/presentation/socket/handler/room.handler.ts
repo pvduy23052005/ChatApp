@@ -1,10 +1,9 @@
 import { Server, Socket } from "socket.io";
 
-
-import { NotifyRemoveMemberUseCase } from "../../../application/use-cases/room/notify-remove-member.use-case";
-import { NotifyAddMemberUseCase } from "../../../application/use-cases/room/notify-add-member.use-case";
-import { NotifyLeaveRoomUseCase } from "../../../application/use-cases/room/notify-leave-room.use-case";
-import { NotifyAssignAdminUseCase } from "../../../application/use-cases/room/notify-assign-admin.use-case";
+import { NotifyRemoveMemberUseCase } from "../../../application/use-cases/room/notifications/notify-remove-member.use-case";
+import { NotifyAddMemberUseCase } from "../../../application/use-cases/room/notifications/notify-add-member.use-case";
+import { NotifyLeaveRoomUseCase } from "../../../application/use-cases/room/notifications/notify-leave-room.use-case";
+import { NotifyAssignAdminUseCase } from "../../../application/use-cases/room/notifications/notify-assign-admin.use-case";
 
 import { RoomWriteRepository } from "../../../infrastructure/database/repositories/room.repository";
 import { ChatWriteRepository } from "../../../infrastructure/database/repositories/chat.repository";

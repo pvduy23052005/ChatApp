@@ -3,14 +3,14 @@ import { Response, Request } from 'express';
 import { UserReadRepository } from "../../../infrastructure/database/repositories/user.repository";
 import { RoomReadRepository, RoomWriteRepository, RoomMemberRepository } from "../../../infrastructure/database/repositories/room.repository";
 
-import { GetDetailRoomUseCase } from "../../../application/use-cases/room/get-detail-room.use-case";
-import { EditRoomUseCase } from "../../../application/use-cases/room/edit-room.use-case";
-import { AddMemberUseCase } from "../../../application/use-cases/room/add-member.use-case";
-import { RemoveMemberUseCase } from "../../../application/use-cases/room/remove-member.use-case";
-import { DeleteRoomUseCase } from "../../../application/use-cases/room/delete-room.use-case";
-import { LeaveRoomUseCase } from "../../../application/use-cases/room/leave-room.use-case";
-import { AssignAdminUseCase } from "../../../application/use-cases/room/assign-admin.use-case";
-import { CreateNewRoomUseCase } from "../../../application/use-cases/room/create-new-room.use-case";
+import { GetDetailRoomUseCase } from "../../../application/use-cases/room/actions/get-detail-room.use-case";
+import { EditRoomUseCase } from "../../../application/use-cases/room/actions/edit-room.use-case";
+import { AddMemberUseCase } from "../../../application/use-cases/room/actions/add-member.use-case";
+import { RemoveMemberUseCase } from "../../../application/use-cases/room/actions/remove-member.use-case";
+import { DeleteRoomUseCase } from "../../../application/use-cases/room/actions/delete-room.use-case";
+import { LeaveRoomUseCase } from "../../../application/use-cases/room/actions/leave-room.use-case";
+import { AssignAdminUseCase } from "../../../application/use-cases/room/actions/assign-admin.use-case";
+import { CreateNewRoomUseCase } from "../../../application/use-cases/room/actions/create-new-room.use-case";
 
 const roomReadRepo = new RoomReadRepository();
 const roomWriteRepo = new RoomWriteRepository();

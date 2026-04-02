@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import { RoomReadRepository } from '../../database/repositories/room.repository';
 
-import { IsUserInRoomUseCase } from '../../../application/use-cases/room/is-user-in-room.use-case';
+import { IsUserInRoomUseCase } from '../../../application/use-cases/room/actions/is-user-in-room.use-case';
 
 const roomReadRepo = new RoomReadRepository();
 

@@ -1,4 +1,4 @@
-import { IRoomMemberRepository } from "../../ports/repositories/room.port";
+import { IRoomMemberRepository } from "../../../ports/repositories/room.port";
 
 export class RemoveMemberUseCase {
   constructor(private readonly roomRepository: IRoomMemberRepository) { }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { GetChatHistoryUseCase } from "../../../application/use-cases/chat/get-chat-history.use-case";
-import { GetRoomUseCase } from "../../../application/use-cases/room/get-room.use-case";
+import { GetRoomUseCase } from "../../../application/use-cases/room/actions/get-room.use-case";
 
 import { ChatReadRepository } from "../../../infrastructure/database/repositories/chat.repository";
 import { RoomReadRepository } from "../../../infrastructure/database/repositories/room.repository";
