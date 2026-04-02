@@ -4,7 +4,7 @@ export interface IUserProps {
   email: string;
   password: string;
   avatar?: string | undefined;
-  status?: string | undefined;
+  statusOnline?: string | undefined;
   createdAt?: Date | undefined;
   updatedAt?: Date | undefined;
 }
@@ -14,7 +14,7 @@ export interface IUserProfile {
   fullName: string;
   email: string;
   avatar: string;
-  status: string;
+  statusOnline: string;
 }
 
 export interface IUserRestore {
@@ -24,7 +24,6 @@ export interface IUserRestore {
   email: string;
   password: string;
   avatar?: string | undefined;
-  status?: string | undefined;
   statusOnline?: string | null | undefined;
   createdAt?: Date | undefined;
   updatedAt?: Date | undefined;

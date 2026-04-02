@@ -4,7 +4,7 @@ import { GetUsersUseCase } from "../../../application/use-cases/user/get-users.u
 import { GetFriendsUseCase } from "../../../application/use-cases/user/get-friends.use-case";
 import { GetFriendAcceptsUseCase } from "../../../application/use-cases/user/get-friend-accepts.use-case";
 import { EditProfileUseCase } from "../../../application/use-cases/user/edit-profile.use-case";
-import type { IUpdateProfile } from "../../../domain/entities/user/user.type";
+import type { IUpdateProfile } from "../../../domain/user/entities/user.type";
 
 import { UserReadRepository, UserWriteRepository } from "../../../infrastructure/database/repositories/user.repository";
 

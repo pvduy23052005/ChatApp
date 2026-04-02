@@ -18,7 +18,7 @@ export class LogoutUseCase {
       throw new Error("Không tìm thấy người dùng");
     }
 
-    user.setStatus("offline");
+    user.setStatusOnline("offline");
 
     await this.userWriteRepo.updateProfile(user);
   }

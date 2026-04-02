@@ -1,6 +1,6 @@
 import { IPasswordService } from "../../ports/password.port";
 import { IUserWriteRepository, IUserReadRepository } from "../../ports/user.port";
-import { UserEntity } from "../../../domain/entities/user/user.entity";
+import { UserEntity } from "../../../domain/user/entities/user.entity";
 export class RegisterUserUseCase {
   constructor(
     private readonly userReadRepo: IUserReadRepository,

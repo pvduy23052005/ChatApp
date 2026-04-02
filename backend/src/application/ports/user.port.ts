@@ -1,4 +1,4 @@
-import { UserEntity } from "../../domain/entities/user/user.entity";
+import { UserEntity } from "../../domain/user/entities/user.entity";
 import { IOutputUserDTO } from "../use-cases/user/get-users.use-case";
 
 export interface IUserReadRepository {

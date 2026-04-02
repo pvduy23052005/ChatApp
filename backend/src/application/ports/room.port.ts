@@ -1,4 +1,4 @@
-import { RoomEntity } from "../../domain/entities/room/room.entity";
+import { RoomEntity } from "../../domain/room/entities/room.entity";
 
 export interface IRoomReadRepository {
   getRoomByUserAndStatus(userID: string, status: string): Promise<RoomEntity[] | []>;

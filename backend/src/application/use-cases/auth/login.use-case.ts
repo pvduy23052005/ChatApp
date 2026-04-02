@@ -1,8 +1,8 @@
-import { IUserReadRepository , IUserWriteRepository } from "../../ports/user.port";
+import { IUserReadRepository, IUserWriteRepository } from "../../ports/user.port";
 import { IPasswordService } from "../../ports/password.port";
 import { ITokenService } from "../../ports/token.port";
 
-import { IUserProfile } from "../../../domain/entities/user/user.type";
+import { IUserProfile } from "../../../domain/user/entities/user.type";
 
 export interface LoginResponse {
   user: IUserProfile;
@@ -34,7 +34,7 @@ export class LoginUseCase {
       throw new Error("Mật khẩu không đúng");
     }
 
-    user.setStatus("online");
+    user.setStatusOnline("online");
     await this.userWriteRepo.updateProfile(user);
 
     const payload = { userId: user.getID() };

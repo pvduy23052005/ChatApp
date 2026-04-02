@@ -6,7 +6,7 @@ export class UserEntity {
   private email: string;
   private password: string;
   private avatar: string;
-  private status: string;
+  private statusOnline: string;
   private createdAt: Date;
   private updatedAt: Date;
 
@@ -16,13 +16,13 @@ export class UserEntity {
     this.email = data.email;
     this.password = data.password;
     this.avatar = data.avatar || "";
-    this.status = data.status || "offline";
+    this.statusOnline = data.statusOnline || "offline";
     this.createdAt = data.createdAt || new Date();
     this.updatedAt = data.updatedAt || new Date();
   }
 
   public isActive(): boolean {
-    return this.status === "active";
+    return this.statusOnline === "active";
   }
 
   public getProfile(): IUserProfile {
@@ -31,7 +31,7 @@ export class UserEntity {
       fullName: this.fullName,
       email: this.email,
       avatar: this.avatar,
-      status: this.status
+      statusOnline: this.statusOnline
     };
   }
 
@@ -53,35 +53,23 @@ export class UserEntity {
     this.updatedAt = new Date();
   }
 
-  public getStatus(): string {
-    return this.status;
+  public getStatusOnline(): string {
+    return this.statusOnline;
   }
 
-  public setStatus(status: string): void {
-    this.status = status;
+  public setStatusOnline(status: string): void {
+    this.statusOnline = status;
     this.updatedAt = new Date();
   }
 
-  public toUpdateObject(): any {
-    return {
-      fullName: this.fullName,
-      avatar: this.avatar,
-      statusOnline: this.status, // Match mongoose schema
-      updatedAt: this.updatedAt
-    };
+  public getCreatedAt(): Date {
+    return this.createdAt;
   }
 
-  public toCreateObject(): any {
-    return {
-      fullName: this.fullName,
-      email: this.email,
-      password: this.password,
-      avatar: this.avatar,
-      statusOnline: this.status,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
-    };
+  public getUpdatedAt(): Date {
+    return this.updatedAt;
   }
+
 
   public static create(data: IUserProps): UserEntity {
     return new UserEntity({
@@ -90,7 +78,7 @@ export class UserEntity {
       password: data.password,
       avatar: data.avatar,
       id: undefined,
-      status: data.status || "offline",
+      statusOnline: data.statusOnline || "offline",
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -98,12 +86,12 @@ export class UserEntity {
 
   public static restore(data: IUserRestore): UserEntity {
     return new UserEntity({
-      id: (data.id || data._id)?.toString(),
+      id: data.id?.toString(),
       fullName: data.fullName,
       email: data.email,
       password: data.password,
       avatar: data.avatar,
-      status: data.statusOnline || data.status,
+      statusOnline: data.statusOnline || "offline",
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     });

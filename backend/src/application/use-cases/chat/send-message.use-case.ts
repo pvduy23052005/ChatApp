@@ -1,7 +1,7 @@
 import { IChatWriteRepository } from "../../ports/chat.port";
 import { IRoomWriteRepository } from "../../ports/room.port";
-import { ChatEntity } from "../../../domain/entities/chat/chat.entity";
-import { IChatDetail } from "../../../domain/entities/chat/chat.type";
+import { ChatEntity } from "../../../domain/chat/entities/chat.entity";
+import { IChatDetail } from "../../../domain/chat/entities/chat.type";
 export interface IDataChat {
   user_id: string;
   content: string;

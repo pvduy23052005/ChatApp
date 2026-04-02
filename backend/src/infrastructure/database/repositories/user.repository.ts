@@ -1,13 +1,9 @@
 import User from "../model/user.model";
 import { IUserReadRepository, IUserWriteRepository, IFriendShipRepository } from "../../../application/ports/user.port";
-import { UserEntity } from "../../../domain/entities/user/user.entity";
+import { UserEntity } from "../../../domain/user/entities/user.entity";
+import { UserMapper } from "../mappers/user.mapper";
 import type { IOutputUserDTO } from "../../../application/use-cases/user/get-users.use-case";
 
-const mapToEntity = (doc: any): UserEntity | null => {
-  if (!doc) return null;
-
-  return UserEntity.restore(doc);
-}
 
 export class UserReadRepository implements IUserReadRepository {
 
@@ -17,12 +13,12 @@ export class UserReadRepository implements IUserReadRepository {
       deleted: false,
     });
 
-    return mapToEntity(user);
+    return UserMapper.toDomain(user);
   }
 
   public async findUserById(userID: string): Promise<UserEntity | null> {
     const user = await User.findOne({ _id: userID, deleted: false });
-    return mapToEntity(user);
+    return UserMapper.toDomain(user);
   }
 
   public async findUsersNotInList(listId: string[]): Promise<IOutputUserDTO[]> {
@@ -71,19 +67,18 @@ export class UserWriteRepository implements IUserWriteRepository {
   }
 
   public async createUser(user: UserEntity): Promise<UserEntity | null> {
-    const newUser = new User(user.toCreateObject());
+    const newUser = new User(UserMapper.toPersistence(user));
     const savedUser = await newUser.save();
-
-    return mapToEntity(savedUser);
+    return UserMapper.toDomain(savedUser);
   }
 
   public async updateProfile(user: UserEntity): Promise<UserEntity | null> {
     const updatedDoc = await User.findByIdAndUpdate(
       user.getID(),
-      user.toUpdateObject(),
+      UserMapper.toPersistence(user),
       { new: true }
     );
-    return mapToEntity(updatedDoc);
+    return UserMapper.toDomain(updatedDoc);
   }
 }
 
