@@ -1,6 +1,6 @@
-import { IUserReadRepository } from "../../ports/user.port";
-import { IFriendReadRepo } from "../../ports/friend.port";
-import { IFriendRequestReadRepository } from "../../ports/friendRequest.port";
+import { IUserReadRepository } from "../../ports/repositories/user.port";
+import { IFriendReadRepo } from "../../ports/repositories/friend.port";
+import { IFriendRequestReadRepository } from "../../ports/repositories/friendRequest.port";
 
 export interface IOutputUserDTO {
   id: string;
@@ -14,7 +14,7 @@ export class GetUsersUseCase {
     private readonly userReadRepo: IUserReadRepository,
     private readonly friendRepo: IFriendReadRepo,
     private readonly friendRequestRepo: IFriendRequestReadRepository
-  ) {}
+  ) { }
 
   public async execute(userID: string): Promise<IOutputUserDTO[]> {
 
@@ -24,7 +24,7 @@ export class GetUsersUseCase {
       this.friendRequestRepo.getOutgoingFriendRequest(userID)
     ]);
 
-    const friendIDs: string[] = friends.map((f) => 
+    const friendIDs: string[] = friends.map((f) =>
       f.getUserId1() === userID ? f.getUserId2() : f.getUserId1()
     );
     const acceptIDs: string[] = incomingRequests.map(req => req.getSenderId());

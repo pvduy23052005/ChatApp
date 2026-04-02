@@ -1,5 +1,5 @@
-import { UserEntity } from "../../domain/user/entities/user.entity";
-import { IOutputUserDTO } from "../use-cases/user/get-users.use-case";
+import { UserEntity } from "../../../domain/user/entity";
+import { IOutputUserDTO } from "../../use-cases/user/get-users.use-case";
 
 export interface IUserReadRepository {
   findUserByEmail(email: string): Promise<UserEntity | null>;

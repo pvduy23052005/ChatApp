@@ -1,7 +1,7 @@
-import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../ports/room.port";
-import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/friendRequest.port";
+import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../ports/repositories/room.port";
+import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/repositories/friendRequest.port";
 import { FriendEntity } from "../../../domain/friend/entity";
-import { IFriendReadRepo, IFriendWriteRepo } from "../../ports/friend.port";
+import { IFriendReadRepo, IFriendWriteRepo } from "../../ports/repositories/friend.port";
 export class AcceptFriendUseCase {
   constructor(
     private readonly roomReadRepo: IRoomReadRepository,

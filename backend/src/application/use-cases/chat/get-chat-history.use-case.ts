@@ -1,4 +1,4 @@
-import { IChatReadRepository } from "../../ports/chat.port";
+import { IChatReadRepository } from "../../ports/repositories/chat.port";
 
 export class GetChatHistoryUseCase {
 

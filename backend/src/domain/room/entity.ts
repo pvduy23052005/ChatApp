@@ -1,4 +1,4 @@
-import { ILastMessage, IGetRoom, IRoom } from "./room.type";
+import { ILastMessage, IGetRoom, IRoom } from "./type";
 
 export class RoomEntity {
   private id: string;

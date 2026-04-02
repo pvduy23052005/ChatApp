@@ -1,4 +1,4 @@
-import { IRoomWriteRepository } from "../../ports/room.port";
+import { IRoomWriteRepository } from "../../ports/repositories/room.port";
 
 export class EditRoomUseCase {
   constructor(private readonly roomRepository: IRoomWriteRepository) { }

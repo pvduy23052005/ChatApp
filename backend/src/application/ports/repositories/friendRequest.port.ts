@@ -1,9 +1,9 @@
-import { FriendRequestEntity } from "../../domain/friendRequest/entity";
+import { FriendRequestEntity } from "../../../domain/friendRequest/entity";
 
 
 export interface IFriendRequestReadRepository {
   getIncomingFriendRequest(myID: string): Promise<FriendRequestEntity[]>;
-  
+
   getOutgoingFriendRequest(myID: string): Promise<FriendRequestEntity[]>;
 
   getFriendRequest(myId: string, friendId: string): Promise<FriendRequestEntity | null>;

@@ -1,4 +1,4 @@
-import { FriendEntity } from "../../domain/friend/entity";
+import { FriendEntity } from "../../../domain/friend/entity";
 
 export interface IFriendReadRepo {
   getAll(id: string): Promise<FriendEntity[]>;

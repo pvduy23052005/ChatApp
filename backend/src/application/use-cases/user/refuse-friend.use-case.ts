@@ -1,4 +1,4 @@
-import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/friendRequest.port";
+import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/repositories/friendRequest.port";
 
 export class RefuseFriendUseCase {
   constructor(

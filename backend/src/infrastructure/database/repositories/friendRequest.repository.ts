@@ -1,4 +1,4 @@
-import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../../application/ports/friendRequest.port";
+import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../../application/ports/repositories/friendRequest.port";
 import { FriendRequestEntity } from "../../../domain/friendRequest/entity";
 import FriendRequest from "../model/friendRequest.model";
 

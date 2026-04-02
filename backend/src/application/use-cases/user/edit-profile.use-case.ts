@@ -1,5 +1,5 @@
-import { IUserReadRepository, IUserWriteRepository } from "../../ports/user.port";
-import { IUpdateProfile, IUserProfile } from "../../../domain/user/entities/user.type";
+import { IUserReadRepository, IUserWriteRepository } from "../../ports/repositories/user.port";
+import { IUpdateProfile, IUserProfile } from "../../../domain/user/type";
 
 export class EditProfileUseCase {
 

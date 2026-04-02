@@ -1,5 +1,5 @@
 import { FriendRequestEntity } from "../../../domain/friendRequest/entity";
-import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/friendRequest.port";
+import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/repositories/friendRequest.port";
 
 export class FriendRequestUseCase {
   constructor(

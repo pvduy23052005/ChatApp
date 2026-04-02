@@ -1,4 +1,4 @@
-import { IUserReadRepository, IUserWriteRepository } from "../../ports/user.port";
+import { IUserReadRepository, IUserWriteRepository } from "../../ports/repositories/user.port";
 
 export class LogoutUseCase {
 

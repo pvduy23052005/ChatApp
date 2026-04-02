@@ -1,5 +1,5 @@
-import { IRoomReadRepository } from "../../ports/room.port";
-import { IChatWriteRepository, IChatReadRepository } from "../../ports/chat.port";
+import { IRoomReadRepository } from "../../ports/repositories/room.port";
+import { IChatWriteRepository, IChatReadRepository } from "../../ports/repositories/chat.port";
 
 export class ReadRoomUseCase {
   constructor(

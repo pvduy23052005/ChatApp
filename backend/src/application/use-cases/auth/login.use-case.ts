@@ -1,8 +1,8 @@
-import { IUserReadRepository, IUserWriteRepository } from "../../ports/user.port";
-import { IPasswordService } from "../../ports/password.port";
-import { ITokenService } from "../../ports/token.port";
+import { IUserReadRepository, IUserWriteRepository } from "../../ports/repositories/user.port";
+import { IPasswordService } from "../../ports/services/password.port";
+import { ITokenService } from "../../ports/services/token.port";
 
-import { IUserProfile } from "../../../domain/user/entities/user.type";
+import { IUserProfile } from "../../../domain/user/type";
 
 export interface LoginResponse {
   user: IUserProfile;

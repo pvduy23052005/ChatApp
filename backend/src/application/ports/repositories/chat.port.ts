@@ -1,4 +1,4 @@
-import { ChatEntity } from "../../domain/chat/entities/chat.entity";
+import { ChatEntity } from "../../../domain/chat/chat.entity";
 
 export interface IChatReadRepository {
   getMessageByRoomID(roomID: string, cursor?: string, limit?: number): Promise<ChatEntity[] | null>

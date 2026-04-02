@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { IPasswordService } from "../../application/ports/password.port";
+import { IPasswordService } from "../../application/ports/services/password.port";
 
 
 export class BcryptHashService implements IPasswordService {

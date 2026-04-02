@@ -1,5 +1,5 @@
 import { FriendEntity } from "../../../domain/friend/entity";
-import { IFriendReadRepo, IFriendWriteRepo } from "../../../application/ports/friend.port";
+import { IFriendReadRepo, IFriendWriteRepo } from "../../../application/ports/repositories/friend.port";
 
 import Friend from "../model/friend.model";
 

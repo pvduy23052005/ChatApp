@@ -1,4 +1,4 @@
-import { IUserProps, IUserProfile, IUserRestore, IUpdateProfile } from "./user.type";
+import { IUserProps, IUserProfile, IUserRestore, IUpdateProfile } from "./type";
 
 export class UserEntity {
   private id: string;

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ITokenService } from "../../application/ports/token.port";
+import { ITokenService } from "../../application/ports/services/token.port";
 
 export class TokenService implements ITokenService {
   public async generateToken(payload: any): Promise<string> {

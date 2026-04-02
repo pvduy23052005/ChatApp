@@ -1,6 +1,6 @@
 import Chat from "../model/chat.model"
-import { IChatReadRepository, IChatWriteRepository } from "../../../application/ports/chat.port";
-import { ChatEntity } from "../../../domain/chat/entities/chat.entity";
+import { IChatReadRepository, IChatWriteRepository } from "../../../application/ports/repositories/chat.port";
+import { ChatEntity } from "../../../domain/chat/chat.entity";
 
 const mapToEntity = (doc: any): ChatEntity | null => {
   if (!doc) return null;

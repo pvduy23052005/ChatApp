@@ -1,5 +1,5 @@
-import { IUserReadRepository } from "../../ports/user.port";
-import { IFriendRequestReadRepository } from "../../ports/friendRequest.port";
+import { IUserReadRepository } from "../../ports/repositories/user.port";
+import { IFriendRequestReadRepository } from "../../ports/repositories/friendRequest.port";
 import { IOutputUserDTO } from "./get-users.use-case";
 
 export class GetFriendAcceptsUseCase {
@@ -7,7 +7,7 @@ export class GetFriendAcceptsUseCase {
   constructor(
     private readonly userReadRepo: IUserReadRepository,
     private readonly friendRequestRepo: IFriendRequestReadRepository
-  ) {}
+  ) { }
 
   public async execute(userID: string): Promise<IOutputUserDTO[]> {
     const requests = await this.friendRequestRepo.getIncomingFriendRequest(userID);
