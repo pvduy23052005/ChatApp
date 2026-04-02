@@ -1,4 +1,6 @@
 import { IUserReadRepository } from "../../ports/user.port";
+import { IFriendReadRepo } from "../../ports/friend.port";
+import { IFriendRequestReadRepository } from "../../ports/friendRequest.port";
 
 export interface IOutputUserDTO {
   id: string;
@@ -8,18 +10,28 @@ export interface IOutputUserDTO {
 
 export class GetUsersUseCase {
 
-  constructor(private readonly userReadRepo: IUserReadRepository) {
-  }
+  constructor(
+    private readonly userReadRepo: IUserReadRepository,
+    private readonly friendRepo: IFriendReadRepo,
+    private readonly friendRequestRepo: IFriendRequestReadRepository
+  ) {}
 
-  public async execute(user: any): Promise<IOutputUserDTO[]> {
+  public async execute(userID: string): Promise<IOutputUserDTO[]> {
 
-    const myID = user.id.toString();
-    const friendIDs: string[] = user.friendList.map((item: any) => item.user_id);
-    const acceptIDs: string[] = user.friendAccepts.map((item: any) => item.toString());
-    const requestIDs: string[] = user.friendRequests.map((item: any) => item.toString());
+    const [friends, incomingRequests, outgoingRequests] = await Promise.all([
+      this.friendRepo.getAll(userID),
+      this.friendRequestRepo.getIncomingFriendRequest(userID),
+      this.friendRequestRepo.getOutgoingFriendRequest(userID)
+    ]);
+
+    const friendIDs: string[] = friends.map((f) => 
+      f.getUserId1() === userID ? f.getUserId2() : f.getUserId1()
+    );
+    const acceptIDs: string[] = incomingRequests.map(req => req.getSenderId());
+    const requestIDs: string[] = outgoingRequests.map(req => req.getReceiverId());
 
     const listId = [
-      myID,
+      userID,
       ...friendIDs,
       ...acceptIDs,
       ...requestIDs,

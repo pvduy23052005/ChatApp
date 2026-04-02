@@ -1,6 +1,6 @@
 import type { IFriendProps } from "./type";
 
-export class friend {
+export class FriendEntity {
   private id?: string | undefined;
   private userId1: string;
   private userId2: string;
@@ -21,13 +21,13 @@ export class friend {
     this.createdAt = data.createdAt || new Date();
   }
 
-  public static establish(userId1: string, userId2: string, roomId: string): friend {
+  public static establish(userId1: string, userId2: string, roomId: string): FriendEntity {
 
     if (userId1 === userId2) {
       throw new Error("Không thể thiết lập quan hệ bạn bè với chính mình");
     }
 
-    return new friend({
+    return new FriendEntity({
       userId1,
       userId2,
       roomId,
@@ -35,8 +35,8 @@ export class friend {
     });
   }
 
-  public static restore(data: IFriendProps): friend {
-    return new friend(data);
+  public static restore(data: IFriendProps): FriendEntity {
+    return new FriendEntity(data);
   }
 
   public getUserId1(): string { return this.userId1; }

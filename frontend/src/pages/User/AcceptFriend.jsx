@@ -25,14 +25,14 @@ function AcceptFriend() {
 
   const handleAccept = (userID) => {
     setUsers((prev) =>
-      prev.map((u) => (u._id === userID ? { ...u, status: "accepted" } : u)),
+      prev.map((u) => (u.id === userID ? { ...u, status: "accepted" } : u)),
     );
     handleFriendAccept(userID);
   };
 
   const handleRefuse = (userID) => {
     setUsers((prev) =>
-      prev.map((u) => (u._id === userID ? { ...u, status: "refused" } : u)),
+      prev.map((u) => (u.id === userID ? { ...u, status: "refused" } : u)),
     );
     handleFriendRefuse(userID);
   };
@@ -49,7 +49,7 @@ function AcceptFriend() {
         <div className="row">
           {users.length > 0 ? (
             users.map((user) => (
-              <div className="col-12 col-md-6 col-lg-4 mb-3" key={user._id}>
+              <div className="col-12 col-md-6 col-lg-4 mb-3" key={user.id}>
                 <div
                   className={`box-user ${
                     user.status === "accepted"
@@ -78,7 +78,7 @@ function AcceptFriend() {
                       {/* Nhóm nút Chấp nhận */}
                       <button
                         className="btn-action btn-accept-friend "
-                        onClick={() => handleAccept(user._id)}
+                        onClick={() => handleAccept(user.id)}
                       >
                         <i className="fa-solid fa-user-plus me-1"></i> Chấp nhận
                       </button>
@@ -93,7 +93,7 @@ function AcceptFriend() {
                       {/* Nhóm nút Hủy/Từ chối */}
                       <button
                         className="btn-action btn-refuse-friend "
-                        onClick={() => handleRefuse(user._id)}
+                        onClick={() => handleRefuse(user.id)}
                       >
                         Từ chối
                       </button>

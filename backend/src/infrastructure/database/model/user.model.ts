@@ -17,24 +17,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  friendRequests: {
-    type: Array,
-    default: []
-  },
-  friendAccepts: {
-    type: Array,
-    default: []
-
-  },
-  friendList: [
-    {
-      user_id: String,
-      room_chat_id: {
-        type: String,
-
-      }
-    }
-  ],
   statusOnline: {
     type: String,
     enum: ["online", "offline"],

@@ -7,16 +7,20 @@ import { EditProfileUseCase } from "../../../application/use-cases/user/edit-pro
 import type { IUpdateProfile } from "../../../domain/user/entities/user.type";
 
 import { UserReadRepository, UserWriteRepository } from "../../../infrastructure/database/repositories/user.repository";
+import { FriendRepository } from "../../../infrastructure/database/repositories/friend.repository";
+import { FriendRequestRepository } from "../../../infrastructure/database/repositories/friendRequest.repository";
 
 const userReadRepo = new UserReadRepository();
 const userWriteRepo = new UserWriteRepository();
+const friendRepo = new FriendRepository();
+const friendRequestRepo = new FriendRequestRepository();
 
 // [get] /users
 export const getUsers = async (req: Request, res: Response) => {
   try {
 
-    const getUsersUseCase = new GetUsersUseCase(userReadRepo);
-    const users = await getUsersUseCase.execute(res.locals.user);
+    const getUsersUseCase = new GetUsersUseCase(userReadRepo, friendRepo, friendRequestRepo);
+    const users = await getUsersUseCase.execute(res.locals.user.id.toString());
 
     res.status(200).json({
       success: true,
@@ -34,8 +38,8 @@ export const getUsers = async (req: Request, res: Response) => {
 // [get] /user/friend-accepts . 
 export const friendAccepts = async (req: Request, res: Response) => {
   try {
-    const getFriendAcceptsUseCase = new GetFriendAcceptsUseCase(userReadRepo);
-    const users = await getFriendAcceptsUseCase.execute(res.locals.user);
+    const getFriendAcceptsUseCase = new GetFriendAcceptsUseCase(userReadRepo, friendRequestRepo);
+    const users = await getFriendAcceptsUseCase.execute(res.locals.user.id.toString());
 
     res.status(200).json({
       success: true,
@@ -55,8 +59,8 @@ export const friendAccepts = async (req: Request, res: Response) => {
 export const getFriends = async (req: Request, res: Response) => {
   try {
 
-    const getFriendsUseCase = new GetFriendsUseCase(userReadRepo);
-    const friends = await getFriendsUseCase.execute(res.locals.user);
+    const getFriendsUseCase = new GetFriendsUseCase(userReadRepo, friendRepo);
+    const friends = await getFriendsUseCase.execute(res.locals.user.id.toString());
 
     res.status(200).json({
       success: true,
@@ -110,10 +114,10 @@ export const editProfile = async (req: Request, res: Response) => {
       success: true,
       message: "Cập nhật thông tin thành công!",
       user: {
-        id: user.getID(),
-        fullName: user.getProfile().fullName,
-        email: user.getProfile().email,
-        avatar: user.getProfile().avatar
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+        avatar: user.avatar
       },
     });
 

@@ -1,17 +1,23 @@
-import { IFriendShipRepository } from "../../ports/user.port";
+import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/friendRequest.port";
 
 export class FriendCancelUseCase {
-  constructor(private readonly friendShipRepo: IFriendShipRepository) { }
+  constructor(
+    private readonly friendRequestRepo: IFriendRequestReadRepository & IFriendRequestWriteRepository
+  ) { }
 
   async execute(myID: string, userID: string): Promise<void> {
     try {
-      await Promise.all([
-        this.friendShipRepo.removeFriendRequest(myID, userID),
-        this.friendShipRepo.removeFriendAccept(userID, myID),
-      ]);
+      const friendRequest = await this.friendRequestRepo.getFriendRequest(userID, myID);
+
+      if (!friendRequest || !friendRequest.getId()) {
+        throw new Error("Không tồn tại lời mời kết bạn");
+      }
+
+      await this.friendRequestRepo.delete(friendRequest.getId() as string);
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
 }
+

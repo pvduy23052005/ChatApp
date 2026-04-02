@@ -9,14 +9,14 @@ function UserList() {
 
   const onClickRequest = (userID) => {
     setUsers((prev) =>
-      prev.map((u) => (u._id === userID ? { ...u, status: "request" } : u)),
+      prev.map((u) => (u.id === userID ? { ...u, status: "request" } : u)),
     );
     handleFriendRequest(userID);
   };
 
   const onClickCancel = (userID) => {
     setUsers((prev) =>
-      prev.map((u) => (u._id === userID ? { ...u, status: null } : u)),
+      prev.map((u) => (u.id === userID ? { ...u, status: null } : u)),
     );
     handleFriendCancel(userID);
   };
@@ -32,7 +32,7 @@ function UserList() {
           {users.map((user) => (
             <div
               className={`box-user ${user.status === "request" ? "add-friend-request" : ""}`}
-              key={user.id || user._id}
+              key={user.id}
             >
               {/* Phần Avatar */}
               <div className="inner-avatar">
@@ -52,7 +52,7 @@ function UserList() {
                   {/* Nút Kết bạn */}
                   <button
                     className="btn-action btn-add"
-                    onClick={() => onClickRequest(user._id)}
+                    onClick={() => onClickRequest(user.id)}
                   >
                     <i className="fa-solid fa-user-plus"></i> Kết bạn
                   </button>
@@ -60,7 +60,7 @@ function UserList() {
                   {/* Nút Hủy */}
                   <button
                     className="btn-action btn-cancel"
-                    onClick={() => onClickCancel(user._id)}
+                    onClick={() => onClickCancel(user.id)}
                   >
                     <i className="bx bx-message-circle-x"></i> Hủy
                   </button>
@@ -68,7 +68,7 @@ function UserList() {
                   {/* Nút Nhắn tin */}
                   <button
                     className="btn-action btn-chat"
-                    onClick={() => handleChatNotFriend(user._id)}
+                    onClick={() => handleChatNotFriend(user.id)}
                   >
                     <i className="fa-solid fa-comment"></i> Nhắn tin
                   </button>

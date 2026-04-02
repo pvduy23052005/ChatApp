@@ -1,6 +1,5 @@
 import { IUserReadRepository, IUserWriteRepository } from "../../ports/user.port";
-import { IUpdateProfile } from "../../../domain/user/entities/user.type";
-import { UserEntity } from "../../../domain/user/entities/user.entity";
+import { IUpdateProfile, IUserProfile } from "../../../domain/user/entities/user.type";
 
 export class EditProfileUseCase {
 
@@ -9,7 +8,7 @@ export class EditProfileUseCase {
     private readonly userWriteRepo: IUserWriteRepository
   ) { };
 
-  public async execute(userID: string, data: IUpdateProfile) {
+  public async execute(userID: string, data: IUpdateProfile): Promise<IUserProfile> {
     const user = await this.userReadRepo.findUserById(userID);
 
     if (!user) {
@@ -24,6 +23,6 @@ export class EditProfileUseCase {
       throw new Error("Cập nhật thất bại!");
     }
 
-    return updatedUser;
+    return updatedUser.getProfile();
   }
 }

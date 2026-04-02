@@ -1,17 +1,21 @@
-import { IFriendShipRepository } from "../../ports/user.port";
+import { FriendRequestEntity } from "../../../domain/friendRequest/entity";
+import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/friendRequest.port";
 
 export class FriendRequestUseCase {
-  constructor(private readonly friendShipRepo: IFriendShipRepository) { }
+  constructor(
+    private readonly friendRequestRepo: IFriendRequestReadRepository & IFriendRequestWriteRepository,
+  ) { }
 
   async execute(myID: string, userID: string): Promise<void> {
-    try {
-      await Promise.all([
-        this.friendShipRepo.addFriendRequest(myID, userID),
-        this.friendShipRepo.addFriendAccept(userID, myID),
-      ]);
-    } catch (error) {
-      console.log(error);
-      throw error;
+
+    const isExists = await this.friendRequestRepo.getFriendRequest(myID, userID);
+
+    if (isExists) {
+      throw new Error("Đã tồn tại lời mời kết bạn");
     }
+
+    const friendRequest = FriendRequestEntity.sendNewRequest(myID, userID);
+
+    await this.friendRequestRepo.save(friendRequest);
   }
 }

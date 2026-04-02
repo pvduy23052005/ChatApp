@@ -6,10 +6,19 @@ export interface ISenderProfile {
 }
 
 export interface IFriendRequestProps {
-  id?: string;
+  id?: string | undefined;
   senderId: string;
   receiverId: string;
   status: RequestStatus;
   createdAt: Date;
-  senderProfile?: ISenderProfile;
+  senderProfile?: ISenderProfile | undefined;
+}
+
+export interface IToObject {
+  id?: string | undefined;
+  senderId: string;
+  receiverId: string;
+  status: RequestStatus;
+  createdAt: Date;
+  senderProfile?: ISenderProfile | undefined;
 }
