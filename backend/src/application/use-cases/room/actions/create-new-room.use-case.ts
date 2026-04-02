@@ -20,12 +20,11 @@ export class CreateNewRoomUseCase {
       ? [...members]
       : [members];
 
-
     if (memberIDs.length === 1) {
       const userID: string = memberIDs[0]!;
       const existRoom = await this.roomReadRepo.checkRoomExist(myID, userID);
       if (existRoom) {
-        throw new Error("Phòng này đã tồn tại");
+        throw new Error("Vui lòng chọn trên 2 người!");
       }
     }
 

@@ -1,6 +1,6 @@
 export interface IChatProps {
   id?: string | undefined;
-  user_id: string;
+  user_id?: string | undefined;
   room_id: string;
   content?: string | undefined;
   images?: string[] | undefined;
@@ -21,7 +21,7 @@ export interface IChatProps {
 
 export interface IChatDetail {
   id: string | undefined;
-  user_id: string;
+  user_id?: string | undefined;
   room_id: string;
   content: string;
   images: string[];

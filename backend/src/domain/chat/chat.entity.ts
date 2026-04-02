@@ -1,8 +1,8 @@
-import { IChatProps, IChatDetail } from "./chat.type";
+import { IChatProps ,IChatDetail } from "./chat.type";
 
 export class ChatEntity {
   private id?: string | undefined;
-  private user_id: string;
+  private user_id?: string | undefined;
   private room_id: string;
   private content: string;
   private images: string[];
@@ -17,7 +17,7 @@ export class ChatEntity {
 
   private constructor(data: IChatProps) {
     this.id = data.id || "";
-    this.user_id = data.user_id.toString() || "";
+    this.user_id = data.user_id?.toString() || undefined;
     this.room_id = data.room_id.toString() || "";
     this.content = data.content?.trim() || "";
     this.images = Array.isArray(data.images) ? data.images : [];
@@ -111,8 +111,21 @@ export class ChatEntity {
     } as IChatProps);
   }
 
+  public static createSystemMessage(room_id: string, content: string): ChatEntity {
+    return new ChatEntity({
+      room_id: room_id,
+      content: content,
+      type: "system",
+      status: "sent",
+      readBy: [],
+      deleted: false,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    } as IChatProps);
+  }
+
   public getId(): string | undefined { return this.id; }
-  public getUserID(): string { return this.user_id; }
+  public getUserID(): string | undefined { return this.user_id; }
   public getRoomID(): string { return this.room_id; }
   public getContent(): string { return this.content; }
   public getImages(): string[] { return this.images; }

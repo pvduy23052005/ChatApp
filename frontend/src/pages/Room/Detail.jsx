@@ -22,11 +22,11 @@ function Detail() {
 
     setRoom((prev) => ({
       ...prev,
-      members: prev.members.filter((m) => m.user_id._id !== memberID),
+      members: prev.members.filter((m) => (m.user_id.id || m.user_id._id) !== memberID),
     }));
     removeMember(id, memberID, fullName);
   };
-  
+
   const onAssignAdmin = async (memberID, fullName) => {
     const isConfirmed = window.confirm(
       `Bạn có chắc chắn muốn chuyển quyền Trưởng nhóm cho ${fullName}? Bạn sẽ trở thành thành viên thường.`,
@@ -39,9 +39,9 @@ function Detail() {
     assignAdmin(id, memberID, fullName);
   };
 
-  const myID = user?._id || user?.id;
+  const myID = user?.id || user?._id;
   const isSuperAdmin = room?.members?.some(
-    (m) => m.user_id?._id === myID && m.role === "superAdmin",
+    (m) => (m.user_id?.id === myID || m.user_id?._id === myID) && m.role === "superAdmin",
   );
   const isGroup = room.typeRoom === "group";
 
@@ -64,7 +64,7 @@ function Detail() {
                 <button
                   className="btn btn-sm btn-outline-danger"
                   onClick={() => {
-                    leaveRoom(room._id, user.fullName);
+                    leaveRoom(room.id, user.fullName);
                   }}
                 >
                   Rời nhóm
@@ -75,12 +75,12 @@ function Detail() {
             <div className="list-group list-group-flush">
               {room.members.map((member) => {
                 const uInfo = member.user_id;
-                const isMe = uInfo._id === myID;
-
+                const memberID = uInfo.id || uInfo._id;
+                const isMe = memberID === myID;
                 return (
                   <div
                     className="list-group-item d-flex align-items-center gap-3 py-3"
-                    key={uInfo._id}
+                    key={memberID}
                   >
                     <img
                       src={uInfo.avatar || "/images/default-avatar.webp"}
@@ -126,8 +126,8 @@ function Detail() {
                         className="btn btn-sm btn-light text-danger"
                         onClick={() => {
                           onRemoveMember(
-                            member.user_id._id,
-                            member.user_id.fullName,
+                            memberID,
+                            uInfo.fullName,
                           );
                         }}
                       >
@@ -140,8 +140,8 @@ function Detail() {
                         title="Chuyển quyền trưởng nhóm"
                         onClick={() => {
                           onAssignAdmin(
-                            member.user_id._id,
-                            member.user_id.fullName,
+                            memberID,
+                            uInfo.fullName,
                           );
                         }}
                       >

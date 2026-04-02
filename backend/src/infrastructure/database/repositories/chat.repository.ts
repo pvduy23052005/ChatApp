@@ -50,17 +50,6 @@ export class ChatWriteRepository implements IChatWriteRepository {
     return mapToEntity(newChat);
   }
 
-  public async createSystemMessage(roomID: string, content: string): Promise<any> {
-    const dataChat = {
-      type: "system",
-      content: content,
-      room_id: roomID,
-    };
-    const newChat = new Chat(dataChat);
-    await newChat.save();
-    return newChat;
-  }
-
   public async markMessageAsRead(messageID: string, userID: string): Promise<void> {
     await Chat.findByIdAndUpdate(messageID, {
       $addToSet: { readBy: userID }

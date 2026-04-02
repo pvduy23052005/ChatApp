@@ -60,8 +60,7 @@ function Create() {
         navigate("/chat");
       }
     } catch (error) {
-      console.error("Lỗi tạo phòng:", error);
-      alert(error.response.data.message);
+      toast.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -95,14 +94,14 @@ function Create() {
               {friends && friends.length > 0 ? (
                 friends.map((friend) => (
                   <label
-                    key={friend._id}
-                    className={`friend-item ${selectedMembers.includes(friend._id) ? "selected" : ""}`}
+                    key={friend.id}
+                    className={`friend-item ${selectedMembers.includes(friend.id) ? "selected" : ""}`}
                   >
                     <input
                       type="checkbox"
                       className="hidden-checkbox"
-                      checked={selectedMembers.includes(friend._id)}
-                      onChange={() => handleCheckboxChange(friend._id)}
+                      checked={selectedMembers.includes(friend.id)}
+                      onChange={() => handleCheckboxChange(friend.id)}
                     />
 
                     <div className="friend-avatar">

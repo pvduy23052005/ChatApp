@@ -6,7 +6,7 @@ async function roomActionValidate(req: Request, res: Response, next: NextFunctio
     const room = res.locals.room;
 
     const currentMember = room.members.find(
-      (member: any) => member.user_id._id.toString() === myID
+      (member: any) => member.user_id.toString() === myID
     )
 
     if (currentMember?.role !== "superAdmin") {

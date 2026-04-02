@@ -18,7 +18,7 @@ export const useRoomAction = () => {
         navigate("/chat");
       }
     } catch (error) {
-      console.log(error.response?.data?.message || "Lỗi khi xóa nhóm");
+      toast.error(error.response?.data?.message || "Lỗi khi xóa nhóm");
     }
   };
 
@@ -57,6 +57,7 @@ export const useRoomAction = () => {
 
   const addMember = async (roomID, memberIDs, listFullNames) => {
     try {
+      console.log(memberIDs);
       const res = await roomServiceAPI.addMember(roomID, memberIDs);
 
       if (res.success) {

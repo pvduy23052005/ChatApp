@@ -70,7 +70,12 @@ function ChatMessageGroup({
           const time = formatTime(chat.createdAt);
           const isSeen = chat.readBy?.length > 1;
 
-          // Grouping Logic
+          const prevChat = chats[index - 1];
+          const isFirstInGroup =
+            !prevChat ||
+            prevChat.type === "system" ||
+            prevChat.sender?.id?.toString() !== senderId;
+
           const nextChat = chats[index + 1];
           const isLastInGroup =
             !nextChat ||
@@ -99,6 +104,9 @@ function ChatMessageGroup({
               )}
 
               <div className="message-content-wrapper">
+                {!isMe && isFirstInGroup && (
+                  <span className="sender-name">{sender?.fullName}</span>
+                )}
                 <div className="message-bubble">
                   {chat.content && <p className="text">{chat.content}</p>}
 

@@ -1,5 +1,7 @@
 import { IRoomWriteRepository } from "../../../ports/repositories/room.port";
 import { IChatWriteRepository } from "../../../ports/repositories/chat.port";
+import { ChatEntity } from "../../../../domain/chat/chat.entity";
+import { INotifyOutputDTO } from "./notification.dto";
 
 export class NotifyLeaveRoomUseCase {
   constructor(
@@ -7,19 +9,23 @@ export class NotifyLeaveRoomUseCase {
     private readonly chatWriteRepo: IChatWriteRepository
   ) { }
 
-  async execute(roomID: string, fullName: string): Promise<any> {
+  async execute(roomID: string, fullName: string): Promise<INotifyOutputDTO> {
     const content = `${fullName} đã rời nhóm`;
 
-    const newChat = await this.chatWriteRepo.createSystemMessage(roomID, content);
+    const systemChat = ChatEntity.createSystemMessage(roomID, content);
+    const newChat = await this.chatWriteRepo.create(systemChat);
 
-    await this.roomRepo.updateLastMessage(roomID, newChat._id);
+    if (newChat && newChat.getId()) {
+      await this.roomRepo.updateLastMessage(roomID, newChat.getId());
+    }
 
     return {
       type: "system",
       content: content,
       room_id: roomID,
-      _id: newChat._id,
-      createdAt: newChat.createdAt,
+      id: newChat?.getId(),
+      readBy: newChat?.getReadBy() || [],
+      createdAt: newChat?.getCreatedAt(),
     };
   }
 }

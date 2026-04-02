@@ -3,7 +3,8 @@ export const markRoomRead_util = (rooms, currentRoomID, myID) => {
   const newListRooms = rooms.map((room) => {
     const oldReadBy = room.lastMessage?.readBy || [];
 
-    if (room._id !== currentRoomID) {
+    const roomID = room.id || room._id;
+    if (roomID !== currentRoomID) {
       return room;
     }
 
@@ -27,7 +28,7 @@ export const markRoomRead_util = (rooms, currentRoomID, myID) => {
 
 // handle last-message real-time .
 export const updateLastMessageAndReorder_util = (rooms, newMessage, myID) => {
-  const roomIndex = rooms.findIndex((room) => room._id === newMessage.room_id);
+  const roomIndex = rooms.findIndex((room) => (room.id || room._id) === newMessage.room_id);
 
   if (roomIndex === -1) return rooms;
 
@@ -38,7 +39,7 @@ export const updateLastMessageAndReorder_util = (rooms, newMessage, myID) => {
   roomToUpdate.lastMessage = {
     content: newMessage.content,
     createdAt: newMessage.createdAt,
-    user_id: myID,
+    user_id: newMessage.user_id || newMessage.sender?.id || newMessage.sender?._id,
     readBy: newMessage.readBy,
   };
 
@@ -70,7 +71,8 @@ export const updateSatusMessmasge_util = (chats, myID) => {
 
 export const updateAdminForRoom_util = (room, memberID) => {
   const updateMemberRoom = room.members.map((member) => {
-    if (member.user_id._id !== memberID) {
+    const mID = member.user_id.id || member.user_id._id;
+    if (mID !== memberID) {
       return member;
     }
 

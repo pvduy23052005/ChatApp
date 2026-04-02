@@ -82,6 +82,14 @@
   align-items: flex-start;
 }
 
+.sender-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin-bottom: 2px;
+  margin-left: 4px;
+}
+
 /* ==================== BUBBLE ==================== */
 .message-bubble {
   position: relative;

@@ -77,10 +77,28 @@ function ChatSider() {
           filteredRooms.map((room) => {
             const myId = user?._id || user?.id;
             const lastMsg = room.lastMessage || {};
-            const isMe = lastMsg.user_id === myId;
+            const lastMsgUserId = lastMsg.user_id?.toString();
+            const isMe = lastMsgUserId === myId?.toString();
+            const isSystem = lastMsg.type === "system";
+
+            let prefix = "";
+            if (!isSystem && lastMsgUserId) {
+              if (isMe) {
+                prefix = "Bạn: ";
+              } else if (room.typeRoom === "group") {
+                const sender = room.members?.find(
+                  (m) =>
+                    (m.user_id?._id || m.user_id?.id)?.toString() ===
+                    lastMsgUserId,
+                );
+                prefix = sender?.user_id?.fullName
+                  ? `${sender.user_id.fullName}: `
+                  : "";
+              }
+            }
+
             const isRead = room.lastMessage?.readBy?.includes(myId);
             const classRead = isRead ? "" : "unread";
-            const prefix = isMe ? "Bạn: " : "";
             const messageContent = lastMsg.content || "Bắt đầu cuộc trò chuyện";
 
             const isOnline = onlineUserIDs.includes(room.otherUserId);

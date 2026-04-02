@@ -2,6 +2,7 @@ import { Response, Request } from 'express';
 
 import { UserReadRepository } from "../../../infrastructure/database/repositories/user.repository";
 import { RoomReadRepository, RoomWriteRepository, RoomMemberRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { FriendRepository } from "../../../infrastructure/database/repositories/friend.repository";
 
 import { GetDetailRoomUseCase } from "../../../application/use-cases/room/actions/get-detail-room.use-case";
 import { EditRoomUseCase } from "../../../application/use-cases/room/actions/edit-room.use-case";
@@ -16,6 +17,7 @@ const roomReadRepo = new RoomReadRepository();
 const roomWriteRepo = new RoomWriteRepository();
 const roomMemberRepo = new RoomMemberRepository();
 const userReadRepo = new UserReadRepository();
+const friendRepo = new FriendRepository();
 
 // [post] /room/create.
 export const createRoomPost = async (req: Request, res: Response) => {
@@ -48,7 +50,7 @@ export const roomDetail = async (req: Request, res: Response) => {
     const roomID: string = req.params.id?.toString() || "";
     const user: any = res.locals.user;
 
-    const getDetailRoomUseCase = new GetDetailRoomUseCase(roomReadRepo, userReadRepo);
+    const getDetailRoomUseCase = new GetDetailRoomUseCase(roomReadRepo, userReadRepo, friendRepo);
     const { detailRoom, friends } = await getDetailRoomUseCase.execute(roomID, user);
 
     res.status(200).json({

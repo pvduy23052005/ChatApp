@@ -106,6 +106,8 @@ export const ChatProvider = ({ children }) => {
       const isMyMessage = newMessage.user_id === myID;
 
       if (isMyMessage || openingRoomID === newMessage.room_id) {
+        if (!newMessage.readBy) newMessage.readBy = [];
+        
         if (!newMessage.readBy.includes(myID)) {
           newMessage.readBy.push(myID);
         }
