@@ -1,5 +1,7 @@
 import Room from "../model/room.model";
 import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../../application/ports/repositories/room.port";
+import { GetRoomOutputDTO } from "../../../application/dtos/room/get-room.dto";
+import { RoomQueryMapper } from "../../../presentation/mappers/room.mapper";
 import { RoomEntity } from "../../../domain/room/entity";
 import mongoose from "mongoose";
 
@@ -17,37 +19,38 @@ const mapToEntity = (doc: any): RoomEntity => {
   })
 }
 
+const ROOM_POPULATE_OPTIONS = [
+  {
+    path: "members.user_id",
+    select: "fullName avatar statusOnline",
+  },
+  {
+    path: "lastMessageId",
+    select: "content status user_id readBy",
+  }
+];
+
 export class RoomReadRepository implements IRoomReadRepository {
 
-  async getRoomByUserAndStatus(userID: string, status: string): Promise<RoomEntity[] | []> {
+  async getRoomByUserAndStatus(userID: string, status: string): Promise<GetRoomOutputDTO[]> {
     const userObjectID = new mongoose.Types.ObjectId(userID);
 
-    const rooms = await Room.find(
-      {
-        "members": {
-          $elemMatch: {
-            user_id: userObjectID,
-            status: status
-          }
-        },
-        deleted: false
-      }
-    )
+    const rooms = await Room.find({
+      "members": {
+        $elemMatch: {
+          user_id: userObjectID,
+          status: status
+        }
+      },
+      deleted: false
+    })
       .sort({ updatedAt: -1 })
-      .populate({
-        path: "members.user_id",
-        select: "fullName avatar statusOnline",
-      })
-      .populate({
-        path: "lastMessageId",
-        select: "content status user_id readBy"
-      }).lean();
+      .populate(ROOM_POPULATE_OPTIONS)
+      .lean() as any[];
 
     if (!rooms || rooms.length === 0) return [];
 
-    const roomsEntity: RoomEntity[] = rooms.map((room: any) => mapToEntity(room));
-
-    return roomsEntity;
+    return rooms.map((room) => RoomQueryMapper.toDTO(room, userID));
   }
 
   async findRoomWithUser(roomID: string, userID: string) {
@@ -55,7 +58,7 @@ export class RoomReadRepository implements IRoomReadRepository {
       _id: roomID,
       "members.user_id": userID,
       deleted: false,
-    }).lean();
+    }).populate(ROOM_POPULATE_OPTIONS).lean();
 
     return room;
   }
@@ -75,10 +78,7 @@ export class RoomReadRepository implements IRoomReadRepository {
     const room = await Room.findOne({
       _id: roomID,
       deleted: false
-    }).populate({
-      path: "members.user_id",
-      select: "fullName avatar ",
-    }).lean();
+    }).populate(ROOM_POPULATE_OPTIONS).lean();
 
     return room;
   }
@@ -86,10 +86,11 @@ export class RoomReadRepository implements IRoomReadRepository {
 
 export class RoomWriteRepository implements IRoomWriteRepository {
 
-  async createNewRoom(newRoomData: any) {
-    const newRoom = new Room(newRoomData);
+  async createNewRoom(roomEntity: RoomEntity): Promise<RoomEntity> {
+    const { id, ...roomData } = roomEntity.toObject();
+    const newRoom = new Room(roomData);
     await newRoom.save();
-    return newRoom;
+    return mapToEntity(newRoom);
   }
 
   async updateRoomTitle(roomID: string, title: string) {

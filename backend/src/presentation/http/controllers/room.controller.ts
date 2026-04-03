@@ -11,7 +11,7 @@ import { RemoveMemberUseCase } from "../../../application/use-cases/room/actions
 import { DeleteRoomUseCase } from "../../../application/use-cases/room/actions/delete-room.use-case";
 import { LeaveRoomUseCase } from "../../../application/use-cases/room/actions/leave-room.use-case";
 import { AssignAdminUseCase } from "../../../application/use-cases/room/actions/assign-admin.use-case";
-import { CreateNewRoomUseCase } from "../../../application/use-cases/room/actions/create-new-room.use-case";
+import { CreateNewRoomUseCase, CreateRoomOutputDTO } from "../../../application/use-cases/room/actions/create-new-room.use-case";
 
 const roomReadRepo = new RoomReadRepository();
 const roomWriteRepo = new RoomWriteRepository();
@@ -25,17 +25,16 @@ export const createRoomPost = async (req: Request, res: Response) => {
     const myID: string = res.locals.user.id.toString() || "";
     const { titleRoom, members } = req.body;
 
-    const createNewRoomUseCase = new CreateNewRoomUseCase(roomReadRepo, roomWriteRepo);
-    const newRoom = await createNewRoomUseCase.execute(myID, titleRoom, members);
+    const createNewRoomUseCase = new CreateNewRoomUseCase(roomWriteRepo);
+    const room: CreateRoomOutputDTO = await createNewRoomUseCase.execute(myID, titleRoom, members);
 
     res.status(201).json({
       success: true,
-      dataRoom: {
-        id: newRoom.id,
-        title: newRoom.title,
+      room: {
+        id: room.id,
+        title: room.title,
       }
     })
-
   } catch (error: any) {
     res.status(500).json({
       success: false,

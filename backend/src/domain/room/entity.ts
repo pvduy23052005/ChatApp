@@ -1,103 +1,68 @@
-import { ILastMessage, IGetRoom, IRoom } from "./type";
+import { ILastMessage, IRoomMember, IRoom } from "./type";
 
 export class RoomEntity {
   private id: string;
   private title: string;
-  private typeRoom: string;
+  private typeRoom: "single" | "group";
   private avatar: string;
   private status: string;
   private createdAt: Date;
   private updatedAt: Date;
-  private members: any[];
+  private members: IRoomMember[];
   private lastMessageId: any;
 
   public constructor(data: IRoom) {
-    this.id = data.id;
+    this.id = data.id || "";
     this.title = data.title;
     this.typeRoom = data.typeRoom;
-    this.avatar = data.avatar;
-    this.status = data.status;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
+    this.avatar = data.avatar || "/images/default-avatar.webp";
+    this.status = data.status || "active";
+    this.createdAt = data.createdAt || new Date();
+    this.updatedAt = data.updatedAt || new Date();
     this.members = data.members || [];
     this.lastMessageId = data.lastMessageId;
   }
 
-  public getRoom(currentUserID: string): IGetRoom {
-    const { title, avatar, otherUserId } = this.getTitleRoom(currentUserID);
+  public static createRoom(creatorId: string, memberIds: string[], typeRoom: "single" | "group", title?: string, avatar?: string) {
 
-    const lastMessage = this.getLastMessage();
+    let members = [];
 
-    const statusOnline = this.isMemberOnline(currentUserID) ? "online" : "offline";
+    if (typeRoom === "group") {
+      members = [
+        { user_id: creatorId, role: "superAdmin", status: "accepted" },
+        ...memberIds.map(id => ({ user_id: id, role: "member", status: "accepted" }))
+      ];
+    } else {
+      members = [
+        { user_id: creatorId, role: "member", status: "accepted" },
+        { user_id: memberIds[0], role: "member", status: "waiting" }
+      ];
+    }
 
+    return new RoomEntity({
+      title: title || "",
+      typeRoom: typeRoom,
+      members,
+      avatar: avatar || "/images/default-avatar.webp"
+    });
+  }
+
+  public toObject() {
     return {
-      _id: this.id,
-      title: title,
+      id: this.id,
+      title: this.title,
       typeRoom: this.typeRoom,
-      avatar: avatar,
-      lastMessage: lastMessage,
-      statusOnline: statusOnline,
+      avatar: this.avatar,
+      status: this.status,
+      members: this.members,
+      createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      otherUserId: otherUserId,
+      lastMessageId: this.lastMessageId
     };
   }
 
-  private getOtherMember(currentUserID: string) {
-    return this.members.find(
-      (m: any) => m.user_id && m.user_id._id.toString() !== currentUserID
-    );
-  }
-
-  private getTitleRoom(currentUserID: string) {
-    if (this.typeRoom === "single") {
-      const otherMember = this.getOtherMember(currentUserID);
-
-      if (otherMember && otherMember.user_id) {
-        return {
-          title: otherMember.user_id.fullName,
-          avatar: otherMember.user_id.avatar || "/images/default-avatar.webp",
-          otherUserId: otherMember.user_id._id.toString()
-        };
-      }
-    }
-
-    return {
-      title: this.title,
-      avatar: this.avatar || "/images/default-avatar.webp",
-      otherUserId: ""
-    }
-  }
-
-  private isMemberOnline(currentUserID: string): boolean {
-    return this.members.some(
-      (m: any) =>
-        m.user_id &&
-        m.user_id._id.toString() !== currentUserID &&
-        m.user_id.statusOnline === "online"
-    );
-  }
-
-  private getLastMessage(): ILastMessage {
-    if (!this.lastMessageId) {
-      const lastMessage = {
-        content: "Bắt đầu trò chuyện ngay",
-        status: "seen" as "seen",
-        user_id: ""
-      }
-      return lastMessage;
-    }
-
-    const lastMessage = {
-      content: this.lastMessageId.content,
-      status: this.lastMessageId.status,
-      user_id: this.lastMessageId?.user_id?.toString() || "",
-      readBy: this.lastMessageId.readBy
-    }
-    return lastMessage;
-  }
-
-  public getID(): string { return this.id; }
-  public getName(): string { return this.title; }
+  public getId(): string { return this.id; }
+  public getTitle(): string { return this.title; }
   public getTypeRoom(): string { return this.typeRoom; }
   public getStatus(): string { return this.status; }
   public getCreatedAt(): Date { return this.createdAt; }

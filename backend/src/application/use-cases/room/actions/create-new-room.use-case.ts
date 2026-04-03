@@ -1,17 +1,21 @@
-import { IRoomReadRepository, IRoomWriteRepository } from "../../../ports/repositories/room.port";
+import { IRoomWriteRepository } from "../../../ports/repositories/room.port";
+import { RoomEntity } from "../../../../domain/room/entity";
+
+export interface CreateRoomOutputDTO {
+  id: string;
+  title: string;
+}
 
 export class CreateNewRoomUseCase {
   constructor(
-    private readonly roomReadRepo: IRoomReadRepository,
     private readonly roomWriteRepo: IRoomWriteRepository
   ) { }
 
-  async execute(myID: string, titleRoom: string, members: string[]) {
+  async execute(myID: string, titleRoom: string, members: string[]): Promise<CreateRoomOutputDTO> {
 
     if (!titleRoom) {
       throw new Error("Nhập tên phòng");
     }
-
     if (!members) {
       throw new Error("Vui lòng chọn thành viên");
     }
@@ -20,36 +24,17 @@ export class CreateNewRoomUseCase {
       ? [...members]
       : [members];
 
-    if (memberIDs.length === 1) {
-      const userID: string = memberIDs[0]!;
-      const existRoom = await this.roomReadRepo.checkRoomExist(myID, userID);
-      if (existRoom) {
-        throw new Error("Vui lòng chọn trên 2 người!");
-      }
+    if (memberIDs.length < 2) {
+      throw new Error("Vui lòng chọn trên 2 người!");
     }
 
-    const newRoomData = {
-      title: titleRoom,
-      typeRoom: "group",
-      members: [
-        {
-          user_id: myID,
-          role: "superAdmin",
-          status: "accepted"
-        }
-      ]
-    }
+    const room = RoomEntity.createRoom(myID, memberIDs, "group", titleRoom);
 
-    memberIDs.forEach((memberID) => {
-      newRoomData.members.push({
-        user_id: memberID,
-        role: "member",
-        status: "accepted"
-      })
-    });
+    const newRoom = await this.roomWriteRepo.createNewRoom(room);
 
-    const newRoom = await this.roomWriteRepo.createNewRoom(newRoomData);
-
-    return newRoom;
+    return {
+      id: newRoom.getId(),
+      title: newRoom.getTitle()
+    };
   }
 }

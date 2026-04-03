@@ -1,4 +1,5 @@
 import { IRoomReadRepository, IRoomWriteRepository } from "../../ports/repositories/room.port";
+import { RoomEntity } from "../../../domain/room/entity";
 
 export class ChatNotFriendUseCase {
   constructor(
@@ -12,14 +13,10 @@ export class ChatNotFriendUseCase {
     if (existRoom) {
       return existRoom._id.toString();
     } else {
-      const newRoom = await this.roomWriteRepo.createNewRoom({
-        typeRoom: "single",
-        members: [
-          { user_id: myID, role: "member", status: "waiting" },
-          { user_id: userID, role: "member", status: "waiting" },
-        ],
-      });
-      return newRoom._id.toString();
+      const newRoomEntity = RoomEntity.createRoom(myID, [userID], "single");
+      
+      const newRoom = await this.roomWriteRepo.createNewRoom(newRoomEntity);
+      return newRoom.getId();
     }
   }
 }

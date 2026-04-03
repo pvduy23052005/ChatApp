@@ -17,13 +17,19 @@ export interface IGetRoom {
 }
 
 export interface IRoom {
-  id: string;
+  id?: string;
   title: string;
-  typeRoom: string;
-  avatar: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  typeRoom: "single" | "group";
+  avatar?: string;
+  status?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   members: any[];
-  lastMessageId: ILastMessage;
+  lastMessageId?: ILastMessage;
+}
+
+export interface IRoomMember {
+  user_id: string;
+  role: "superAdmin" | "admin" | "member";
+  status: "waiting" | "accepted" | "refused";
 }

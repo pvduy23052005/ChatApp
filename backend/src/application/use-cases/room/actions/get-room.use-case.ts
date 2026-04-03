@@ -1,11 +1,10 @@
 import { IRoomReadRepository } from "../../../ports/repositories/room.port";
-import { RoomEntity } from "../../../../domain/room/entity";
-import { IGetRoom } from "../../../../domain/room/type";
+import { GetRoomOutputDTO } from "../../../dtos/room/get-room.dto";
 
 export class GetRoomUseCase {
   constructor(private readonly roomRepo: IRoomReadRepository) { }
 
-  async execute(userID: string, status: string): Promise<IGetRoom[]> {
+  async execute(userID: string, status: string): Promise<GetRoomOutputDTO[]> {
     if (!status || !userID) {
       throw new Error("Vui lòng cung cấp trạng thái phòng và ID người dùng");
     }
@@ -16,10 +15,6 @@ export class GetRoomUseCase {
       throw new Error("Trạng thái không hợp lệ");
     }
 
-    const rooms: RoomEntity[] = await this.roomRepo.getRoomByUserAndStatus(userID, status)
-
-    const listRoom: IGetRoom[] = rooms.map((room: RoomEntity) => room.getRoom(userID));
-
-    return listRoom;
+    return await this.roomRepo.getRoomByUserAndStatus(userID, status);
   }
 }
