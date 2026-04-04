@@ -42,7 +42,7 @@ function ChatHeader({ currentRoomInfo }) {
 
       <div className="chat-header-actions">
         <Link 
-          to = {`/room/detail/${currentRoomInfo._id}`} 
+          to = {`/room/detail/${currentRoomInfo.id}`} 
           className="chat-header-btn" title="Thông tin phòng">
           <IoEllipsisVertical size={24} />
         </Link>

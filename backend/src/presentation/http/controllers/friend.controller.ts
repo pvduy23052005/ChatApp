@@ -105,7 +105,7 @@ export const refuseFriendRequest = async (req: Request, res: Response) => {
   }
 };
 
-// [DELETE] /friends/requests/:id
+// [DELETE] /friends/cancel/:id
 export const cancelFriendRequest = async (req: Request, res: Response) => {
   try {
     const myId = res.locals.user.id.toString();

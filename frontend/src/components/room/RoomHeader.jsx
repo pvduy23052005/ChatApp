@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
 import { FaRegSave } from "react-icons/fa";
 import { RiDeleteBin2Line } from "react-icons/ri";
-import { toast } from "react-toastify";
-import { roomServiceAPI } from "../../services/roomServiceAPI"; // Import API trực tiếp vào đây
 import { useNavigate } from "react-router-dom";
 import { FaUserPlus } from "react-icons/fa";
+import { toast } from "react-toastify";
 
-function RoomHeader({ room, isSuperAdmin, deleteRoomFunc }) {
+function RoomHeader({
+  room,
+  isSuperAdmin,
+  deleteRoomFunc,
+  editRoomFunc,
+  setRoom,
+}) {
   const [title, setTitle] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
@@ -28,18 +33,8 @@ function RoomHeader({ room, isSuperAdmin, deleteRoomFunc }) {
       return;
     }
 
-    try {
-      setIsSaving(true);
-      const res = await roomServiceAPI.edit(room._id, title);
-      if (res.success) {
-        toast.success(res.message);
-      }
-    } catch (error) {
-      const msg = error.response?.data?.message || "Lỗi khi cập nhật tên";
-      toast.error(msg);
-      setTitle(room.title);
-      setTitle(room.title);
-    }
+    setIsSaving(true);
+    await editRoomFunc(room.id, title, setRoom);
     setIsSaving(false);
   };
 
@@ -91,27 +86,27 @@ function RoomHeader({ room, isSuperAdmin, deleteRoomFunc }) {
                   onClick={handleSubmit}
                 >
                   {isSaving ? (
-                    <span> Dang luu ... </span>
+                    <span> Đang lưu ... </span>
                   ) : (
                     <>
-                      <FaRegSave /> 
+                      <FaRegSave />
                     </>
                   )}
                 </button>
               )}
               <button
                 className="btn btn-outline-secondary"
-                onClick={() => navigate(`/room/add-member/${room._id}`)}
+                onClick={() => navigate(`/room/add-member/${room.id}`)}
               >
                 <FaUserPlus />
               </button>
 
               <button
                 className="btn btn-outline-danger "
-                onClick={() => deleteRoomFunc(room._id, room.title)}
+                onClick={() => deleteRoomFunc(room.id, room.title)}
                 title="Giải tán nhóm"
               >
-                <RiDeleteBin2Line /> 
+                <RiDeleteBin2Line />
               </button>
             </div>
           )}

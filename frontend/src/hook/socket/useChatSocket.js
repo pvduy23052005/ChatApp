@@ -75,7 +75,6 @@ export const useChatSocket = (currentRoomID) => {
     };
 
     const handleNewMessage = (newMessage) => {
-      console.log(newMessage);
       if (newMessage.room_id === currentRoomID) {
         setChats((prev) => [...prev, newMessage]);
         chatServiceSocket.userReadLastMessage({

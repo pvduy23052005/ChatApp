@@ -59,6 +59,7 @@ export class RoomQueryMapper {
           id: m.user_id._id.toString(),
           fullName: m.user_id.fullName,
           avatar: m.user_id.avatar || "/images/default-avatar.webp",
+          role: m.role,
         }))
     };
   }

@@ -71,8 +71,8 @@ export const updateSatusMessmasge_util = (chats, myID) => {
 
 export const updateAdminForRoom_util = (room, memberID) => {
   const updateMemberRoom = room.members.map((member) => {
-    const mID = member.user_id.id || member.user_id._id;
-    if (mID !== memberID) {
+    const myID = member.id;
+    if (myID !== memberID) {
       return member;
     }
 

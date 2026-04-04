@@ -20,7 +20,7 @@ export const ChatProvider = ({ children }) => {
 
   // current room id  .
   const currentRoomID = searchParams.get("roomId");
-  const currentRoomInfo = rooms.find((room) => room._id === currentRoomID);
+  const currentRoomInfo = rooms.find((room) => room.id === currentRoomID);
 
   const currentRoomIDRef = useRef(currentRoomID);
   const userRef = useRef(user);

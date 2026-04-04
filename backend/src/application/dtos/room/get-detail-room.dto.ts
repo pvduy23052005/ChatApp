@@ -7,5 +7,6 @@ export interface RoomDetailOutputDTO {
     id: string;
     fullName: string;
     avatar: string;
-  }[];
+    role: string;
+   }[];
 }

@@ -1,6 +1,5 @@
 import { IRoomReadRepository } from "../../../ports/repositories/room.port";
 import { RoomDetailOutputDTO } from "../../../dtos/room/get-detail-room.dto";
-import { RoomQueryMapper } from "../../../../presentation/mappers/room.mapper";
 
 export class GetDetailRoomUseCase {
   constructor(
@@ -13,12 +12,12 @@ export class GetDetailRoomUseCase {
       throw new Error("Vui lòng cung cấp ID phòng");
     }
 
-    const roomEntity = await this.roomRepository.findRoomById(roomID);
+    const detailDto = await this.roomRepository.getDetailById(roomID);
 
-    if (!roomEntity) {
+    if (!detailDto) {
       throw new Error("Phòng không tồn tại");
     }
 
-    return RoomQueryMapper.toDetailDTO(roomEntity.toObject());
+    return detailDto;
   }
 }

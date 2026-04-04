@@ -106,8 +106,8 @@ function ChatSider() {
 
             return (
               <Link
-                to={`${location.pathname}?roomId=${room._id}`}
-                key={room._id}
+                to={`${location.pathname}?roomId=${room.id}`}
+                key={room.id}
                 className={`conversation-item ${isActive ? "active" : ""}`}
               >
                 {/* Avatar */}

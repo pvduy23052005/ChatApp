@@ -3,6 +3,7 @@ import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from
 import { GetRoomOutputDTO } from "../../../application/dtos/room/get-room.dto";
 import { RoomQueryMapper } from "../../../presentation/mappers/room.mapper";
 import { RoomEntity } from "../../../domain/room/entity";
+import { RoomDetailOutputDTO } from "../../../application/dtos/room/get-detail-room.dto";
 import mongoose from "mongoose";
 
 const mapToEntity = (doc: any): RoomEntity => {
@@ -22,7 +23,7 @@ const mapToEntity = (doc: any): RoomEntity => {
 const ROOM_POPULATE_OPTIONS = [
   {
     path: "members.user_id",
-    select: "fullName avatar statusOnline",
+    select: "fullName avatar statusOnline role",
   },
   {
     path: "lastMessageId",
@@ -85,6 +86,17 @@ export class RoomReadRepository implements IRoomReadRepository {
     if (!room) return null;
 
     return mapToEntity(room);
+  }
+
+  async getDetailById(roomID: string): Promise<RoomDetailOutputDTO | null> {
+    const room = await Room.findOne({
+      _id: roomID,
+      deleted: false
+    }).populate(ROOM_POPULATE_OPTIONS).lean();
+
+    if (!room) return null;
+
+    return RoomQueryMapper.toDetailDTO(room);
   }
 }
 

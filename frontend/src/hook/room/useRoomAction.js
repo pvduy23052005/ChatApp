@@ -2,6 +2,7 @@ import { roomServiceAPI } from "../../services/roomServiceAPI";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { roomServiceSocket } from "../../socket/services/roomServiceSocket";
+import { updateAdminForRoom_util } from "../../utils/room.util";
 
 export const useRoomAction = () => {
   const navigate = useNavigate();
@@ -22,16 +23,22 @@ export const useRoomAction = () => {
     }
   };
 
-  const removeMember = async (roomID, memberID, fullName) => {
+  const removeMember = async (roomID, memberID, fullName, setRoom) => {
     try {
       const res = await roomServiceAPI.removeMember(roomID, memberID);
       if (res.success) {
         toast.success(`Đã xóa ${fullName} khỏi nhóm`);
+        if (setRoom) {
+          setRoom((prev) => ({
+            ...prev,
+            members: prev.members.filter((m) => m.id !== memberID),
+          }));
+        }
         // emit socket .
         roomServiceSocket.removeMember(roomID, memberID, fullName);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message);
+      toast.error(error.response?.data?.message || "Lỗi khi xóa thành viên");
     }
   };
 
@@ -51,13 +58,12 @@ export const useRoomAction = () => {
         roomServiceSocket.leaveRoom(roomID, fullName);
       }
     } catch (err) {
-      console.log(err.response);
+      toast.error(err.response?.data?.message || "Lỗi khi rời nhóm");
     }
   };
 
   const addMember = async (roomID, memberIDs, listFullNames) => {
     try {
-      console.log(memberIDs);
       const res = await roomServiceAPI.addMember(roomID, memberIDs);
 
       if (res.success) {
@@ -67,20 +73,39 @@ export const useRoomAction = () => {
         navigate(-1);
       }
     } catch (error) {
-      console.log(error.response.data?.message);
+      toast.error(error.response?.data?.message || "Lỗi khi thêm thành viên");
     }
   };
 
-  const assignAdmin = async (roomID, memberID, fullName) => {
+  const assignAdmin = async (roomID, memberID, fullName, setRoom) => {
     try {
       const res = await roomServiceAPI.assignAdmin(roomID, memberID);
       if (res.success) {
+        if (setRoom) {
+          setRoom((prevRoom) => updateAdminForRoom_util(prevRoom, memberID));
+        }
         // socket .
         roomServiceSocket.assignAdmin(roomID, fullName);
         toast.success("Phong trưởng nhóm thành công!");
       }
     } catch (error) {
-      console.log(error.response.data.message);
+      toast.error(error.response?.data?.message || "Lỗi khi phong trưởng nhóm");
+    }
+  };
+
+  const editRoom = async (roomID, title, setRoom) => {
+    try {
+      const res = await roomServiceAPI.edit(roomID, title);
+      if (res.success) {
+        toast.success(res.message);
+        if (setRoom) {
+          setRoom((prev) => ({ ...prev, title }));
+        }
+        return true;
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Lỗi khi cập nhật tên");
+      return false;
     }
   };
 
@@ -90,5 +115,6 @@ export const useRoomAction = () => {
     leaveRoom,
     addMember,
     assignAdmin,
+    editRoom,
   };
 };

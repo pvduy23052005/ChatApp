@@ -9,7 +9,8 @@ import { updateAdminForRoom_util } from "../../utils/room.util";
 function Detail() {
   const { id } = useParams();
   const { user } = useAuth();
-  const { deleteRoom, removeMember, leaveRoom, assignAdmin } = useRoomAction();
+  const { deleteRoom, removeMember, leaveRoom, assignAdmin, editRoom } =
+    useRoomAction();
   const { room, setRoom, loading, error } = useRoomDetail(id);
 
   if (loading) return <div>Đang tải...</div>;
@@ -20,11 +21,7 @@ function Detail() {
     const isConfirm = window.confirm(`Bạn có chắc chắn muốn xóa ${fullName}? `);
     if (!isConfirm) return;
 
-    setRoom((prev) => ({
-      ...prev,
-      members: prev.members.filter((m) => (m.user_id.id || m.user_id._id) !== memberID),
-    }));
-    removeMember(id, memberID, fullName);
+    removeMember(id, memberID, fullName, setRoom);
   };
 
   const onAssignAdmin = async (memberID, fullName) => {
@@ -32,16 +29,13 @@ function Detail() {
       `Bạn có chắc chắn muốn chuyển quyền Trưởng nhóm cho ${fullName}? Bạn sẽ trở thành thành viên thường.`,
     );
     if (!isConfirmed) return;
-    setRoom((prevRoom) => {
-      const updateRoom = updateAdminForRoom_util(prevRoom, memberID);
-      return updateRoom;
-    });
-    assignAdmin(id, memberID, fullName);
+
+    assignAdmin(id, memberID, fullName, setRoom);
   };
 
   const myID = user?.id || user?._id;
   const isSuperAdmin = room?.members?.some(
-    (m) => (m.user_id?.id === myID || m.user_id?._id === myID) && m.role === "superAdmin",
+    (m) => m.id === myID && m.role === "superAdmin",
   );
   const isGroup = room.typeRoom === "group";
 
@@ -53,6 +47,8 @@ function Detail() {
             room={room}
             isSuperAdmin={isSuperAdmin}
             deleteRoomFunc={deleteRoom}
+            editRoomFunc={editRoom}
+            setRoom={setRoom}
           />
 
           <div className="card shadow-sm">
@@ -74,8 +70,7 @@ function Detail() {
 
             <div className="list-group list-group-flush">
               {room.members.map((member) => {
-                const uInfo = member.user_id;
-                const memberID = uInfo.id || uInfo._id;
+                const memberID = member.id;
                 const isMe = memberID === myID;
                 return (
                   <div
@@ -83,8 +78,8 @@ function Detail() {
                     key={memberID}
                   >
                     <img
-                      src={uInfo.avatar || "/images/default-avatar.webp"}
-                      alt={uInfo.fullName}
+                      src={member.avatar || "/images/default-avatar.webp"}
+                      alt={member.fullName}
                       className="rounded-circle"
                       style={{
                         width: "40px",
@@ -95,7 +90,7 @@ function Detail() {
 
                     <div className="flex-grow-1">
                       <div className="d-flex align-items-center gap-2">
-                        <span className="fw-medium">{uInfo.fullName}</span>
+                        <span className="fw-medium">{member.fullName}</span>
                         {isMe && (
                           <span
                             className="badge bg-secondary"
@@ -113,22 +108,13 @@ function Detail() {
                           </span>
                         )}
                       </div>
-                      <small
-                        className="text-muted"
-                        style={{ fontSize: "0.85rem" }}
-                      >
-                        {uInfo.email}
-                      </small>
                     </div>
 
                     {isSuperAdmin && !isMe && (
                       <button
                         className="btn btn-sm btn-light text-danger"
                         onClick={() => {
-                          onRemoveMember(
-                            memberID,
-                            uInfo.fullName,
-                          );
+                          onRemoveMember(memberID, member.fullName);
                         }}
                       >
                         <FaDeleteLeft />
@@ -139,10 +125,7 @@ function Detail() {
                         className="btn btn-sm btn-light text-warning ml-2"
                         title="Chuyển quyền trưởng nhóm"
                         onClick={() => {
-                          onAssignAdmin(
-                            memberID,
-                            uInfo.fullName,
-                          );
+                          onAssignAdmin(memberID, member.fullName);
                         }}
                       >
                         <FaCrown />

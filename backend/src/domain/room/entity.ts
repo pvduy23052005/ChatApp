@@ -73,12 +73,12 @@ export class RoomEntity {
       throw new Error("Không thể thêm thành viên vào phòng chat cá nhân");
     }
 
-    const requester = this.members.find(m => m.user_id.toString() === requesterId);
+    const requester = this.members.find(m => this.getMemberId(m.user_id) === requesterId);
     if (!requester || (requester.role !== "superAdmin" && requester.role !== "admin")) {
       throw new Error("Bạn không có quyền thêm thành viên");
     }
 
-    const isExist = this.members.some(m => m.user_id.toString() === userId);
+    const isExist = this.members.some(m => this.getMemberId(m.user_id) === userId);
     if (isExist) {
       throw new Error("Người dùng đã là thành viên của phòng");
     }
@@ -93,7 +93,7 @@ export class RoomEntity {
 
   public removeMember(removeMemberID: string, requesterID: string): void {
 
-    const requester = this.members.find(m => m.user_id.toString() === requesterID);
+    const requester = this.members.find(m => this.getMemberId(m.user_id) === requesterID);
     if (!requester || (requester.role !== "superAdmin" && requester.role !== "admin")) {
       throw new Error("Bạn không có quyền xóa thành viên");
     }
@@ -102,7 +102,7 @@ export class RoomEntity {
       throw new Error("Không thể xóa chính mình khỏi nhóm");
     }
 
-    const targetMember = this.members.find(m => m.user_id.toString() === removeMemberID);
+    const targetMember = this.members.find(m => this.getMemberId(m.user_id) === removeMemberID);
     if (!targetMember) {
       throw new Error("Người dùng không phải là thành viên của phòng");
     }
@@ -111,18 +111,18 @@ export class RoomEntity {
       throw new Error("Quản trị viên chỉ có quyền xóa thành viên bình thường");
     }
 
-    this.members = this.members.filter(m => m.user_id.toString() !== removeMemberID);
+    this.members = this.members.filter(m => this.getMemberId(m.user_id) !== removeMemberID);
     this.updatedAt = new Date();
   }
 
   public leaveRoom(userId: string): void {
-    const memberIndex = this.members.findIndex(m => m.user_id.toString() === userId);
+    const memberIndex = this.members.findIndex(m => this.getMemberId(m.user_id) === userId);
 
     if (memberIndex === -1) {
       throw new Error("Bạn không phải là thành viên của phòng này");
     }
 
-    const member = this.members.find(m => m.user_id.toString() === userId);
+    const member = this.members.find(m => this.getMemberId(m.user_id) === userId);
 
     if (member?.role === "superAdmin") {
       throw new Error("Không thể rời khỏi phòng khi là trưởng nhóm");
@@ -141,12 +141,12 @@ export class RoomEntity {
       throw new Error("Bạn không thể tự thao tác lên chính mình");
     }
 
-    const requester = this.members.find(m => m.user_id.toString() === requesterId);
+    const requester = this.members.find(m => this.getMemberId(m.user_id) === requesterId);
     if (!requester || (requester.role !== "superAdmin" && requester.role !== "admin")) {
       throw new Error("Bạn không có quyền chỉ định quản trị viên");
     }
 
-    const targetMember = this.members.find(m => m.user_id.toString() === targetUserId);
+    const targetMember = this.members.find(m => this.getMemberId(m.user_id) === targetUserId);
     if (!targetMember) {
       throw new Error("Người dùng này không có mặt trong phòng");
     }
@@ -174,7 +174,7 @@ export class RoomEntity {
       throw new Error("Không thể đổi tên phòng chat cá nhân");
     }
 
-    const requester = this.members.find(m => m.user_id.toString() === requesterId);
+    const requester = this.members.find(m => this.getMemberId(m.user_id) === requesterId);
     if (!requester) {
       throw new Error("Bạn không có quyền đổi tên phòng này");
     }
@@ -184,7 +184,7 @@ export class RoomEntity {
   }
 
   public checkIsMember(userId: string): void {
-    const isMember = this.members.some(m => m.user_id.toString() === userId);
+    const isMember = this.members.some(m => this.getMemberId(m.user_id) === userId);
 
     if (!isMember) {
       throw new Error("Bạn không có quyền truy cập phòng này!");
@@ -200,6 +200,13 @@ export class RoomEntity {
     return new RoomEntity(data);
   }
 
+
+  private getMemberId(user_id: any): string {
+    if (typeof user_id === "object" && user_id !== null) {
+      return (user_id._id || user_id.id || "").toString();
+    }
+    return (user_id || "").toString();
+  }
 
   public toObject() {
     return {

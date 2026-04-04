@@ -8,7 +8,7 @@ const mapToEntity = (doc: any): ChatEntity | null => {
 }
 
 export class ChatReadRepository implements IChatReadRepository {
-  public async getMessageByRoomID(roomID: string, cursor?: string, limit: number = 10): Promise<ChatEntity[] | null> {
+  public async getMessageByRoomID(roomID: string, cursor?: string, limit: number = 15): Promise<ChatEntity[] | null> {
     const query: any = {
       room_id: roomID,
       deleted: false,

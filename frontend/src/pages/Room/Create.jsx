@@ -4,6 +4,7 @@ import { userServiceAPI } from "../../services/userServiceAPI";
 import { roomServiceAPI } from "../../services/roomServiceAPI";
 import "../../styles/pages/room/create.css";
 import { toast } from "react-toastify";
+import { friendServiceAPI } from "../../services/friendServiceAPI";
 
 function Create() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ function Create() {
   useEffect(() => {
     const handleGetFriends = async () => {
       try {
-        const res = await userServiceAPI.getFriends();
+        const res = await friendServiceAPI.getFriends();
         setFriends(res.friends || []);
       } catch (error) {
         console.error("Lỗi lấy danh sách bạn bè:", error);

@@ -8,7 +8,7 @@ export class GetChatHistoryUseCase {
     private readonly roomRepository: IRoomReadRepository
   ) { }
 
-  public async execute(userId: string, roomID: string, cursor?: string, limit: number = 10) {
+  public async execute(userId: string, roomID: string, cursor?: string, limit: number = 15) {
 
     const room = await this.roomRepository.findRoomById(roomID);
 
