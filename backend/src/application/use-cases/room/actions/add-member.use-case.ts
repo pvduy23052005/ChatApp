@@ -1,15 +1,23 @@
-import { IRoomMemberRepository } from "../../../ports/repositories/room.port";
+import { IRoomWriteRepository, IRoomReadRepository } from "../../../ports/repositories/room.port";
 
 export class AddMemberUseCase {
-  constructor(private readonly roomRepository: IRoomMemberRepository) { }
+  constructor(
+    private readonly roomWriteRepo: IRoomWriteRepository,
+    private readonly roomReadRepo: IRoomReadRepository
+  ) { }
 
-  async execute(roomID: string, newMemberIDs: string | string[], room: any) {
+  async execute(roomID: string, newMemberIDs: string | string[]): Promise<void> {
+    const room = await this.roomReadRepo.findRoomById(roomID);
+
+    if (!room) {
+      throw new Error("Phòng không tồn tại");
+    }
 
     const memberIDs: string[] = Array.isArray(newMemberIDs)
       ? newMemberIDs
       : [newMemberIDs];
 
-    const existMemberIDs = room.members.map(
+    const existMemberIDs = room.getMembers().map(
       (member: any) => member.user_id.toString()
     );
 
@@ -21,14 +29,10 @@ export class AddMemberUseCase {
       throw new Error("Tất cả người dùng được chọn đã có mặt trong phòng");
     }
 
-    const listNewMembers = filteredMemberIDs.map((userId: string) => ({
-      user_id: userId,
-      role: "member",
-      status: "accepted"
-    }));
+    filteredMemberIDs.forEach((userId: string) => {
+      room.addMember(userId);
+    });
 
-    await this.roomRepository.addMembersToRoom(roomID, listNewMembers);
-
-    return filteredMemberIDs;
+    await this.roomWriteRepo.update(room);
   }
 }

@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 
 import { UserReadRepository } from "../../../infrastructure/database/repositories/user.repository";
-import { RoomReadRepository, RoomWriteRepository, RoomMemberRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { RoomReadRepository, RoomWriteRepository } from "../../../infrastructure/database/repositories/room.repository";
 import { FriendRepository } from "../../../infrastructure/database/repositories/friend.repository";
 
 import { GetDetailRoomUseCase } from "../../../application/use-cases/room/actions/get-detail-room.use-case";
@@ -15,7 +15,6 @@ import { CreateNewRoomUseCase, CreateRoomOutputDTO } from "../../../application/
 
 const roomReadRepo = new RoomReadRepository();
 const roomWriteRepo = new RoomWriteRepository();
-const roomMemberRepo = new RoomMemberRepository();
 const userReadRepo = new UserReadRepository();
 const friendRepo = new FriendRepository();
 
@@ -49,13 +48,12 @@ export const roomDetail = async (req: Request, res: Response) => {
     const roomID: string = req.params.id?.toString() || "";
     const user: any = res.locals.user;
 
-    const getDetailRoomUseCase = new GetDetailRoomUseCase(roomReadRepo, userReadRepo, friendRepo);
-    const { detailRoom, friends } = await getDetailRoomUseCase.execute(roomID, user);
+    const getDetailRoomUseCase = new GetDetailRoomUseCase(roomReadRepo);
+    const detailRoom = await getDetailRoomUseCase.execute(roomID);
 
     res.status(200).json({
       success: true,
       room: detailRoom,
-      friends: friends,
     })
   } catch (error: any) {
     res.status(500).json({
@@ -92,10 +90,9 @@ export const addMember = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
     const { newMemberIDs } = req.body;
-    const room = res.locals.room;
 
-    const addMemberUseCase = new AddMemberUseCase(roomMemberRepo);
-    const addedMemberIDs = await addMemberUseCase.execute(roomID, newMemberIDs, room);
+    const addMemberUseCase = new AddMemberUseCase(roomWriteRepo, roomReadRepo);
+    const addedMemberIDs = await addMemberUseCase.execute(roomID, newMemberIDs);
 
     res.status(200).json({
       success: true,
@@ -117,7 +114,7 @@ export const removeMember = async (req: Request, res: Response) => {
     const { removeMemberID } = req.body;
     const myID: string = res.locals.user.id.toString();
 
-    const removeMemberUseCase = new RemoveMemberUseCase(roomMemberRepo);
+    const removeMemberUseCase = new RemoveMemberUseCase(roomReadRepo, roomWriteRepo);
     const removedID = await removeMemberUseCase.execute(roomID, removeMemberID, myID);
 
     res.status(200).json({
@@ -138,7 +135,7 @@ export const deleteRoom = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
 
-    const deleteRoomUseCase = new DeleteRoomUseCase(roomWriteRepo);
+    const deleteRoomUseCase = new DeleteRoomUseCase(roomWriteRepo, roomReadRepo);
     await deleteRoomUseCase.execute(roomID);
 
     res.status(200).json({
@@ -158,10 +155,9 @@ export const leaveRoom = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
     const myID: string = res.locals.user.id.toString();
-    const room = res.locals.room;
 
-    const leaveRoomUseCase = new LeaveRoomUseCase(roomMemberRepo);
-    await leaveRoomUseCase.execute(roomID, myID, room);
+    const leaveRoomUseCase = new LeaveRoomUseCase(roomReadRepo, roomWriteRepo);
+    await leaveRoomUseCase.execute(roomID, myID);
 
     res.status(200).json({
       success: true,
@@ -182,7 +178,7 @@ export const assignAdmin = async (req: Request, res: Response) => {
     const { newAdminID } = req.body;
     const myID: string = res.locals.user.id.toString();
 
-    const assignAdminUseCase = new AssignAdminUseCase(roomMemberRepo);
+    const assignAdminUseCase = new AssignAdminUseCase(roomReadRepo, roomWriteRepo);
     await assignAdminUseCase.execute(roomID, newAdminID, myID);
 
     res.status(200).json({

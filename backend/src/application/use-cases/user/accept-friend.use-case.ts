@@ -1,4 +1,5 @@
 import { IRoomReadRepository, IRoomWriteRepository, IRoomMemberRepository } from "../../ports/repositories/room.port";
+import { RoomEntity } from "../../../domain/room/entity";
 import { IFriendRequestReadRepository, IFriendRequestWriteRepository } from "../../ports/repositories/friendRequest.port";
 import { FriendEntity } from "../../../domain/friend/entity";
 import { IFriendReadRepo, IFriendWriteRepo } from "../../ports/repositories/friend.port";
@@ -12,21 +13,17 @@ export class AcceptFriendUseCase {
   ) { }
 
   async execute(myID: string, userID: string): Promise<void> {
-    let existRoom = await this.roomReadRepo.checkRoomExist(myID, userID);
-    let roomChatId;
+    const existRoom = await this.roomReadRepo.checkRoomExist(myID, userID);
+    let roomChatId: string;
 
     if (existRoom) {
-      roomChatId = existRoom._id.toString();
-      await this.roomMemberRepo.updateMemberStatus(roomChatId, "accepted");
+      roomChatId = existRoom.getId();
+      existRoom.acceptAllMembers();
+      await this.roomWriteRepo.update(existRoom);
     } else {
-      const newRoom = await this.roomWriteRepo.createNewRoom({
-        typeRoom: "single",
-        members: [
-          { user_id: myID, status: "accepted" },
-          { user_id: userID, status: "accepted" },
-        ],
-      });
-      roomChatId = newRoom._id.toString();
+      const roomEntity = RoomEntity.createFriendRoom(myID, userID);
+      const newRoom = await this.roomWriteRepo.createNewRoom(roomEntity);
+      roomChatId = newRoom.getId();
     }
 
     const friendRequest = await this.friendRequestRepo.getFriendRequest(myID, userID);

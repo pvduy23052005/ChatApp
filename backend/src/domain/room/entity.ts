@@ -47,6 +47,113 @@ export class RoomEntity {
     });
   }
 
+  public static createFriendRoom(userAId: string, userBId: string) {
+    const members = [
+      { user_id: userAId, role: "member", status: "accepted" },
+      { user_id: userBId, role: "member", status: "accepted" }
+    ];
+
+    return new RoomEntity({
+      title: "",
+      typeRoom: "single",
+      members,
+      avatar: "/images/default-avatar.webp"
+    });
+  }
+
+  public acceptAllMembers(): void {
+    this.members = this.members.map(member => ({
+      ...member,
+      status: "accepted"
+    }));
+  }
+
+  public addMember(userId: string): void {
+    if (this.typeRoom === "single") {
+      throw new Error("Không thể thêm thành viên vào phòng chat cá nhân");
+    }
+
+    const isExist = this.members.some(m => m.user_id.toString() === userId);
+    if (isExist) {
+      throw new Error("Người dùng đã là thành viên của phòng");
+    }
+
+    this.members.push({
+      user_id: userId,
+      role: "member",
+      status: "accepted"
+    });
+    this.updatedAt = new Date();
+  }
+
+  public removeMember(removeMemberID: string, requesterID: string): void {
+
+    const requester = this.members.find(m => m.user_id.toString() === requesterID);
+    if (!requester || (requester.role !== "superAdmin" && requester.role !== "admin")) {
+      throw new Error("Bạn không có quyền xóa thành viên");
+    }
+
+    if (removeMemberID === requesterID) {
+      throw new Error("Không thể xóa chính mình khỏi nhóm");
+    }
+
+    const initialLength = this.members.length;
+    this.members = this.members.filter(m => m.user_id.toString() !== removeMemberID);
+
+    if (this.members.length === initialLength) {
+      throw new Error("Người dùng không phải là thành viên của phòng");
+    }
+    this.updatedAt = new Date();
+  }
+
+  public leaveRoom(userId: string): void {
+    const memberIndex = this.members.findIndex(m => m.user_id.toString() === userId);
+
+    if (memberIndex === -1) {
+      throw new Error("Bạn không phải là thành viên của phòng này");
+    }
+
+    const member = this.members.find(m => m.user_id.toString() === userId);
+
+    if (member?.role === "superAdmin") {
+      throw new Error("Không thể rời khỏi phòng khi là trưởng nhóm");
+    }
+
+    this.members.splice(memberIndex, 1);
+    this.updatedAt = new Date();
+  }
+
+  public assignAdmin(targetUserId: string, requesterId: string): void {
+    if (!targetUserId) {
+      throw new Error("Vui lòng chọn thành viên để chỉ định làm quản trị viên");
+    }
+
+    if (targetUserId === requesterId) {
+      throw new Error("Bạn không thể tự thao tác lên chính mình");
+    }
+
+    const requester = this.members.find(m => m.user_id.toString() === requesterId);
+    if (!requester || (requester.role !== "superAdmin" && requester.role !== "admin")) {
+      throw new Error("Bạn không có quyền chỉ định quản trị viên");
+    }
+
+    const targetMember = this.members.find(m => m.user_id.toString() === targetUserId);
+    if (!targetMember) {
+      throw new Error("Người dùng này không có mặt trong phòng");
+    }
+
+    if (targetMember.role === "admin" || targetMember.role === "superAdmin") {
+      throw new Error("Người dùng này đã là quản trị viên rồi");
+    }
+
+    targetMember.role = "admin";
+    this.updatedAt = new Date();
+  }
+
+  public static restore(data: IRoom): RoomEntity {
+    return new RoomEntity(data);
+  }
+
   public toObject() {
     return {
       id: this.id,
@@ -67,4 +174,5 @@ export class RoomEntity {
   public getStatus(): string { return this.status; }
   public getCreatedAt(): Date { return this.createdAt; }
   public getMembers(): any[] { return this.members; }
+  public getLastMessageId(): string { return this.lastMessageId };
 }

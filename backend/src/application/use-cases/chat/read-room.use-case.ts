@@ -11,8 +11,8 @@ export class ReadRoomUseCase {
   async execute(roomID: string, userID: string): Promise<void> {
     const room = await this.roomRepo.findRoomById(roomID);
 
-    if (room && room.lastMessageId) {
-      const message = await this.chatReadRepo.findById(room.lastMessageId.toString());
+    if (room && room.getLastMessageId()) {
+      const message = await this.chatReadRepo.findById(room.getLastMessageId().toString());
 
       if (message) {
         message.markAsRead(userID);

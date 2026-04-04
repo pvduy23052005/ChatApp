@@ -1,18 +1,20 @@
-import { IRoomMemberRepository } from "../../../ports/repositories/room.port";
+import { IRoomReadRepository, IRoomWriteRepository } from "../../../ports/repositories/room.port";
 
 export class AssignAdminUseCase {
-  constructor(private readonly roomRepository: IRoomMemberRepository) { }
+  constructor(
+    private readonly roomReadRepo: IRoomReadRepository,
+    private readonly roomWriteRepo: IRoomWriteRepository
+  ) { }
 
-  async execute(roomID: string, newAdminID: string, myID: string) {
+  async execute(roomID: string, newAdminID: string, myID: string): Promise<void> {
 
-    if (!newAdminID) {
-      throw new Error("Vui lòng chọn thành viên để chỉ định làm quản trị viên");
+    const room = await this.roomReadRepo.findRoomById(roomID);
+    if (!room) {
+      throw new Error("Phòng không tồn tại");
     }
 
-    if (newAdminID === myID) {
-      throw new Error("Bạn đã là quản trị viên của phòng");
-    }
+    room.assignAdmin(newAdminID, myID);
 
-    await this.roomRepository.assignAdminRole(roomID, newAdminID);
+    await this.roomWriteRepo.update(room);
   }
 }

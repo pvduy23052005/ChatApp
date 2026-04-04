@@ -1,4 +1,5 @@
 import type { GetRoomOutputDTO } from "../../application/dtos/room/get-room.dto";
+import type { RoomDetailOutputDTO } from "../../application/dtos/room/get-detail-room.dto";
 
 export class RoomQueryMapper {
   public static toDTO(rawRoom: any, currentUserID: string): GetRoomOutputDTO {
@@ -43,6 +44,22 @@ export class RoomQueryMapper {
       statusOnline: isMemberOnline ? "online" : "offline",
       updatedAt: rawRoom.updatedAt,
       otherUserId,
+    };
+  }
+
+  public static toDetailDTO(rawRoom: any): RoomDetailOutputDTO {
+    return {
+      id: rawRoom._id.toString(),
+      title: rawRoom.title,
+      typeRoom: rawRoom.typeRoom,
+      avatar: rawRoom.avatar || "/images/default-avatar.webp",
+      members: (rawRoom.members || [])
+        .filter((m: any) => m?.user_id?._id)
+        .map((m: any) => ({
+          id: m.user_id._id.toString(),
+          fullName: m.user_id.fullName,
+          avatar: m.user_id.avatar || "/images/default-avatar.webp",
+        }))
     };
   }
 }

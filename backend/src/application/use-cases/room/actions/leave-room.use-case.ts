@@ -1,18 +1,20 @@
-import { IRoomMemberRepository } from "../../../ports/repositories/room.port";
+import { IRoomReadRepository, IRoomWriteRepository } from "../../../ports/repositories/room.port";
 
 export class LeaveRoomUseCase {
-  constructor(private readonly roomRepository: IRoomMemberRepository) { }
+  constructor(
+    private readonly roomReadRepository: IRoomReadRepository,
+    private readonly roomWriteRepository: IRoomWriteRepository
+  ) { }
 
-  async execute(roomID: string, myID: string, room: any) {
+  async execute(roomID: string, myID: string): Promise<void> {
+    const room = await this.roomReadRepository.findRoomById(roomID);
 
-    const myInfo = room.members.find(
-      (member: any) => member.user_id.toString() === myID
-    );
-
-    if (myInfo && myInfo.role === "superAdmin") {
-      throw new Error("Vui lòng chỉ định người khác làm Trưởng nhóm trước khi rời");
+    if (!room) {
+      throw new Error("Phòng không tồn tại");
     }
 
-    await this.roomRepository.removeMemberFromRoom(roomID, myID);
+    room.leaveRoom(myID);
+
+    await this.roomWriteRepository.update(room);
   }
 }

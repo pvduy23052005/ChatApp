@@ -6,7 +6,7 @@ import { RoomEntity } from "../../../domain/room/entity";
 import mongoose from "mongoose";
 
 const mapToEntity = (doc: any): RoomEntity => {
-  return new RoomEntity({
+  return RoomEntity.restore({
     id: doc._id.toString(),
     title: doc.title,
     typeRoom: doc.typeRoom,
@@ -63,24 +63,28 @@ export class RoomReadRepository implements IRoomReadRepository {
     return room;
   }
 
-  async checkRoomExist(myID: string, userID: string) {
+  async checkRoomExist(myID: string, userID: string): Promise<RoomEntity | null> {
     const room = await Room.findOne({
       typeRoom: "single",
       "members.user_id": {
         $all: [myID, userID]
       }
-    }).select("_id").lean();
+    }).lean();
 
-    return room;
+    if (!room) return null;
+
+    return mapToEntity(room);
   }
 
-  async findRoomById(roomID: string) {
+  async findRoomById(roomID: string): Promise<RoomEntity | null> {
     const room = await Room.findOne({
       _id: roomID,
       deleted: false
     }).populate(ROOM_POPULATE_OPTIONS).lean();
 
-    return room;
+    if (!room) return null;
+
+    return mapToEntity(room);
   }
 }
 
@@ -91,6 +95,14 @@ export class RoomWriteRepository implements IRoomWriteRepository {
     const newRoom = new Room(roomData);
     await newRoom.save();
     return mapToEntity(newRoom);
+  }
+
+  async update(roomEntity: RoomEntity): Promise<void> {
+    const { id, ...roomData } = roomEntity.toObject();
+    await Room.updateOne(
+      { _id: id },
+      { $set: { ...roomData } }
+    );
   }
 
   async updateRoomTitle(roomID: string, title: string) {

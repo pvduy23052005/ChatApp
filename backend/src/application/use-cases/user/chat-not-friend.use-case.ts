@@ -11,7 +11,7 @@ export class ChatNotFriendUseCase {
     const existRoom = await this.roomReadRepo.checkRoomExist(myID, userID);
 
     if (existRoom) {
-      return existRoom._id.toString();
+      return existRoom.getId();
     } else {
       const newRoomEntity = RoomEntity.createRoom(myID, [userID], "single");
       
