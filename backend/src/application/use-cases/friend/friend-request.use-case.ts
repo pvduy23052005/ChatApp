@@ -6,15 +6,15 @@ export class FriendRequestUseCase {
     private readonly friendRequestRepo: IFriendRequestReadRepository & IFriendRequestWriteRepository,
   ) { }
 
-  async execute(myID: string, userID: string): Promise<void> {
+  async execute(senderId: string, receiverId: string): Promise<void> {
 
-    const isExists = await this.friendRequestRepo.getFriendRequest(myID, userID);
+    const isExists = await this.friendRequestRepo.getFriendRequest(senderId, receiverId);
 
     if (isExists) {
       throw new Error("Đã tồn tại lời mời kết bạn");
     }
 
-    const friendRequest = FriendRequestEntity.sendNewRequest(myID, userID);
+    const friendRequest = FriendRequestEntity.sendNewRequest(senderId, receiverId);
 
     await this.friendRequestRepo.save(friendRequest);
   }

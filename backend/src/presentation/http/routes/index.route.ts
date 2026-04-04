@@ -5,12 +5,15 @@ import authMiddleware from "../middlewares/auth.middleware"
 import { userRoute } from "./user.route"
 import { roomRoute } from "./room.route"
 import { uploadRoute } from "./upload.route"
+import { friendRoute } from "./friend.route"
 
 const allRoute = (app: Express) => {
 
   app.use("/auth", authRoute);
 
   app.use("/chat", authMiddleware, chatRoute);
+
+  app.use("/friends", authMiddleware, friendRoute);
 
   app.use("/users", authMiddleware, userRoute);
 
@@ -19,4 +22,4 @@ const allRoute = (app: Express) => {
   app.use("/upload", authMiddleware, uploadRoute);
 }
 
-export default allRoute; 
+export default allRoute;

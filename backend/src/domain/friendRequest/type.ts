@@ -1,4 +1,4 @@
-export type RequestStatus = "pending" | "accepted" | "rejected";
+export type RequestStatus = "pending" | "accepted" | "refused";
 
 export interface ISenderProfile {
   fullName: string;

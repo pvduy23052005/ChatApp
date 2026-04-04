@@ -6,7 +6,8 @@ export interface IFriendRequestReadRepository {
 
   getOutgoingFriendRequest(myID: string): Promise<FriendRequestEntity[]>;
 
-  getFriendRequest(myId: string, friendId: string): Promise<FriendRequestEntity | null>;
+  getFriendRequest(senderID: string, receiverID: string): Promise<FriendRequestEntity | null>;
+  findRequestById(id: string): Promise<FriendRequestEntity | null>;
 }
 
 export interface IFriendRequestWriteRepository {

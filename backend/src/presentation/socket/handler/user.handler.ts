@@ -1,22 +1,21 @@
 import { Server, Socket } from "socket.io";
 
 import { ChatNotFriendUseCase } from "../../../application/use-cases/user/chat-not-friend.use-case";
-import { FriendRequestUseCase } from "../../../application/use-cases/user/friend-request.use-case";
-import { FriendCancelUseCase } from "../../../application/use-cases/user/friend-cancel.use-case";
-import { RefuseFriendUseCase } from "../../../application/use-cases/user/refuse-friend.use-case";
-import { AcceptFriendUseCase } from "../../../application/use-cases/user/accept-friend.use-case";
+import { FriendRequestUseCase } from "../../../application/use-cases/friend/friend-request.use-case";
+import { FriendCancelUseCase } from "../../../application/use-cases/friend/friend-cancel.use-case";
+import { RefuseFriendUseCase } from "../../../application/use-cases/friend/refuse-friend.use-case";
+import { AcceptFriendUseCase } from "../../../application/use-cases/friend/accept-friend.use-case";
 
-import { RoomReadRepository, RoomWriteRepository, RoomMemberRepository } from "../../../infrastructure/database/repositories/room.repository";
-import { FriendShipRepository } from "../../../infrastructure/database/repositories/user.repository";
+import { RoomReadRepository, RoomWriteRepository } from "../../../infrastructure/database/repositories/room.repository";
+import { UserReadRepository } from "../../../infrastructure/database/repositories/user.repository";
 import { FriendRequestRepository } from "../../../infrastructure/database/repositories/friendRequest.repository";
 import { FriendRepository } from "../../../infrastructure/database/repositories/friend.repository";
 
 const friendRepo = new FriendRepository();
 const friendRequestRepo = new FriendRequestRepository();
-const friendShipRepo = new FriendShipRepository();
+const userReadRepo = new UserReadRepository();
 const roomReadRepo = new RoomReadRepository();
 const roomWriteRepo = new RoomWriteRepository();
-const roomMemberRepo = new RoomMemberRepository();
 
 export const userSocket = (io: Server, socket: Socket) => {
   const myID: string = socket.data.user.userId;
@@ -61,7 +60,7 @@ export const userSocket = (io: Server, socket: Socket) => {
   socket.on("CLIENT_REFUSE_FRIEND", async (data) => {
     try {
       const refuseFriendUseCase = new RefuseFriendUseCase(friendRequestRepo);
-      await refuseFriendUseCase.execute(myID, data.userID);
+      await refuseFriendUseCase.execute(data.userID, myID);
     } catch (error) {
       console.log(error);
     }
@@ -70,8 +69,8 @@ export const userSocket = (io: Server, socket: Socket) => {
   // accept friend
   socket.on("CLIENT_ACCEPT_FRIEND", async (data) => {
     try {
-      const acceptFriendUseCase = new AcceptFriendUseCase(roomReadRepo, roomWriteRepo, roomMemberRepo, friendRepo, friendRequestRepo);
-      await acceptFriendUseCase.execute(myID, data.userID);
+      const acceptFriendUseCase = new AcceptFriendUseCase(roomReadRepo, roomWriteRepo, friendRepo, friendRequestRepo);
+      await acceptFriendUseCase.execute(data.userID, myID);
     } catch (error) {
       console.error(error);
     }

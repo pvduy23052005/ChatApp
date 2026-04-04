@@ -47,12 +47,26 @@ export class FriendRequestRepository implements IFriendRequestReadRepository, IF
     });
   }
 
-  async getFriendRequest(myId: string, friendId: string): Promise<FriendRequestEntity | null> {
+  async getFriendRequest(senderId: string, receiverId: string): Promise<FriendRequestEntity | null> {
     const doc = await FriendRequest.findOne({
-      receiverId: myId,
-      senderId: friendId,
+      senderId,
+      receiverId,
       status: "pending"
     }).lean();
+
+    if (!doc) return null;
+
+    return FriendRequestEntity.restore({
+      id: doc._id.toString(),
+      senderId: doc.senderId.toString(),
+      receiverId: doc.receiverId.toString(),
+      status: doc.status,
+      createdAt: doc.createdAt
+    });
+  }
+
+  async findRequestById(id: string): Promise<FriendRequestEntity | null> {
+    const doc = await FriendRequest.findById(id).lean();
 
     if (!doc) return null;
 

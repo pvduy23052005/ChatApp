@@ -1,8 +1,6 @@
 import { Response, Request } from 'express';
 
 import { GetUsersUseCase } from "../../../application/use-cases/user/get-users.use-case";
-import { GetFriendsUseCase } from "../../../application/use-cases/user/get-friends.use-case";
-import { GetFriendAcceptsUseCase } from "../../../application/use-cases/user/get-friend-accepts.use-case";
 import { EditProfileUseCase } from "../../../application/use-cases/user/edit-profile.use-case";
 import type { IUpdateProfile } from "../../../domain/user/type";
 
@@ -25,46 +23,6 @@ export const getUsers = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       users: users
-    })
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Lỗi hệ thống, vui lòng thử lại sau"
-    });
-  }
-}
-
-// [get] /user/friend-accepts . 
-export const friendAccepts = async (req: Request, res: Response) => {
-  try {
-    const getFriendAcceptsUseCase = new GetFriendAcceptsUseCase(userReadRepo, friendRequestRepo);
-    const users = await getFriendAcceptsUseCase.execute(res.locals.user.id.toString());
-
-    res.status(200).json({
-      success: true,
-      friendAccepts: users
-    })
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Lỗi hệ thống, vui lòng thử lại sau"
-    });
-  }
-
-}
-
-// [get] /user/friends
-export const getFriends = async (req: Request, res: Response) => {
-  try {
-
-    const getFriendsUseCase = new GetFriendsUseCase(userReadRepo, friendRepo);
-    const friends = await getFriendsUseCase.execute(res.locals.user.id.toString());
-
-    res.status(200).json({
-      success: true,
-      friends: friends
     })
   } catch (error) {
     console.log(error);

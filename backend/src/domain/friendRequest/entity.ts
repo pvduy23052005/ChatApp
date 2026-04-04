@@ -39,11 +39,11 @@ export class FriendRequestEntity {
     this.status = "accepted";
   }
 
-  public reject(): void {
+  public refuse(): void {
     if (this.status != "pending") {
       throw new Error("Không thể từ chối lời mời kết bạn không ở trạng thái chờ xử lý");
     }
-    this.status = "rejected";
+    this.status = "refused";
   }
 
   public static restore(data: IFriendRequestProps): FriendRequestEntity {
