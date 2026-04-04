@@ -1,7 +1,7 @@
 import { FriendEntity } from "../../../domain/friend/entity";
 
 export interface IFriendReadRepo {
-  getAll(id: string): Promise<FriendEntity[]>;
+  getAll(userId: string): Promise<FriendEntity[]>;
 }
 
 export interface IFriendWriteRepo {

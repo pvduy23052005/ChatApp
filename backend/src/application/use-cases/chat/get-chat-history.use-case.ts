@@ -1,13 +1,22 @@
 import { IChatReadRepository } from "../../ports/repositories/chat.port";
+import { IRoomReadRepository } from "../../ports/repositories/room.port";
 
 export class GetChatHistoryUseCase {
 
-  constructor(private readonly chatRepository: IChatReadRepository) { }
+  constructor(
+    private readonly chatRepository: IChatReadRepository,
+    private readonly roomRepository: IRoomReadRepository
+  ) { }
 
-  public async execute(roomID: string, cursor?: string, limit: number = 10) {
-    if (!roomID) {
+  public async execute(userId: string, roomID: string, cursor?: string, limit: number = 10) {
+
+    const room = await this.roomRepository.findRoomById(roomID);
+
+    if (!room) {
       throw new Error("Vui lòng cung cấp ID phòng");
     }
+
+    room.checkIsMember(userId);
 
     const listMessages = await this.chatRepository.getMessageByRoomID(roomID, cursor, limit);
 

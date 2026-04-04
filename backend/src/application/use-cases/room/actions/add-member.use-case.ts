@@ -6,7 +6,7 @@ export class AddMemberUseCase {
     private readonly roomReadRepo: IRoomReadRepository
   ) { }
 
-  async execute(roomID: string, newMemberIDs: string | string[]): Promise<void> {
+  async execute(roomID: string, newMemberIDs: string | string[], requesterId: string): Promise<void> {
     const room = await this.roomReadRepo.findRoomById(roomID);
 
     if (!room) {
@@ -30,7 +30,7 @@ export class AddMemberUseCase {
     }
 
     filteredMemberIDs.forEach((userId: string) => {
-      room.addMember(userId);
+      room.addMember(userId, requesterId);
     });
 
     await this.roomWriteRepo.update(room);

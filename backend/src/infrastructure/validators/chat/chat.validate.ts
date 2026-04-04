@@ -1,23 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { RoomReadRepository } from '../../database/repositories/room.repository';
-
-import { IsUserInRoomUseCase } from '../../../application/use-cases/room/actions/is-user-in-room.use-case';
-
-const roomReadRepo = new RoomReadRepository();
 
 async function chatValidate(req: Request, res: Response, next: NextFunction) {
   try {
     const roomID: string = req.params.id?.toString() || "";
-    const myID: string = res.locals.user.id.toString();
 
-    const isUserInRoomUseCase = new IsUserInRoomUseCase(roomReadRepo);
-    const checkIsUserInRoom = await isUserInRoomUseCase.execute(roomID, myID);
-
-    if (!checkIsUserInRoom) {
-      return res.status(403).json({
+    if (!roomID) {
+      return res.status(400).json({
         success: false,
-        message: "Bạn không có trong cuộc trò chuyện này"
+        message: "Vui lòng cung cấp ID phòng"
       });
     }
 

@@ -12,7 +12,7 @@ export class ReadRoomUseCase {
     const room = await this.roomRepo.findRoomById(roomID);
 
     if (room && room.getLastMessageId()) {
-      const message = await this.chatReadRepo.findById(room.getLastMessageId().toString());
+      const message = await this.chatReadRepo.findById(room.getLastMessageId());
 
       if (message) {
         message.markAsRead(userID);

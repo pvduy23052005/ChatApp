@@ -25,7 +25,7 @@ export interface IRoom {
   createdAt?: Date;
   updatedAt?: Date;
   members: any[];
-  lastMessageId?: ILastMessage;
+  lastMessageId?: string;
 }
 
 export interface IRoomMember {

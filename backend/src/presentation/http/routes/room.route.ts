@@ -1,20 +1,18 @@
 import { Router } from "express";
 const router: Router = Router();
 import * as controller from "../controllers/room.controller";
-import roomActionValidate from "../../../infrastructure/validators/room/roomAction.validate";
 import roomValidate from "../../../infrastructure/validators/room/room.validate";
+
 
 router.post("/create", controller.createRoomPost);
 
 router.post("/delete/:id",
   roomValidate,
-  roomActionValidate,
   controller.deleteRoom
 )
 
 router.patch("/edit/:id",
   roomValidate,
-  roomActionValidate,
   controller.editRoom
 )
 
@@ -25,12 +23,10 @@ router.get("/detail/:id",
 
 router.post("/add-member/:id",
   roomValidate,
-  roomActionValidate,
   controller.addMember);
 
 router.post("/remove-member/:id",
   roomValidate,
-  roomActionValidate,
   controller.removeMember);
 
 router.post("/leave/:id",
@@ -39,7 +35,7 @@ router.post("/leave/:id",
 
 router.post("/assign-admin/:id",
   roomValidate,
-  roomActionValidate,
   controller.assignAdmin);
+
 
 export const roomRoute: Router = router;

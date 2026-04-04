@@ -9,7 +9,7 @@ export class RoomEntity {
   private createdAt: Date;
   private updatedAt: Date;
   private members: IRoomMember[];
-  private lastMessageId: any;
+  private lastMessageId: string;
 
   public constructor(data: IRoom) {
     this.id = data.id || "";
@@ -20,7 +20,7 @@ export class RoomEntity {
     this.createdAt = data.createdAt || new Date();
     this.updatedAt = data.updatedAt || new Date();
     this.members = data.members || [];
-    this.lastMessageId = data.lastMessageId;
+    this.lastMessageId = data.lastMessageId || "";
   }
 
   public static createRoom(creatorId: string, memberIds: string[], typeRoom: "single" | "group", title?: string, avatar?: string) {
@@ -68,9 +68,14 @@ export class RoomEntity {
     }));
   }
 
-  public addMember(userId: string): void {
+  public addMember(userId: string, requesterId: string): void {
     if (this.typeRoom === "single") {
       throw new Error("Không thể thêm thành viên vào phòng chat cá nhân");
+    }
+
+    const requester = this.members.find(m => m.user_id.toString() === requesterId);
+    if (!requester || (requester.role !== "superAdmin" && requester.role !== "admin")) {
+      throw new Error("Bạn không có quyền thêm thành viên");
     }
 
     const isExist = this.members.some(m => m.user_id.toString() === userId);
@@ -97,12 +102,16 @@ export class RoomEntity {
       throw new Error("Không thể xóa chính mình khỏi nhóm");
     }
 
-    const initialLength = this.members.length;
-    this.members = this.members.filter(m => m.user_id.toString() !== removeMemberID);
-
-    if (this.members.length === initialLength) {
+    const targetMember = this.members.find(m => m.user_id.toString() === removeMemberID);
+    if (!targetMember) {
       throw new Error("Người dùng không phải là thành viên của phòng");
     }
+
+    if (requester.role === "admin" && targetMember.role !== "member") {
+      throw new Error("Quản trị viên chỉ có quyền xóa thành viên bình thường");
+    }
+
+    this.members = this.members.filter(m => m.user_id.toString() !== removeMemberID);
     this.updatedAt = new Date();
   }
 
@@ -150,9 +159,47 @@ export class RoomEntity {
     this.updatedAt = new Date();
   }
 
+  public changeTitle(newTitle: string, requesterId: string): void {
+    const trimmedTitle = newTitle.trim();
+
+    if (!trimmedTitle) {
+      throw new Error("Tên phòng không được để trống!");
+    }
+
+    if (trimmedTitle.length > 50) {
+      throw new Error("Tên phòng không được vượt quá 50 ký tự");
+    }
+
+    if (this.typeRoom === "single") {
+      throw new Error("Không thể đổi tên phòng chat cá nhân");
+    }
+
+    const requester = this.members.find(m => m.user_id.toString() === requesterId);
+    if (!requester) {
+      throw new Error("Bạn không có quyền đổi tên phòng này");
+    }
+
+    this.title = trimmedTitle;
+    this.updatedAt = new Date();
+  }
+
+  public checkIsMember(userId: string): void {
+    const isMember = this.members.some(m => m.user_id.toString() === userId);
+
+    if (!isMember) {
+      throw new Error("Bạn không có quyền truy cập phòng này!");
+    }
+  }
+
+  public isOwner(userId: string): boolean {
+    const owner = this.members.find(m => m.user_id.toString() === userId);
+    return owner?.role === "superAdmin";
+  }
+
   public static restore(data: IRoom): RoomEntity {
     return new RoomEntity(data);
   }
+
 
   public toObject() {
     return {
@@ -174,5 +221,5 @@ export class RoomEntity {
   public getStatus(): string { return this.status; }
   public getCreatedAt(): Date { return this.createdAt; }
   public getMembers(): any[] { return this.members; }
-  public getLastMessageId(): string { return this.lastMessageId };
+  public getLastMessageId(): string { return this.lastMessageId; }
 }

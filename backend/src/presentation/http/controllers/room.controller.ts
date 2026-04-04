@@ -1,8 +1,6 @@
 import { Response, Request } from 'express';
 
-import { UserReadRepository } from "../../../infrastructure/database/repositories/user.repository";
 import { RoomReadRepository, RoomWriteRepository } from "../../../infrastructure/database/repositories/room.repository";
-import { FriendRepository } from "../../../infrastructure/database/repositories/friend.repository";
 
 import { GetDetailRoomUseCase } from "../../../application/use-cases/room/actions/get-detail-room.use-case";
 import { EditRoomUseCase } from "../../../application/use-cases/room/actions/edit-room.use-case";
@@ -15,8 +13,6 @@ import { CreateNewRoomUseCase, CreateRoomOutputDTO } from "../../../application/
 
 const roomReadRepo = new RoomReadRepository();
 const roomWriteRepo = new RoomWriteRepository();
-const userReadRepo = new UserReadRepository();
-const friendRepo = new FriendRepository();
 
 // [post] /room/create.
 export const createRoomPost = async (req: Request, res: Response) => {
@@ -46,7 +42,6 @@ export const createRoomPost = async (req: Request, res: Response) => {
 export const roomDetail = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
-    const user: any = res.locals.user;
 
     const getDetailRoomUseCase = new GetDetailRoomUseCase(roomReadRepo);
     const detailRoom = await getDetailRoomUseCase.execute(roomID);
@@ -68,9 +63,10 @@ export const editRoom = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
     const { title } = req.body;
+    const myId: string = res.locals.user.id.toString();
 
-    const editRoomUseCase = new EditRoomUseCase(roomWriteRepo);
-    const updatedRoom = await editRoomUseCase.execute(roomID, title);
+    const editRoomUseCase = new EditRoomUseCase(roomWriteRepo, roomReadRepo);
+    const updatedRoom = await editRoomUseCase.execute(roomID, title, myId);
 
     return res.status(200).json({
       success: true,
@@ -90,9 +86,10 @@ export const addMember = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
     const { newMemberIDs } = req.body;
+    const myID: string = res.locals.user.id.toString();
 
     const addMemberUseCase = new AddMemberUseCase(roomWriteRepo, roomReadRepo);
-    const addedMemberIDs = await addMemberUseCase.execute(roomID, newMemberIDs);
+    const addedMemberIDs = await addMemberUseCase.execute(roomID, newMemberIDs, myID);
 
     res.status(200).json({
       success: true,
@@ -134,9 +131,10 @@ export const removeMember = async (req: Request, res: Response) => {
 export const deleteRoom = async (req: Request, res: Response) => {
   try {
     const roomID: string = req.params.id?.toString() || "";
+    const myId: string = res.locals.user.id.toString();
 
     const deleteRoomUseCase = new DeleteRoomUseCase(roomWriteRepo, roomReadRepo);
-    await deleteRoomUseCase.execute(roomID);
+    await deleteRoomUseCase.execute(roomID, myId);
 
     res.status(200).json({
       success: true,

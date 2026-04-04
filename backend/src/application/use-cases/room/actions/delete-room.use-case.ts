@@ -6,17 +6,18 @@ export class DeleteRoomUseCase {
     private readonly roomReadRepository: IRoomReadRepository
   ) { }
 
-  async execute(roomID: string): Promise<void> {
+  async execute(roomID: string, myID: string): Promise<void> {
 
     const room = await this.roomReadRepository.findRoomById(roomID);
     if (!room) {
       throw new Error("Phòng không tồn tại");
     }
 
-    if (!roomID) {
-      throw new Error("Vui lòng cung cấp ID phòng");
+    if (!room.isOwner(myID)) {
+      throw new Error("Bạn không có quyền xóa phòng");
     }
 
     await this.roomRepository.softDeleteRoom(roomID);
+
   }
 }

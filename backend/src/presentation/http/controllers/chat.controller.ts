@@ -36,9 +36,10 @@ export const getListChat = async (req: Request, res: Response) => {
   try {
     const roomID: string = (req.params.id?.toString()) || "";
     const cursor: string = req.query.cursor?.toString() || "";
+    const myId: string = res.locals.user.id?.toString();
 
-    const getChatHistoryUseCase = new GetChatHistoryUseCase(chatReadRepository);
-    const chats = await getChatHistoryUseCase.execute(roomID, cursor);
+    const getChatHistoryUseCase = new GetChatHistoryUseCase(chatReadRepository, roomReadRepo);
+    const chats = await getChatHistoryUseCase.execute(myId, roomID, cursor);
 
     res.json({
       success: true,
